@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +7,7 @@ import 'package:verd/data/repositories/auth_repository.dart';
 import 'package:verd/data/services/firebase_auth_service.dart';
 import 'package:verd/data/services/firestore_service.dart';
 import 'package:verd/data/services/local_storage.dart';
+import 'package:verd/data/services/storage_service.dart';
 import 'package:verd/providers/notification_provider.dart';
 
 // ─── Service-level providers ───
@@ -16,6 +18,10 @@ final firebaseAuthServiceProvider = Provider<FirebaseAuthService>((ref) {
 
 final firestoreServiceProvider = Provider<FirestoreService>((ref) {
   return FirestoreService();
+});
+
+final storageServiceProvider = Provider<StorageService>((ref) {
+  return StorageService();
 });
 
 final localStorageServiceProvider = Provider<LocalStorageService>((ref) {
@@ -100,6 +106,27 @@ class AuthNotifier extends AsyncNotifier<AppUser?> {
 
   Future<void> resetPassword(String email) async {
     await ref.read(authRepositoryProvider).resetPassword(email);
+  }
+
+  /// Update the user's profile (name, phone, location, photo).
+  Future<void> updateProfile({
+    String? name,
+    String? phone,
+    String? location,
+    File? photoFile,
+  }) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      final updated = await ref.read(authRepositoryProvider).updateProfile(
+        name: name,
+        phone: phone,
+        location: location,
+        photoFile: photoFile,
+      );
+      // Invalidate the currentUserProvider so the profile screen re-reads
+      ref.invalidate(currentUserProvider);
+      return updated;
+    });
   }
 
   Future<void> logout() async {

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:verd/core/constants/app_theme.dart';
 import 'package:verd/core/providers/theme_provider.dart';
+import 'package:verd/providers/auth_provider.dart';
 
 import 'package:verd/shared/dialogs/confirmation_dialog.dart';
 import 'package:verd/shared/widgets/skeleton_loader.dart';
@@ -16,20 +17,10 @@ class ProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    // Simulate loading for the profile skeleton
-    Future.delayed(const Duration(milliseconds: 600), () {
-      if (mounted) setState(() => _isLoading = false);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
+    final user = ref.watch(currentUserProvider);
+    if (user == null) {
       return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: const ProfileSkeleton(),
@@ -38,7 +29,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
     // Deep green from the inspiration Image #3
     final headerBgColor = isDark ? const Color(0xFF081C0B) : const Color(0xFF13401A);
 
@@ -97,34 +87,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       Stack(
                         alignment: Alignment.bottomRight,
                         children: [
-                          Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: const Color(0xFF81C784), width: 3), // Light green border
-                              color: const Color(0xFF4CAF50),
-                            ),
-                            child: const Center(
-                              child: Text(
-                                'A',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 40,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
+                          _buildAvatar(user.photoUrl, user.displayName, headerBgColor),
                           GestureDetector(
                             onTap: () => context.push('/edit-profile'),
                             child: Container(
                               padding: const EdgeInsets.all(6),
                               margin: const EdgeInsets.only(bottom: 4, right: 4),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFE68A00), // Orange badge like the inspiration
+                                color: const Color(0xFFE68A00),
                                 shape: BoxShape.circle,
-                                border: Border.all(color: headerBgColor, width: 2), // Cutout effect
+                                border: Border.all(color: headerBgColor, width: 2),
                               ),
                               child: const Icon(Icons.edit, color: Colors.white, size: 16),
                             ),
@@ -133,7 +105,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       ),
                       const SizedBox(height: AppSpacing.md),
                       Text(
-                        'Ada Farmer',
+                        user.displayName.isNotEmpty ? user.displayName : 'Farmer',
                         style: AppTypography.h3.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -142,7 +114,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'ada.farmer@verd.com',
+                        user.email,
                         style: AppTypography.bodySmall.copyWith(
                           color: Colors.white70,
                         ),
@@ -266,6 +238,43 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildAvatar(String? photoUrl, String displayName, Color borderColor) {
+    const size = 100.0;
+    final initial = displayName.isNotEmpty ? displayName[0].toUpperCase() : '?';
+
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: const Color(0xFF81C784), width: 3),
+        color: AppColors.primary,
+      ),
+      child: ClipOval(
+        child: photoUrl != null && photoUrl.isNotEmpty
+            ? Image.network(
+                photoUrl,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => _initialsWidget(initial),
+              )
+            : _initialsWidget(initial),
+      ),
+    );
+  }
+
+  Widget _initialsWidget(String initial) {
+    return Center(
+      child: Text(
+        initial,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 40,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }

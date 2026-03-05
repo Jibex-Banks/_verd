@@ -62,8 +62,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      backgroundColor: AppColors.backgroundPrimary,
+      backgroundColor: colorScheme.surface,
       body: SafeArea(
         child: Column(
           children: [
@@ -119,6 +120,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   Widget _buildTopBar() {
     final showLogo = _pages[_currentIndex].showLogo;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Padding(
       padding: const EdgeInsets.symmetric(
@@ -133,13 +135,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               children: [
                 SvgPicture.asset(AppAssets.logoSvg, height: 40),
                 const SizedBox(height: 4),
-                const Text(
+                Text(
                   'WELCOME!',
                   style: TextStyle(
                     fontFamily: AppTypography.primaryFont,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 0.5,
+                    color: colorScheme.onSurface,
                   ),
                 ),
               ],
@@ -151,7 +154,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: Text(
                 'Skip',
                 style: AppTypography.body.copyWith(
-                  color: AppColors.gray600,
+                  color: colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -189,6 +192,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             data.title,
             style: AppTypography.h3.copyWith(
               fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
             textAlign: TextAlign.center,
           ),
@@ -196,7 +200,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           Text(
             data.description,
             style: AppTypography.body.copyWith(
-              color: AppColors.textPrimary,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             textAlign: TextAlign.center,
           ),

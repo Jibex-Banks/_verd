@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:verd/data/models/user.dart';
 import 'package:verd/data/services/firebase_auth_service.dart';
 import 'package:verd/data/services/firestore_service.dart';
 import 'package:verd/data/services/local_storage.dart';
+import 'package:verd/data/services/storage_service.dart';
 
 /// Orchestrates authentication flow across Firebase Auth,
 /// Firestore (user profiles), and local Hive cache.
@@ -11,14 +13,17 @@ class AuthRepository {
   final FirebaseAuthService _authService;
   final FirestoreService _firestoreService;
   final LocalStorageService _localStorage;
+  final StorageService _storageService;
 
   AuthRepository({
     required FirebaseAuthService authService,
     required FirestoreService firestoreService,
     required LocalStorageService localStorage,
+    StorageService? storageService,
   })  : _authService = authService,
         _firestoreService = firestoreService,
-        _localStorage = localStorage;
+        _localStorage = localStorage,
+        _storageService = storageService ?? StorageService();
 
   /// Stream of raw Firebase auth state changes.
   Stream<User?> get authStateChanges => _authService.authStateChanges;
@@ -167,5 +172,45 @@ class AuthRepository {
     }
     return profile;
   }
-}
 
+  /// Update the user's profile fields.
+  /// Pass a [photoFile] to upload a new profile picture to Firebase Storage.
+  Future<AppUser> updateProfile({
+    String? name,
+    String? phone,
+    String? location,
+    File? photoFile,
+  }) async {
+    final uid = _authService.currentUser?.uid;
+    if (uid == null) throw Exception('No authenticated user');
+
+    // 1. Upload new photo if provided
+    String? newPhotoUrl;
+    if (photoFile != null) {
+      newPhotoUrl = await _storageService.uploadProfileImage(
+        userId: uid,
+        imageFile: photoFile,
+      );
+    }
+
+    // 2. Build Firestore update payload (only changed fields)
+    final updates = <String, dynamic>{};
+    if (name != null) updates['displayName'] = name;
+    if (phone != null) updates['phoneNumber'] = phone;
+    if (location != null) updates['farmLocation'] = location;
+    if (newPhotoUrl != null) updates['photoUrl'] = newPhotoUrl;
+
+    if (updates.isNotEmpty) {
+      await _firestoreService.updateUserProfile(uid, updates);
+    }
+
+    // 3. Update Firebase Auth display name / photo URL
+    if (name != null) await _authService.updateDisplayName(name);
+    if (newPhotoUrl != null) await _authService.updatePhotoURL(newPhotoUrl);
+
+    // 4. Refresh and cache the updated profile
+    final updated = await _firestoreService.getUserProfile(uid);
+    if (updated != null) await _localStorage.cacheUser(updated);
+    return updated ?? getCachedUser()!;
+  }
+}

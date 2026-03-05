@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,6 +32,10 @@ import 'package:verd/features/scan/scan_history_screen.dart';
 import 'package:verd/features/learning/learning_center_screen.dart';
 import 'package:verd/features/learning/article_detail_screen.dart';
 
+/// Global navigator key — used by FCM tap handler to navigate
+/// without a BuildContext (e.g. when app is in background/terminated).
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 class RouterNotifier extends ChangeNotifier {
   final Ref _ref;
 
@@ -50,6 +55,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   final notifier = ref.watch(routerNotifierProvider);
 
   return GoRouter(
+    navigatorKey: navigatorKey,
     refreshListenable: notifier,
     initialLocation: '/',
     redirect: (context, state) {

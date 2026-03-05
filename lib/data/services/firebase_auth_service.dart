@@ -42,6 +42,11 @@ class FirebaseAuthService {
     await _auth.currentUser?.updateDisplayName(name);
   }
 
+  /// Update the photo URL of the currently signed-in user.
+  Future<void> updatePhotoURL(String url) async {
+    await _auth.currentUser?.updatePhotoURL(url);
+  }
+
   // ─── Google Sign-In ───
 
   /// Sign in with Google.

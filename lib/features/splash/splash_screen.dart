@@ -66,8 +66,10 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: colorScheme.surface,
       body: Stack(
         children: [
           // ── Green Gas / Mist Effect at the bottom ──
@@ -101,26 +103,13 @@ class _SplashScreenState extends State<SplashScreen>
 
                     SvgPicture.asset(AppAssets.logoSvg, width: 90),
 
-                    const SizedBox(height: 16),
-
-                    // App Name
-                    Text(
-                      'VERD',
-                      style: AppTypography.h1.copyWith(
-                        color: AppColors.primary800,
-                        fontSize: 36,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 6,
-                      ),
-                    ),
-
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 20),
 
                     // Tagline
                     Text(
                       'CLARITY FOR YOUR CROPS',
                       style: AppTypography.body.copyWith(
-                        color: AppColors.gray700,
+                        color: isDark ? AppColors.primary200 : AppColors.gray700,
                         fontSize: 13,
                         letterSpacing: 3,
                         fontWeight: FontWeight.w500,
@@ -135,7 +124,7 @@ class _SplashScreenState extends State<SplashScreen>
                       child: Text(
                         'powered by an offline AI',
                         style: AppTypography.bodySmall.copyWith(
-                          color: AppColors.gray600,
+                          color: isDark ? AppColors.primary200.withValues(alpha: 0.7) : AppColors.gray600,
                           fontSize: 13,
                         ),
                       ),
