@@ -221,10 +221,12 @@ class SuccessDialog extends StatelessWidget {
       });
     }
 
+    final theme = Theme.of(context);
+
     return Dialog(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadius.xxl)),
-      backgroundColor: AppColors.backgroundSecondary,
+      backgroundColor: theme.colorScheme.surface,
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.xxl),
         child: Column(
@@ -238,7 +240,7 @@ class SuccessDialog extends StatelessWidget {
               const SizedBox(height: AppSpacing.sm),
               Text(message!,
                   style: AppTypography.body
-                      .copyWith(color: AppColors.textSecondary),
+                      .copyWith(color: theme.colorScheme.onSurfaceVariant),
                   textAlign: TextAlign.center),
             ],
             if (actionLabel != null) ...[
@@ -251,8 +253,8 @@ class SuccessDialog extends StatelessWidget {
                     onAction?.call();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
+                    backgroundColor: theme.colorScheme.primary,
+                    foregroundColor: theme.colorScheme.onPrimary,
                     padding: const EdgeInsets.symmetric(vertical: 13),
                     elevation: 0,
                     shape: RoundedRectangleBorder(

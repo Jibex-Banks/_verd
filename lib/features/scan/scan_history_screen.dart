@@ -257,6 +257,7 @@ class _ScanHistoryScreenState extends State<ScanHistoryScreen> {
     required IconData icon,
     required VoidCallback onTap,
   }) {
+    final isDark = theme.brightness == Brightness.dark;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -266,11 +267,13 @@ class _ScanHistoryScreenState extends State<ScanHistoryScreen> {
           color: theme.colorScheme.surfaceContainerHigh,
           shape: BoxShape.circle,
           border: Border.all(
-            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+            color: isDark 
+                ? theme.colorScheme.outlineVariant.withValues(alpha: 0.5)
+                : theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
             width: 1,
           ),
           boxShadow: [
-            if (theme.brightness == Brightness.light)
+            if (!isDark)
               BoxShadow(
                 color: theme.colorScheme.shadow.withValues(alpha: 0.05),
                 blurRadius: 10,

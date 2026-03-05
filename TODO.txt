@@ -1,11 +1,23 @@
-make widget support dark theme 
-in the history screen the filter features is not working at all same as dark mode 
-Article screen dark mode
-gallery screen dark mode
-edit profile modal needs work on dark mode 
-the profile screen need a redesign 
+Potentially Remaining (Optional)
+Firebase App Check — Already in 
 
+pubspec.yaml
+ but not initialized. This adds security against abuse (prevents unauthorized API calls). Nice for production but not needed for a hackathon demo.
+Firebase AI (firebase_ai) — Also in 
 
-some widgets are not supporting dark mode
-notification settings screen needs work on dark mode
-scan history screen icon buttons needs work on dark mode
+pubspec.yaml
+ but I haven't seen it wired up. If you're using Gemini/AI features through Firebase, this would need setup.
+Notification tap handling — When a user taps a notification from the system tray, you could navigate them to a specific screen (e.g., scan results). Right now 
+
+onMessageOpenedApp
+ exists in 
+
+FCMService
+ but isn't wired up in the app.
+
+ Extensions from firebase 
+ then the extra features like picture upload for both register and profile screen
+ and the AI features 
+ link users profile to make the app dynamic 
+ Use User data from firebase to make the app dynamic 
+ 

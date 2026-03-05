@@ -27,6 +27,7 @@ class AppCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final radius = borderRadius ?? AppRadius.card;
 
     // Responsive padding: scales slightly with screen width
@@ -38,17 +39,19 @@ class AppCard extends StatelessWidget {
 
     BoxDecoration decoration = switch (variant) {
       AppCardVariant.elevated => BoxDecoration(
-        color: backgroundColor ?? AppColors.backgroundSecondary,
+        color: backgroundColor ?? theme.colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(radius),
-        boxShadow: [AppShadows.card],
+        boxShadow: [
+          if (theme.brightness == Brightness.light) AppShadows.card
+        ],
       ),
       AppCardVariant.outlined => BoxDecoration(
-        color: backgroundColor ?? AppColors.backgroundSecondary,
+        color: backgroundColor ?? theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(radius),
-        border: Border.all(color: AppColors.gray300, width: 1.5),
+        border: Border.all(color: theme.colorScheme.outlineVariant, width: 1.5),
       ),
       AppCardVariant.filled => BoxDecoration(
-        color: backgroundColor ?? AppColors.gray100,
+        color: backgroundColor ?? theme.colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(radius),
       ),
       AppCardVariant.ghost => BoxDecoration(
@@ -102,6 +105,7 @@ class AppStatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final scaleFactor = MediaQuery.textScalerOf(context).scale(1.0).clamp(0.8, 1.3);
 
     return AppCard(
@@ -114,7 +118,7 @@ class AppStatCard extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: iconBackgroundColor ?? AppColors.primary50,
+              color: iconBackgroundColor ?? theme.colorScheme.primaryContainer,
               borderRadius: BorderRadius.circular(AppRadius.md),
             ),
             child: Center(child: icon),
@@ -126,7 +130,7 @@ class AppStatCard extends StatelessWidget {
             child: Text(
               value,
               style: AppTypography.h3.copyWith(
-                color: valueColor ?? AppColors.textPrimary,
+                color: valueColor ?? theme.colorScheme.onSurface,
                 fontSize: AppTypography.xl * scaleFactor,
               ),
             ),
@@ -135,7 +139,7 @@ class AppStatCard extends StatelessWidget {
           Text(
             label,
             style: AppTypography.bodySmall.copyWith(
-              color: AppColors.textSecondary,
+              color: theme.colorScheme.onSurfaceVariant,
               fontSize: AppTypography.sm * scaleFactor,
             ),
             maxLines: 2,

@@ -26,12 +26,12 @@ class NotificationSettingsScreen extends ConsumerWidget {
             Navigator.of(context).pop();
           },
           child: Text(
-            'back'.tr(),
+            'Back||back'.tr(),
             style: AppTypography.buttonSmall.copyWith(color: AppColors.primary),
           ),
         ),
         title: Text(
-          'notifications'.tr(),
+          'Notifications||notifications'.tr(),
           style: AppTypography.h4.copyWith(color: theme.colorScheme.onSurface),
         ),
         centerTitle: true,
@@ -39,7 +39,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
-              'done'.tr(),
+              'Done||done'.tr(),
               style: AppTypography.buttonSmall.copyWith(color: AppColors.primary),
             ),
           ),
@@ -52,8 +52,8 @@ class NotificationSettingsScreen extends ConsumerWidget {
           children: [
             _buildToggleItem(
               context: context,
-              title: 'push_notifications'.tr(),
-              subtitle: 'push_notifications_desc'.tr(),
+              title: 'Push Notifications||push_notifications'.tr(),
+              subtitle: 'Enable or disable push notifications||push_notifications_desc'.tr(),
               value: settingsNotifier.notificationsEnabled,
               onChanged: (val) async {
                 if (val) {
@@ -69,7 +69,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'topics'.tr(),
+                  'Topics||topics'.tr(),
                   style: AppTypography.h4.copyWith(
                     fontSize: 18,
                     color: theme.colorScheme.primary,
@@ -79,24 +79,24 @@ class NotificationSettingsScreen extends ConsumerWidget {
             ),
             _buildToggleItem(
               context: context,
-              title: 'scan_results'.tr(),
-              subtitle: 'scan_results_desc'.tr(),
+              title: 'Scan Results||scan_results'.tr(),
+              subtitle: 'Get notified when your scan is complete||scan_results_desc'.tr(),
               value: topics[FcmTopics.scanResults] ?? false,
               onChanged: (val) => notifier.toggleTopic(FcmTopics.scanResults, val),
               enabled: settingsNotifier.notificationsEnabled,
             ),
             _buildToggleItem(
               context: context,
-              title: 'learning_updates'.tr(),
-              subtitle: 'learning_updates_desc'.tr(),
+              title: 'Learning Updates||learning_updates'.tr(),
+              subtitle: 'New articles and learning tips||learning_updates_desc'.tr(),
               value: topics[FcmTopics.learningUpdates] ?? false,
               onChanged: (val) => notifier.toggleTopic(FcmTopics.learningUpdates, val),
               enabled: settingsNotifier.notificationsEnabled,
             ),
             _buildToggleItem(
               context: context,
-              title: 'system_alerts'.tr(),
-              subtitle: 'system_alerts_desc'.tr(),
+              title: 'System Alerts||system_alerts'.tr(),
+              subtitle: 'Important system and security updates||system_alerts_desc'.tr(),
               value: topics[FcmTopics.systemAlerts] ?? false,
               onChanged: (val) => notifier.toggleTopic(FcmTopics.systemAlerts, val),
               enabled: settingsNotifier.notificationsEnabled,
@@ -117,7 +117,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'debug_tools'.tr(),
+                    'Debug Tools||debug_tools'.tr(),
                     style: AppTypography.h4.copyWith(
                       fontSize: 18,
                       color: theme.colorScheme.primary,
@@ -133,7 +133,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
                     await Clipboard.setData(ClipboardData(text: token));
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('token_copied'.tr())),
+                        SnackBar(content: Text('Token copied to clipboard||token_copied'.tr())),
                       );
                     }
                   }
@@ -144,7 +144,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
                     color: theme.brightness == Brightness.dark ? AppColors.errorLight : AppColors.error,
                   ),
                   title: Text(
-                    'copy_token'.tr(),
+                    'Copy FCM Token||copy_token'.tr(),
                     style: AppTypography.bodyLarge.copyWith(
                       fontWeight: AppTypography.medium,
                       color: theme.colorScheme.onSurface,

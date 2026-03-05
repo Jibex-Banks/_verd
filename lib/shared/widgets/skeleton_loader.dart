@@ -10,9 +10,11 @@ class _Shimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     return Shimmer.fromColors(
-      baseColor: AppColors.gray200,
-      highlightColor: AppColors.gray50,
+      baseColor: isDark ? theme.colorScheme.surfaceContainerHighest : AppColors.gray200,
+      highlightColor: isDark ? theme.colorScheme.surfaceContainerHigh : AppColors.gray50,
       period: const Duration(milliseconds: 1400),
       child: child,
     );
@@ -35,11 +37,12 @@ class ShimmerBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(borderRadius),
       ),
     );
@@ -58,11 +61,12 @@ class ShimmerLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       width: width ?? double.infinity,
       height: height,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(AppRadius.sm),
       ),
     );
@@ -75,11 +79,12 @@ class ShimmerCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       width: size,
       height: size,
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
         shape: BoxShape.circle,
       ),
     );
@@ -136,16 +141,17 @@ class ScanListSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Column(
       children: List.generate(itemCount, (i) => Column(
         children: [
-          ScanListItemSkeleton(),
+          const ScanListItemSkeleton(),
           if (i < itemCount - 1)
-            const Divider(
+            Divider(
               height: 1,
               indent: AppSpacing.lg,
               endIndent: AppSpacing.lg,
-              color: AppColors.gray100,
+              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
             ),
         ],
       )),

@@ -108,12 +108,13 @@ class ConfirmationDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sw = MediaQuery.sizeOf(context).width;
-    final confirmColor = isDangerous ? AppColors.error : AppColors.primary;
+    final theme = Theme.of(context);
+    final confirmColor = isDangerous ? theme.colorScheme.error : theme.colorScheme.primary;
 
     return Dialog(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadius.xxl)),
-      backgroundColor: AppColors.backgroundSecondary,
+      backgroundColor: theme.colorScheme.surfaceContainerHigh,
       // Constrain width on tablets
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: sw < 600 ? sw * 0.88 : 400),
@@ -141,7 +142,7 @@ class ConfirmationDialog extends StatelessWidget {
               // Title
               Text(
                 title,
-                style: AppTypography.h3,
+                style: AppTypography.h3.copyWith(color: theme.colorScheme.onSurface),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: AppSpacing.sm),
@@ -150,7 +151,7 @@ class ConfirmationDialog extends StatelessWidget {
               Text(
                 message,
                 style: AppTypography.body
-                    .copyWith(color: AppColors.textSecondary),
+                    .copyWith(color: theme.colorScheme.onSurfaceVariant),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: AppSpacing.xxl),
@@ -162,17 +163,17 @@ class ConfirmationDialog extends StatelessWidget {
                   child: OutlinedButton(
                     onPressed: () => Navigator.of(context).pop(false),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: AppColors.textPrimary,
+                      foregroundColor: theme.colorScheme.onSurface,
                       padding: const EdgeInsets.symmetric(vertical: 13),
-                      side: const BorderSide(
-                          color: AppColors.gray300, width: 1.5),
+                      side: BorderSide(
+                          color: theme.colorScheme.outlineVariant, width: 1.5),
                       shape: RoundedRectangleBorder(
                           borderRadius:
                           BorderRadius.circular(AppRadius.button)),
                     ),
                     child: Text(cancelLabel,
                         style: AppTypography.button
-                            .copyWith(color: AppColors.textPrimary)),
+                            .copyWith(color: theme.colorScheme.onSurface)),
                   ),
                 ),
                 const SizedBox(width: AppSpacing.md),
@@ -190,7 +191,7 @@ class ConfirmationDialog extends StatelessWidget {
                           BorderRadius.circular(AppRadius.button)),
                     ),
                     child: Text(confirmLabel,
-                        style: AppTypography.button),
+                        style: AppTypography.button.copyWith(color: theme.colorScheme.onPrimary)),
                   ),
                 ),
               ]),

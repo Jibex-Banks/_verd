@@ -323,12 +323,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     
     // Determine the active icon 
     IconData activeIcon = Icons.brightness_auto;
-    const Color activeColor = Color(0xFF673AB7); // Deep Purple
+    Color activeColor = const Color(0xFF673AB7); // Deep Purple
     
     if (currentMode == ThemeMode.dark) {
       activeIcon = Icons.dark_mode;
+      activeColor = const Color(0xFF3F51B5); // Indigo
     } else if (currentMode == ThemeMode.light) {
       activeIcon = Icons.light_mode;
+      activeColor = const Color(0xFFFF9800); // Orange
     }
 
     return Padding(
@@ -361,38 +363,87 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           const SizedBox(height: AppSpacing.md),
           Padding(
             padding: const EdgeInsets.only(left: 60.0), // Indent to match text
-            child: SizedBox(
-              width: double.infinity,
-              child: SegmentedButton<ThemeMode>(
-                segments: [
-                  ButtonSegment<ThemeMode>(
-                    value: ThemeMode.system,
-                    label: Text('System||system'.tr()),
-                    icon: const Icon(Icons.brightness_auto, size: 16),
+            child: Container(
+              height: 40,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  _buildCustomToggleBtn(
+                    theme: theme,
+                    title: 'System||system'.tr(),
+                    icon: Icons.brightness_auto,
+                    isSelected: currentMode == ThemeMode.system,
+                    onTap: () => ref.read(themeProvider.notifier).setTheme(ThemeMode.system),
                   ),
-                  ButtonSegment<ThemeMode>(
-                    value: ThemeMode.light,
-                    label: Text('Light||light'.tr()),
-                    icon: const Icon(Icons.light_mode, size: 16),
+                  _buildCustomToggleBtn(
+                    theme: theme,
+                    title: 'Light||light'.tr(),
+                    icon: Icons.light_mode,
+                    isSelected: currentMode == ThemeMode.light,
+                    onTap: () => ref.read(themeProvider.notifier).setTheme(ThemeMode.light),
                   ),
-                  ButtonSegment<ThemeMode>(
-                    value: ThemeMode.dark,
-                    label: Text('Dark||dark'.tr()),
-                    icon: const Icon(Icons.dark_mode, size: 16),
+                  _buildCustomToggleBtn(
+                    theme: theme,
+                    title: 'Dark||dark'.tr(),
+                    icon: Icons.dark_mode,
+                    isSelected: currentMode == ThemeMode.dark,
+                    onTap: () => ref.read(themeProvider.notifier).setTheme(ThemeMode.dark),
                   ),
                 ],
-                selected: {currentMode},
-                onSelectionChanged: (selection) {
-                  ref.read(themeProvider.notifier).setTheme(selection.first);
-                },
-                style: ButtonStyle(
-                  visualDensity: VisualDensity.compact,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildCustomToggleBtn({
+    required ThemeData theme,
+    required String title,
+    required IconData icon,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          decoration: BoxDecoration(
+            color: isSelected ? theme.colorScheme.surfaceContainerHigh : Colors.transparent,
+            borderRadius: BorderRadius.circular(8),
+            border: isSelected 
+                ? Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5), width: 1)
+                : null,
+            boxShadow: isSelected && theme.brightness == Brightness.light
+                ? [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4, offset: const Offset(0, 2))]
+                : null,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                size: 14,
+                color: isSelected ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant,
+              ),
+              const SizedBox(width: 6),
+              Flexible(
+                child: Text(
+                  title,
+                  style: AppTypography.caption.copyWith(
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                    color: isSelected ? theme.colorScheme.onSurface : theme.colorScheme.onSurfaceVariant,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

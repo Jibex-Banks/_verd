@@ -33,7 +33,8 @@ class LoadingIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveColor = color ?? AppColors.primary;
+    final theme = Theme.of(context);
+    final effectiveColor = color ?? theme.colorScheme.primary;
     final scaleFactor = MediaQuery.textScalerOf(context).scale(1.0).clamp(0.8, 1.3);
 
     Widget indicator = switch (variant) {
@@ -65,7 +66,7 @@ class LoadingIndicator extends StatelessWidget {
           Text(
             label!,
             style: AppTypography.bodySmall.copyWith(
-              color: AppColors.textSecondary,
+              color: theme.colorScheme.onSurfaceVariant,
               fontSize: AppTypography.sm * scaleFactor,
             ),
           ),
@@ -92,6 +93,7 @@ class LoadingOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Stack(
       children: [
         child,
@@ -106,9 +108,11 @@ class LoadingOverlay extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(AppSpacing.xxl),
                     decoration: BoxDecoration(
-                      color: AppColors.backgroundSecondary,
+                      color: theme.colorScheme.surface,
                       borderRadius: BorderRadius.circular(AppRadius.xl),
-                      boxShadow: [AppShadows.lg],
+                      boxShadow: [
+                        if (theme.brightness == Brightness.light) AppShadows.lg
+                      ],
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -119,7 +123,7 @@ class LoadingOverlay extends StatelessWidget {
                           Text(
                             message!,
                             style: AppTypography.body.copyWith(
-                                color: AppColors.textSecondary),
+                                color: theme.colorScheme.onSurfaceVariant),
                             textAlign: TextAlign.center,
                           ),
                         ],

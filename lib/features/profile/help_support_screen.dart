@@ -145,9 +145,9 @@ class HelpSupportScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(
+            Icon(
               Icons.chevron_right,
-              color: AppColors.gray400,
+              color: theme.colorScheme.onSurfaceVariant,
             ),
           ],
         ),
@@ -161,6 +161,7 @@ class HelpSupportScreen extends StatelessWidget {
     required String answer,
   }) {
 
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.md),
       child: AppCard(
@@ -173,14 +174,14 @@ class HelpSupportScreen extends StatelessWidget {
               question,
               style: AppTypography.bodyLarge.copyWith(
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+                color: theme.colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: AppSpacing.md),
             Text(
               answer,
               style: AppTypography.body.copyWith(
-                color: AppColors.gray600,
+                color: theme.colorScheme.onSurfaceVariant,
                 height: 1.5,
               ),
             ),

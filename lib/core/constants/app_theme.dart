@@ -468,28 +468,29 @@ class AppTheme {
     useMaterial3: true,
     brightness: Brightness.dark,
     colorScheme: ColorScheme.dark(
-      primary: AppColors.primary400,
-      onPrimary: AppColors.gray900,
+      primary: AppColors.primary300,           // Light green accent
+      onPrimary: const Color(0xFF0A1A0F),      // Deep forest on primary
       primaryContainer: AppColors.primary900,
       onPrimaryContainer: AppColors.primary100,
-      secondary: AppColors.gray400,
-      onSecondary: AppColors.gray900,
-      secondaryContainer: AppColors.gray800,
-      onSecondaryContainer: AppColors.gray200,
+      secondary: AppColors.primary200,
+      onSecondary: const Color(0xFF0A1A0F),
+      secondaryContainer: const Color(0xFF1C3D24),
+      onSecondaryContainer: AppColors.primary100,
       error: AppColors.errorLight,
-      onError: AppColors.gray900,
+      onError: const Color(0xFF0A1A0F),
       errorContainer: AppColors.errorDark,
       onErrorContainer: AppColors.errorLight,
       surface: DarkColors.surface,
       onSurface: DarkColors.textPrimary,
       surfaceContainerHighest: DarkColors.surfaceContainer,
+      surfaceContainerHigh: DarkColors.surfaceContainerHigh,
       onSurfaceVariant: DarkColors.textSecondary,
-      outline: AppColors.gray700,
-      outlineVariant: AppColors.gray800,
+      outline: const Color(0xFF2E5938),         // Muted green outline
+      outlineVariant: const Color(0xFF1C3D24),  // Subtle green border
       shadow: Colors.black,
       scrim: Colors.black,
-      inverseSurface: AppColors.gray200,
-      onInverseSurface: AppColors.gray900,
+      inverseSurface: AppColors.primary100,
+      onInverseSurface: const Color(0xFF0A1A0F),
       inversePrimary: AppColors.primary700,
     ),
     fontFamily: AppTypography.primaryFont,
@@ -513,15 +514,15 @@ class AppTheme {
       fillColor: DarkColors.surfaceContainer,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppRadius.input),
-        borderSide: const BorderSide(color: AppColors.gray700, width: 2),
+        borderSide: const BorderSide(color: Color(0xFF2E5938), width: 2),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppRadius.input),
-        borderSide: const BorderSide(color: AppColors.gray700, width: 2),
+        borderSide: const BorderSide(color: Color(0xFF2E5938), width: 2),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppRadius.input),
-        borderSide: BorderSide(color: AppColors.primary400, width: 2),
+        borderSide: BorderSide(color: AppColors.primary300, width: 2),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppRadius.input),
@@ -535,7 +536,7 @@ class AppTheme {
         horizontal: AppSpacing.lg,
         vertical: AppSpacing.md,
       ),
-      hintStyle: const TextStyle(color: AppColors.gray600),
+      hintStyle: TextStyle(color: DarkColors.textSecondary.withValues(alpha: 0.6)),
     ),
     cardTheme: CardThemeData(
       color: DarkColors.surfaceContainer,
@@ -548,10 +549,10 @@ class AppTheme {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.primary,
-        foregroundColor: AppColors.textWhite,
-        disabledBackgroundColor: AppColors.gray700,
-        disabledForegroundColor: AppColors.gray500,
+        backgroundColor: AppColors.primary600,
+        foregroundColor: Colors.white,
+        disabledBackgroundColor: const Color(0xFF1C3D24),
+        disabledForegroundColor: DarkColors.textSecondary,
         padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.xxl,
           vertical: 14,
@@ -573,8 +574,8 @@ class AppTheme {
       style: OutlinedButton.styleFrom(
         foregroundColor: DarkColors.textPrimary,
         backgroundColor: DarkColors.surfaceContainer,
-        disabledForegroundColor: AppColors.gray600,
-        side: const BorderSide(color: AppColors.gray700, width: 2),
+        disabledForegroundColor: DarkColors.textSecondary,
+        side: const BorderSide(color: Color(0xFF2E5938), width: 2),
         padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.xxl,
           vertical: 14,
@@ -587,7 +588,7 @@ class AppTheme {
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        foregroundColor: AppColors.primary300,
+        foregroundColor: AppColors.primary300,       // Light green accent
         padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.lg,
           vertical: 10,
@@ -607,20 +608,20 @@ class AppTheme {
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       backgroundColor: DarkColors.surfaceContainer,
-      selectedItemColor: AppColors.primary400,
+      selectedItemColor: AppColors.primary300,
       unselectedItemColor: DarkColors.textSecondary,
       type: BottomNavigationBarType.fixed,
       elevation: 0,
       landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
     ),
     dividerTheme: const DividerThemeData(
-      color: AppColors.gray800,
+      color: Color(0xFF1C3D24),
       thickness: 1,
       space: AppSpacing.lg,
     ),
     chipTheme: ChipThemeData(
-      backgroundColor: AppColors.gray800,
-      disabledColor: AppColors.gray900,
+      backgroundColor: const Color(0xFF1C3D24),
+      disabledColor: const Color(0xFF0F2416),
       selectedColor: AppColors.primary700,
       secondarySelectedColor: AppColors.primary900,
       labelStyle: AppTypography.bodySmall.copyWith(color: DarkColors.textPrimary),
@@ -632,18 +633,19 @@ class AppTheme {
       ),
     ),
     snackBarTheme: SnackBarThemeData(
-      backgroundColor: AppColors.gray200,
-      contentTextStyle: AppTypography.body.copyWith(color: AppColors.gray900),
-      actionTextColor: AppColors.primary700,
+      backgroundColor: const Color(0xFF1C3D24),
+      contentTextStyle: AppTypography.body.copyWith(color: DarkColors.textPrimary),
+      actionTextColor: AppColors.primary300,
     ),
   );
 }
 
-/// Dark mode color tokens — mirrors [AppColors] for dark surfaces.
+/// Dark mode color tokens — earthy green agricultural theme.
 class DarkColors {
-  static const background = Color(0xFF121212);
-  static const surface = Color(0xFF1E1E1E);
-  static const surfaceContainer = Color(0xFF2A2A2A);
-  static const textPrimary = Color(0xFFE0E0E0);
-  static const textSecondary = Color(0xFF9E9E9E);
+  static const background       = Color(0xFF0A1A0F);  // Deepest forest
+  static const surface          = Color(0xFF0F2416);  // Dark forest green
+  static const surfaceContainer = Color(0xFF16321D);  // Card / elevated surface
+  static const surfaceContainerHigh = Color(0xFF1C3D24); // Higher elevation
+  static const textPrimary      = Color(0xFFF1F8E9);  // Warm white-green
+  static const textSecondary    = Color(0xFFA5D6A7);  // Muted light green
 }
