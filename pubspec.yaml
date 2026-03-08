@@ -82,9 +82,10 @@ dependencies:
   hive: ^2.2.3                         # Core Hive DB
   hive_flutter: ^1.1.0                 # Hive Flutter bindings
   connectivity_plus: ^7.0.0            # Network state monitoring
+  image: ^4.8.0                        # Image manipulation for TFLite
   
   # TensorFlow Lite for offline ML
-  tflite_flutter: ^0.10.4             # TensorFlow Lite for Flutter
+  tflite_flutter: ^0.12.1             # TensorFlow Lite for Flutter
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
@@ -119,6 +120,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/models/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

@@ -4,6 +4,8 @@ import 'package:verd/data/services/ai_routing_service.dart';
 import 'package:verd/data/services/local_ml_service.dart';
 import 'package:verd/providers/auth_provider.dart'; // To get firestore/storage providers
 
+import 'package:verd/data/services/tflite_ai_service.dart';
+
 // AI service provider
 final aiServiceProvider = Provider<AIService>((ref) {
   return AIService(
@@ -12,8 +14,12 @@ final aiServiceProvider = Provider<AIService>((ref) {
   );
 });
 
+final tfliteAIServiceProvider = Provider<TFLiteAIService>((ref) {
+  return TFLiteAIService();
+});
+
 final localMLServiceProvider = Provider<LocalMLService>((ref) {
-  return LocalMLService();
+  return LocalMLService(tfliteService: ref.watch(tfliteAIServiceProvider));
 });
 
 final aiRoutingServiceProvider = Provider<AIRoutingService>((ref) {

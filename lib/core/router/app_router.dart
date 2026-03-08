@@ -48,11 +48,6 @@ class RouterNotifier extends ChangeNotifier {
       (_, _) => notifyListeners(),
     );
   }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
 }
 
 final routerNotifierProvider = Provider<RouterNotifier>((ref) {

@@ -1,11 +1,14 @@
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 
-/// Simulates a local Machine Learning model for offline crop analysis.
-/// 
-/// Once the `.tflite` model is delivered by the ML team, this class 
-/// will be updated to use `tflite_flutter` to run on-device inference.
+import 'package:verd/data/services/tflite_ai_service.dart';
+
+/// Routes offline requests to the Local TFLite model.
 class LocalMLService {
+  final TFLiteAIService _tfliteService;
+
+  LocalMLService({required TFLiteAIService tfliteService}) : _tfliteService = tfliteService;
+
   /// Analyzes a crop image locally (offline).
   /// 
   /// Returns a JSON-like map containing the structured analysis results.
@@ -19,24 +22,26 @@ class LocalMLService {
       }
     }
 
-    // TODO: Implement actual TFLite inference here when the model is ready.
+    final result = await _tfliteService.analyzeImage(image);
     
-    // Simulate processing time 
-    await Future.delayed(const Duration(seconds: 2));
+    String cropType = 'Unknown';
+    if (result['disease'] != null) {
+        cropType = result['disease'].split(' ').first;
+    }
 
     return {
       'status': 'success',
-      'engine': 'local_tflite_mock',
+      'engine': 'local_tflite',
       'timestamp': DateTime.now().toIso8601String(),
       'analysis': {
-        'cropType': 'Unknown Crop (Offline Mode)',
-        'healthStatus': 'Pending Verification',
-        'confidence': 0.85,
-        'diseases': [
+        'cropType': cropType,
+        'healthStatus': result['status'],
+        'confidence': (result['confidence'] as int).toDouble() / 100.0,
+        'diseases': result['status'] == 'Healthy' ? [] : [
           {
-            'name': 'Possible Leaf Blight',
-            'severity': 'Moderate',
-            'treatment': 'Ensure proper watering and isolate affected leaves. Connect to internet for detailed Gemini analysis.'
+            'name': result['disease'] ?? 'Unknown Issue',
+            'severity': result['status'],
+            'treatment': result['treatment']
           }
         ]
       }
