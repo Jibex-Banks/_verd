@@ -92,7 +92,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Sign-in link sent to $email! Check your inbox.'),
+            content: Text(AppLocalizations.of(context)!.sign_in_link_sent(email)),
             backgroundColor: Colors.green,
             behavior: SnackBarBehavior.floating,
           ),
@@ -135,7 +135,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 const SizedBox(height: AppSpacing.xl),
 
                 Text(
-                  'welcome',
+                  AppLocalizations.of(context)!.login_welcome,
                   style: AppTypography.h2.copyWith(
                     fontWeight: FontWeight.bold,
                     color: cs.onSurface,
@@ -144,7 +144,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 Text(
-                  'login',
+                  AppLocalizations.of(context)!.login,
                   style: AppTypography.body.copyWith(
                     color: cs.onSurfaceVariant,
                   ),
@@ -183,7 +183,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       child: Text(
-                        'forgot_password',
+                        AppLocalizations.of(context)!.forgot_password,
                         style: AppTypography.bodySmall.copyWith(
                           color: AppColors.primary,
                           fontWeight: FontWeight.w500,
@@ -195,7 +195,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 const SizedBox(height: AppSpacing.xl),
 
                 AppButton(
-                  text: _isLoading ? 'loading' : 'sign_in'.toUpperCase(),
+                  text: _isLoading ? AppLocalizations.of(context)!.loading : AppLocalizations.of(context)!.sign_in.toUpperCase(),
                   onPressed: _isLoading || _isGoogleLoading ? null : _onLogin,
                   isLoading: _isLoading,
                 ),
@@ -216,7 +216,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                 // ── Google Sign In Button ──
                 AppButton(
-                  text: _isGoogleLoading ? 'loading'.toUpperCase() : 'google_sign_in'.toUpperCase(),
+                  text: _isGoogleLoading ? AppLocalizations.of(context)!.loading.toUpperCase() : AppLocalizations.of(context)!.google_sign_in.toUpperCase(),
                   onPressed: _isLoading || _isGoogleLoading ? null : _onGoogleSignIn,
                   isLoading: _isGoogleLoading,
                   variant: AppButtonVariant.outlined,
@@ -228,15 +228,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '${'dont_have_account'.split('?').first}? ',
+                      AppLocalizations.of(context)!.dont_have_account,
                       style: AppTypography.bodySmall.copyWith(
                         color: cs.onSurfaceVariant,
                       ),
                     ),
+                    const SizedBox(width: 4),
                     GestureDetector(
                       onTap: () => context.push('/signup'),
                       child: Text(
-                        'sign_up',
+                        AppLocalizations.of(context)!.sign_up,
                         style: AppTypography.bodySmall.copyWith(
                           color: AppColors.primary,
                           fontWeight: FontWeight.w600,

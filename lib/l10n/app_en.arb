@@ -101,6 +101,7 @@
   "insights_error": "Insights Error",
   "irrigation": "Irrigation",
   "irrigation_desc_short": "Water tips",
+  "language": "Language",
   "keep_editing": "Keep Editing",
   "learning_center_desc_short": "Articles & tutorials",
   "learning_center_title": "Learning Center",
@@ -237,5 +238,35 @@
   "warning": "Warning",
   "critical": "Critical",
   "home": "Home",
-  "scan": "Scan"
+  "scan": "Scan",
+  "gemini_analysis": "Cloud Analysis",
+  "care_guide": "Care Guide",
+  "scanned_at": "Scanned: {date}",
+  "@scanned_at": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "save_to_history_coming_soon": "Save to history coming soon",
+  "sign_in_link_sent": "Sign-in link sent to {email}! Check your inbox.",
+  "@sign_in_link_sent": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "login_welcome": "Welcome",
+  "login": "Log in or sign up with email link",
+  "forgot_password": "Forgot password?",
+  "loading": "Loading",
+  "google_sign_in": "Sign in with Google",
+  "dont_have_account": "Don't have an account?",
+  "sign_up": "Sign up",
+  "already_have_account": "Already have an account?",
+  "sign_in": "Sign in",
+  "create_account": "Create account",
+  "create_profile": "Create your profile"
 }

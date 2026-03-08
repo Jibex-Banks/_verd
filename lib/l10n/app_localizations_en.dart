@@ -324,6 +324,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get irrigation_desc_short => 'Water tips';
 
   @override
+  String get language => 'Language';
+
+  @override
   String get keep_editing => 'Keep Editing';
 
   @override
@@ -755,4 +758,56 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scan => 'Scan';
+
+  @override
+  String get gemini_analysis => 'Cloud Analysis';
+
+  @override
+  String get care_guide => 'Care Guide';
+
+  @override
+  String scanned_at(String date) {
+    return 'Scanned: $date';
+  }
+
+  @override
+  String get save_to_history_coming_soon => 'Save to history coming soon';
+
+  @override
+  String sign_in_link_sent(String email) {
+    return 'Sign-in link sent to $email! Check your inbox.';
+  }
+
+  @override
+  String get login_welcome => 'Welcome';
+
+  @override
+  String get login => 'Log in or sign up with email link';
+
+  @override
+  String get forgot_password => 'Forgot password?';
+
+  @override
+  String get loading => 'Loading';
+
+  @override
+  String get google_sign_in => 'Sign in with Google';
+
+  @override
+  String get dont_have_account => 'Don\'t have an account?';
+
+  @override
+  String get sign_up => 'Sign up';
+
+  @override
+  String get already_have_account => 'Already have an account?';
+
+  @override
+  String get sign_in => 'Sign in';
+
+  @override
+  String get create_account => 'Create account';
+
+  @override
+  String get create_profile => 'Create your profile';
 }

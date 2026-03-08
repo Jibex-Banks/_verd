@@ -139,7 +139,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     SvgPicture.asset(AppAssets.logoSvg, height: 48),
                     const SizedBox(height: AppSpacing.lg),
                     Text(
-                      'create_account',
+                      AppLocalizations.of(context)!.create_account,
                       style: AppTypography.h2.copyWith(
                         fontWeight: FontWeight.bold,
                         color: cs.onSurface,
@@ -147,7 +147,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     ),
                     const SizedBox(height: AppSpacing.xs),
                     Text(
-                      'create_profile',
+                      AppLocalizations.of(context)!.create_profile,
                       style: AppTypography.body.copyWith(
                         color: cs.onSurfaceVariant,
                       ),
@@ -210,8 +210,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               ),
               const SizedBox(height: AppSpacing.lg),
 
-              AppTextField.password(label: 'confirm_password',
-                hint: 'confirm_password',
+              AppTextField.password(label: AppLocalizations.of(context)!.confirm_new_password,
+                hint: AppLocalizations.of(context)!.confirm_new_password,
                 controller: _confirmPasswordController,
                 textInputAction: TextInputAction.done,
                 onSubmitted: (_) => _onSignUp(),
@@ -219,7 +219,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               const SizedBox(height: AppSpacing.xxl),
 
               AppButton(
-                text: _isLoading ? 'loading' : 'sign_up'.toUpperCase(),
+                text: _isLoading ? AppLocalizations.of(context)!.loading : AppLocalizations.of(context)!.sign_up.toUpperCase(),
                 onPressed: _isLoading || _isGoogleLoading ? null : _onSignUp,
                 isLoading: _isLoading,
               ),
@@ -240,7 +240,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
               // ── Google Sign Up Button ──
               AppButton(
-                text: _isGoogleLoading ? 'loading' : 'google_sign_in'.toUpperCase(),
+                text: _isGoogleLoading ? AppLocalizations.of(context)!.loading.toUpperCase() : AppLocalizations.of(context)!.google_sign_in.toUpperCase(),
                 onPressed: _isLoading || _isGoogleLoading ? null : _onGoogleSignUp,
                 isLoading: _isGoogleLoading,
                 variant: AppButtonVariant.outlined,
@@ -248,18 +248,19 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               ),
               const SizedBox(height: AppSpacing.xxl),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '${'already_have_account'.split('?').first}? ',
-                    style: AppTypography.bodySmall.copyWith(color: cs.onSurfaceVariant),
-                  ),
-                  GestureDetector(
-                    onTap: () => context.pop(),
-                    child: Text(
-                      'login',
-                      style: AppTypography.bodySmall.copyWith(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!.already_have_account,
+                      style: AppTypography.bodySmall.copyWith(color: cs.onSurfaceVariant),
+                    ),
+                    const SizedBox(width: 4),
+                    GestureDetector(
+                      onTap: () => context.pop(),
+                      child: Text(
+                        AppLocalizations.of(context)!.login,
+                        style: AppTypography.bodySmall.copyWith(
                         color: AppColors.primary,
                         fontWeight: FontWeight.w600,
                       ),

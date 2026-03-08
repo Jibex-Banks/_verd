@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:verd/core/constants/app_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:verd/core/providers/locale_provider.dart';
+import 'package:verd/l10n/app_localizations.dart';
 
 class LanguageScreen extends ConsumerStatefulWidget {
   const LanguageScreen({super.key});
@@ -41,12 +42,12 @@ class _LanguageScreenState extends ConsumerState<LanguageScreen> {
             context.pop();
           },
           child: Text(
-            'Back',
+            AppLocalizations.of(context)!.back,
             style: AppTypography.buttonSmall.copyWith(color: AppColors.primary),
           ),
         ),
         title: Text(
-          'language',
+          AppLocalizations.of(context)!.language,
           style: AppTypography.h4.copyWith(color: theme.colorScheme.onSurface),
         ),
         centerTitle: true,
@@ -58,7 +59,7 @@ class _LanguageScreenState extends ConsumerState<LanguageScreen> {
               }
             },
             child: Text(
-              'Done',
+              AppLocalizations.of(context)!.done,
               style: AppTypography.buttonSmall.copyWith(color: AppColors.primary),
             ),
           ),

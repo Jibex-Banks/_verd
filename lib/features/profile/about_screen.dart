@@ -60,7 +60,7 @@ class AboutScreen extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(
-              'VERD',
+              'VERD', // Brand name, not translated
               style: AppTypography.h1.copyWith(
                 fontWeight: FontWeight.w800,
                 color: theme.colorScheme.onSurface,
@@ -68,7 +68,7 @@ class AboutScreen extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              'Version 1.0.0',
+              AppLocalizations.of(context)!.version,
               style: AppTypography.bodySmall.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),

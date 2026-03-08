@@ -161,29 +161,29 @@ class AppLocalizationsEs extends AppLocalizations {
   String get email_hint => 'su@email.com';
 
   @override
-  String get email_me_link => 'Email me a link';
+  String get email_me_link => 'Envíame un enlace';
 
   @override
-  String get email_notifications => 'Email Notifications';
+  String get email_notifications => 'Notificaciones por correo';
 
   @override
-  String get email_notifications_desc => 'Receive updates via email';
+  String get email_notifications_desc => 'Recibir actualizaciones por correo';
 
   @override
-  String get email_support => 'Email Support';
+  String get email_support => 'Soporte por correo';
 
   @override
-  String get enter_current_password => 'Enter current password';
+  String get enter_current_password => 'Ingrese la contraseña actual';
 
   @override
-  String get enter_email_error => 'Please enter your email address.';
+  String get enter_email_error => 'Por favor ingrese su dirección de correo.';
 
   @override
   String get enter_email_link_error =>
-      'Please enter your email to receive a sign-in link.';
+      'Por favor ingrese su correo para recibir un enlace de acceso.';
 
   @override
-  String get enter_new_password => 'Enter new password';
+  String get enter_new_password => 'Ingrese la nueva contraseña';
 
   @override
   String get enter_password_hint => 'Ingrese su contraseña';
@@ -195,79 +195,80 @@ class AppLocalizationsEs extends AppLocalizations {
   String get error_generic_title => 'Algo salió mal';
 
   @override
-  String get explore_categories => 'Explore Categories';
+  String get explore_categories => 'Explorar categorías';
 
   @override
   String get faq_accuracy_a =>
-      'Our AI model has been trained on thousands of crop images and maintains a 95% accuracy rate for common crop diseases.';
+      'Nuestro modelo de IA ha sido entrenado con miles de imágenes de cultivos y mantiene una precisión del 95% en enfermedades comunes.';
 
   @override
-  String get faq_accuracy_q => 'How accurate is the disease detection?';
+  String get faq_accuracy_q =>
+      '¿Qué precisión tiene la detección de enfermedades?';
 
   @override
   String get faq_offline_a =>
-      'Yes! Enable offline mode in settings. Previously downloaded disease data will be available for scanning.';
+      '¡Sí! Active el modo sin conexión en ajustes. Los datos de enfermedades descargados estarán disponibles para escanear.';
 
   @override
-  String get faq_offline_q => 'Can I use the app offline?';
+  String get faq_offline_q => '¿Puedo usar la app sin conexión?';
 
   @override
   String get faq_scan_a =>
-      'Go to the Scan tab, position your crop within the frame, and tap the camera button. The app will analyze the image and provide results.';
+      'Vaya a la pestaña Escanear, coloque su cultivo en el marco y pulse el botón de la cámara. La app analizará la imagen y dará los resultados.';
 
   @override
-  String get faq_scan_q => 'How do I scan a crop?';
+  String get faq_scan_q => '¿Cómo escaneo un cultivo?';
 
   @override
-  String get faqs => 'Frequently Asked Questions';
+  String get faqs => 'Preguntas frecuentes';
 
   @override
-  String get farm_location => 'Farm Location';
+  String get farm_location => 'Ubicación de la granja';
 
   @override
-  String get farm_location_hint => 'e.g. Kumasi, Ghana';
+  String get farm_location_hint => 'ej. Kumasi, Ghana';
 
   @override
-  String get farmer => 'Farmer';
+  String get farmer => 'Agricultor';
 
   @override
-  String get farming_insights => 'Farming Insights';
+  String get farming_insights => 'Análisis agrícolas';
 
   @override
-  String get farming_overview => 'Your Farming Overview';
+  String get farming_overview => 'Resumen de su explotación';
 
   @override
-  String get feature_ai => 'AI-powered crop disease detection';
+  String get feature_ai => 'Detección de enfermedades de cultivos con IA';
 
   @override
-  String get feature_history => 'History tracking and analytics';
+  String get feature_history => 'Historial y análisis';
 
   @override
-  String get feature_learning => 'Comprehensive learning resources';
+  String get feature_learning => 'Recursos de aprendizaje';
 
   @override
-  String get feature_offline => 'Offline mode for remote areas';
+  String get feature_offline => 'Modo sin conexión para zonas remotas';
 
   @override
-  String get features => 'Features';
+  String get features => 'Características';
 
   @override
-  String get fill_all_fields => 'Please fill in all fields.';
+  String get fill_all_fields => 'Por favor complete todos los campos.';
 
   @override
-  String get filter_by_status => 'Filter by Status';
+  String get filter_by_status => 'Filtrar por estado';
 
   @override
-  String get full_name => 'Full Name';
+  String get full_name => 'Nombre completo';
 
   @override
-  String get full_name_hint => 'Your full name';
+  String get full_name_hint => 'Su nombre completo';
 
   @override
-  String get gallery => 'Gallery';
+  String get gallery => 'Galería';
 
   @override
-  String get gallery_desc_short => 'Browse saved images';
+  String get gallery_desc_short => 'Ver imágenes guardadas';
 
   @override
   String get get_insights_desc =>
@@ -277,7 +278,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get get_insights_title => 'Obtenga análisis';
 
   @override
-  String get get_started => 'GET STARTED';
+  String get get_started => 'EMPEZAR';
 
   @override
   String get go_back => 'Volver';
@@ -287,61 +288,64 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get google_sign_up_failed =>
-      'Google Sign-Up failed. Please try again.';
+      'Registro con Google fallido. Por favor inténtelo de nuevo.';
 
   @override
-  String get guide_diseases => 'Enfermedades';
+  String get guide_diseases => 'Guía de enfermedades de cultivos';
 
   @override
-  String get guide_featured => 'Destacado';
+  String get guide_featured => 'Identificar el gusano cogollero';
 
   @override
-  String get guide_pests => 'Plagas';
+  String get guide_pests => 'Conceptos básicos de plagas';
 
   @override
-  String get guide_soil => 'Suelo';
+  String get guide_soil => 'Mejorar la salud del suelo';
 
   @override
-  String get guide_water => 'Agua';
+  String get guide_water => 'Riego inteligente';
 
   @override
-  String get health_status => 'Health Status';
+  String get health_status => 'Estado de salud';
 
   @override
   String get help_support => 'Ayuda y soporte';
 
   @override
-  String get helpful_resources => 'Helpful Resources';
+  String get helpful_resources => 'Recursos útiles';
 
   @override
-  String get insights_error => 'Insights Error';
+  String get insights_error => 'Error de análisis';
 
   @override
-  String get irrigation => 'Irrigation';
+  String get irrigation => 'Riego';
 
   @override
-  String get irrigation_desc_short => 'Water tips';
+  String get irrigation_desc_short => 'Consejos de agua';
 
   @override
-  String get keep_editing => 'Keep Editing';
+  String get language => 'Idioma';
 
   @override
-  String get learning_center_desc_short => 'Articles & tutorials';
+  String get keep_editing => 'Seguir editando';
 
   @override
-  String get learning_center_title => 'Learning Center';
+  String get learning_center_desc_short => 'Artículos y tutoriales';
 
   @override
-  String get learning_resources => 'Learning Resources';
+  String get learning_center_title => 'Centro de aprendizaje';
+
+  @override
+  String get learning_resources => 'Recursos de aprendizaje';
 
   @override
   String get learning_topic => 'Tema de aprendizaje';
 
   @override
-  String get learning_updates => 'Learning Updates';
+  String get learning_updates => 'Actualizaciones de aprendizaje';
 
   @override
-  String get learning_updates_desc => 'New articles and learning tips';
+  String get learning_updates_desc => 'Nuevos artículos y consejos';
 
   @override
   String get light => 'Claro';
@@ -350,239 +354,249 @@ class AppLocalizationsEs extends AppLocalizations {
   String get listen_guide => 'Escuchar la guía';
 
   @override
-  String get live_chat => 'Live Chat';
+  String get live_chat => 'Chat en vivo';
 
   @override
-  String get live_chat_desc => 'Chat with our team';
+  String get live_chat_desc => 'Chatee con nuestro equipo';
 
   @override
-  String get local_analysis => 'Local Analysis';
+  String get local_analysis => 'Análisis local';
 
   @override
-  String get logout => 'Logout';
+  String get logout => 'Cerrar sesión';
 
   @override
   String get logout_desc =>
-      'You will need to sign in again to access your account.';
+      'Tendrá que iniciar sesión de nuevo para acceder a su cuenta.';
 
   @override
-  String get logout_q => 'Log Out?';
+  String get logout_q => '¿Cerrar sesión?';
 
   @override
   String get mission_desc =>
-      'VERD is dedicated to empowering farmers and agricultural professionals with cutting-edge AI technology to identify crop diseases early and improve crop yields. Our mission is to make agricultural expertise accessible to everyone.';
+      'VERD se dedica a empoderar a agricultores y profesionales con tecnología IA para identificar enfermedades de cultivos a tiempo y mejorar rendimientos. Nuestra misión es hacer la experiencia agrícola accesible para todos.';
 
   @override
-  String get my_profile => 'My Profile';
+  String get my_profile => 'Mi perfil';
 
   @override
-  String get name_empty_error => 'Name cannot be empty';
+  String get name_empty_error => 'El nombre no puede estar vacío';
 
   @override
   String get new_password => 'Nueva contraseña';
 
   @override
-  String get new_photo_selected => 'New photo selected — tap Save to apply';
+  String get new_photo_selected =>
+      'Nueva foto seleccionada — pulse Guardar para aplicar';
 
   @override
-  String get new_scan => 'New Scan';
+  String get new_scan => 'Nuevo escaneo';
 
   @override
   String get next => 'Siguiente';
 
   @override
-  String get no_insights_yet => 'No insights available yet';
+  String get no_insights_yet => 'Aún no hay análisis disponibles';
 
   @override
   String get no_internet => 'Sin Internet';
 
   @override
-  String get no_internet_desc => 'Verifique su conexión e inténtelo de nuevo.';
+  String get no_internet_desc =>
+      'Compruebe la configuración de red\ny inténtelo de nuevo.';
 
   @override
-  String get notifications => 'Notifications';
+  String get notifications => 'Notificaciones';
 
   @override
   String get open_settings => 'Abrir configuración';
 
   @override
-  String get our_mission => 'Our Mission';
+  String get our_mission => 'Nuestra misión';
 
   @override
   String get password => 'Contraseña';
 
   @override
-  String get password_requirements => 'Password Requirements:';
+  String get password_requirements => 'Requisitos de contraseña:';
 
   @override
   String get password_reset_sent =>
-      'Password reset email sent! Check your inbox.';
+      '¡Correo de restablecimiento enviado! Revise su bandeja de entrada.';
 
   @override
-  String get password_too_short => 'Password must be at least 6 characters.';
+  String get password_too_short =>
+      'La contraseña debe tener al menos 6 caracteres.';
 
   @override
-  String get password_update_success => 'Password updated successfully';
+  String get password_update_success => 'Contraseña actualizada correctamente';
 
   @override
-  String get passwords_do_not_match => 'Passwords do not match.';
+  String get passwords_do_not_match => 'Las contraseñas no coinciden.';
 
   @override
-  String get perm_camera_benefit1 => 'Escanear problemas de cultivos';
+  String get perm_camera_benefit1 =>
+      'Tomar fotos de cultivos para análisis al instante';
 
   @override
-  String get perm_camera_benefit2 => 'Capturar fotos de alta resolución';
+  String get perm_camera_benefit2 => 'Identificar enfermedades en tiempo real';
 
   @override
-  String get perm_camera_benefit3 => 'Análisis en tiempo real';
+  String get perm_camera_benefit3 => 'Guardar historial de escaneos con fotos';
 
   @override
-  String get perm_camera_btn => 'Permitir acceso a cámara';
+  String get perm_camera_btn => 'Permitir acceso a la cámara';
 
   @override
   String get perm_camera_desc =>
-      'VERD necesita acceder a su cámara para escanear y analizar sus cultivos';
+      'VERD necesita acceso a su cámara para escanear cultivos e identificar enfermedades.';
 
   @override
-  String get perm_camera_details => 'Solo se usa para el escaneo de cultivos';
+  String get perm_camera_details =>
+      'Sus fotos se procesan de forma segura y no se comparten sin su permiso.';
 
   @override
-  String get perm_camera_title => 'Acceso a la cámara';
+  String get perm_camera_title => 'Acceso a la cámara requerido';
 
   @override
-  String get perm_location_benefit1 => 'Alertas meteorológicas locales';
+  String get perm_location_benefit1 => 'Alertas de enfermedades regionales';
 
   @override
-  String get perm_location_benefit2 => 'Recomendaciones basadas en la región';
+  String get perm_location_benefit2 => 'Recomendaciones según el clima';
 
   @override
-  String get perm_location_benefit3 => 'Mapa de granja preciso';
+  String get perm_location_benefit3 => 'Encontrar recursos agrícolas cercanos';
 
   @override
-  String get perm_location_btn => 'Permitir ubicación';
+  String get perm_location_btn => 'Permitir acceso a la ubicación';
 
   @override
   String get perm_location_desc =>
-      'VERD usa su ubicación para proporcionar información agrícola localizada';
+      'Active la ubicación para alertas de enfermedades y actualizaciones meteorológicas localizadas.';
 
   @override
-  String get perm_location_details => 'Solo ubicación aproximada';
+  String get perm_location_details =>
+      'Sus datos de ubicación solo se usan para ofrecer información relevante y no se comparten.';
 
   @override
   String get perm_location_title => 'Acceso a la ubicación';
 
   @override
-  String get perm_notif_benefit1 => 'Alertas tempranas de enfermedades';
+  String get perm_notif_benefit1 => 'Alertas de escaneo completado';
 
   @override
-  String get perm_notif_benefit2 => 'Recordatorios de riego';
+  String get perm_notif_benefit2 => 'Avisos de brotes de enfermedades';
 
   @override
-  String get perm_notif_benefit3 => 'Actualizaciones meteorológicas';
+  String get perm_notif_benefit3 => 'Informes semanales de salud de cultivos';
 
   @override
   String get perm_notif_btn => 'Activar notificaciones';
 
   @override
   String get perm_notif_desc =>
-      'Manténgase informado sobre actualizaciones importantes de su granja';
+      'Reciba notificaciones sobre brotes, resultados de escaneo y actualizaciones agrícolas importantes.';
 
   @override
-  String get perm_notif_details => 'Puede desactivar en cualquier momento';
+  String get perm_notif_details =>
+      'Puede personalizar las preferencias de notificación en cualquier momento en ajustes.';
 
   @override
-  String get perm_notif_title => 'Notificaciones';
+  String get perm_notif_title => 'Manténgase informado';
 
   @override
   String get permission_required => 'Permiso requerido';
 
   @override
   String get permission_required_desc =>
-      'This feature requires a permission that has been denied. Please enable it in your device settings.';
+      'Esta función requiere un permiso que ha sido denegado. Por favor actívelo en la configuración del dispositivo.';
 
   @override
-  String get personalized_insights => 'Personalized Insights';
+  String get personalized_insights => 'Análisis personalizados';
 
   @override
-  String get personlized_recommendations => 'Personalized Recommendations';
+  String get personlized_recommendations => 'Recomendaciones personalizadas';
 
   @override
-  String get pest_control => 'Pest Control';
+  String get pest_control => 'Control de plagas';
 
   @override
-  String get pest_control_desc_short => 'Identify pests';
+  String get pest_control_desc_short => 'Identificar plagas';
 
   @override
   String get phone_hint => '+1 234 567 8900';
 
   @override
-  String get phone_number => 'Phone Number';
+  String get phone_number => 'Número de teléfono';
 
   @override
   String get please_log_in => 'Por favor inicie sesión';
 
   @override
-  String get please_log_in_scanner => 'Please log in to use the scanner';
+  String get please_log_in_scanner =>
+      'Por favor inicie sesión para usar el escáner';
 
   @override
-  String get popular_topics => 'Popular Topics';
+  String get popular_topics => 'Temas populares';
 
   @override
-  String get position_crop_instruction => 'Position crop within frame';
+  String get position_crop_instruction => 'Coloque el cultivo dentro del marco';
 
   @override
-  String get preferences_support => 'Preferences & Support';
+  String get preferences_support => 'Preferencias y soporte';
 
   @override
   String get profile => 'Perfil';
 
   @override
-  String get profile_photo_selected => 'Profile photo selected';
+  String get profile_photo_selected => 'Foto de perfil seleccionada';
 
   @override
   String get profile_update_error =>
-      'Failed to update profile. Please try again.';
+      'Error al actualizar el perfil. Por favor inténtelo de nuevo.';
 
   @override
-  String get profile_update_success => 'Profile updated successfully';
+  String get profile_update_success => 'Perfil actualizado correctamente';
 
   @override
-  String get push_notifications => 'Push Notifications';
+  String get push_notifications => 'Notificaciones push';
 
   @override
-  String get push_notifications_desc => 'Enable or disable push notifications';
+  String get push_notifications_desc =>
+      'Activar o desactivar notificaciones push';
 
   @override
-  String get pwd_rule_case => 'Contains uppercase and lowercase letters';
+  String get pwd_rule_case => 'Contiene mayúsculas y minúsculas';
 
   @override
-  String get pwd_rule_length => 'At least 8 characters long';
+  String get pwd_rule_length => 'Al menos 8 caracteres';
 
   @override
-  String get pwd_rule_number => 'Contains at least one number';
+  String get pwd_rule_number => 'Contiene al menos un número';
 
   @override
-  String get pwd_rule_special => 'Contains at least one special character';
+  String get pwd_rule_special => 'Contiene al menos un carácter especial';
 
   @override
-  String get quick_actions => 'Quick Actions';
+  String get quick_actions => 'Acciones rápidas';
 
   @override
-  String get quick_topics => 'Quick Topics';
+  String get quick_topics => 'Temas rápidos';
 
   @override
   String get rec_diversify =>
-      'Try diversifying your crops for better soil health';
+      'Diversifique sus cultivos para mejorar la salud del suelo';
 
   @override
-  String get rec_document => 'Document treatments to track effectiveness';
+  String get rec_document =>
+      'Documente los tratamientos para seguir la eficacia';
 
   @override
   String get rec_scan_regularly =>
-      'Continue scanning regularly to build better insights';
+      'Siga escaneando con regularidad para mejores análisis';
 
   @override
-  String get recommendations => 'Recommendations';
+  String get recommendations => 'Recomendaciones';
 
   @override
   String get retry => 'Reintentar';
@@ -591,13 +605,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get save => 'Guardar';
 
   @override
-  String get save_result => 'Save Result';
+  String get save_result => 'Guardar resultado';
 
   @override
-  String get scan_crop => 'Scan Crop';
+  String get scan_crop => 'Escanear cultivo';
 
   @override
-  String get scan_crop_desc_short => 'Identify diseases instantly';
+  String get scan_crop_desc_short => 'Identificar enfermedades al instante';
 
   @override
   String get scan_crops_desc =>
@@ -610,19 +624,20 @@ class AppLocalizationsEs extends AppLocalizations {
   String get scan_history => 'Historial de escaneos';
 
   @override
-  String get scan_results => 'Scan Results';
+  String get scan_results => 'Resultados del escaneo';
 
   @override
-  String get scan_results_desc => 'Get notified when your scan is complete';
+  String get scan_results_desc => 'Reciba aviso cuando su escaneo esté listo';
 
   @override
-  String get search_articles => 'Search Articles';
+  String get search_articles => 'Buscar artículos';
 
   @override
   String get search_hint => 'Buscar...';
 
   @override
-  String get send_link_failed => 'Failed to send link. Please try again.';
+  String get send_link_failed =>
+      'Error al enviar el enlace. Por favor inténtelo de nuevo.';
 
   @override
   String get server_error => 'Error del servidor';
@@ -632,88 +647,89 @@ class AppLocalizationsEs extends AppLocalizations {
       'Nuestros servidores tienen problemas. Por favor inténtelo más tarde.';
 
   @override
-  String get share_coming_soon => 'Share functionality coming soon';
+  String get share_coming_soon => 'Compartir próximamente';
 
   @override
   String get skip => 'Omitir';
 
   @override
-  String get smart_companion => 'Your smart agricultural companion';
+  String get smart_companion => 'Su compañero agrícola inteligente';
 
   @override
-  String get soil_health => 'Soil Health';
+  String get soil_health => 'Salud del suelo';
 
   @override
-  String get soil_health_desc_short => 'Maintain soil';
+  String get soil_health_desc_short => 'Mantener el suelo';
 
   @override
-  String get splash_powered => 'powered by an offline AI';
+  String get splash_powered => 'impulsado por una IA sin conexión';
 
   @override
-  String get splash_tagline => 'CLARITY FOR YOUR CROPS';
+  String get splash_tagline => 'CLARIDAD PARA SUS CULTIVOS';
 
   @override
-  String get start_scanning => 'Start Scanning';
+  String get start_scanning => 'Empezar a escanear';
 
   @override
   String get start_scanning_desc =>
-      'Start scanning crops to get personalized insights';
+      'Escanee cultivos para obtener análisis personalizados';
 
   @override
-  String get stay => 'Stay';
+  String get stay => 'Quedarse';
 
   @override
   String get system => 'Sistema';
 
   @override
-  String get system_alerts => 'System Alerts';
+  String get system_alerts => 'Alertas del sistema';
 
   @override
-  String get system_alerts_desc => 'Important system and security updates';
+  String get system_alerts_desc =>
+      'Actualizaciones importantes del sistema y seguridad';
 
   @override
   String get take_action_desc =>
-      'Reciba tratamientos personalizados y planes de prevención';
+      'Obtenga pasos claros para proteger su granja y producir más.';
 
   @override
-  String get take_action_title => 'Tome acción';
+  String get take_action_title => 'Actuar con inteligencia';
 
   @override
-  String get terms_coming_soon => 'Terms of Service coming soon';
+  String get terms_coming_soon => 'Términos de servicio próximamente';
 
   @override
   String get terms_of_service => 'Términos de servicio';
 
   @override
-  String get tip_of_the_day => 'TIP OF THE DAY';
+  String get tip_of_the_day => 'CONSEJO DEL DÍA';
 
   @override
-  String get token_copied => 'Token copied to clipboard';
+  String get token_copied => 'Token copiado al portapapeles';
 
   @override
-  String get topics => 'Topics';
+  String get topics => 'Temas';
 
   @override
-  String get total_scans => 'Total Scans';
+  String get total_scans => 'Total de escaneos';
 
   @override
-  String get treatment_guide => 'Treatment Guide';
+  String get treatment_guide => 'Guía de tratamiento';
 
   @override
   String get unexpected_error =>
-      'An unexpected error occurred. Please try again.';
+      'Ha ocurrido un error inesperado. Por favor inténtelo de nuevo.';
 
   @override
-  String get unknown => 'Unknown';
+  String get unknown => 'Desconocido';
 
   @override
-  String get upload_coming_soon => 'Upload coming soon';
+  String get upload_coming_soon => 'Subida próximamente';
 
   @override
-  String get version => 'Version 1.0.0';
+  String get version => 'Versión 1.0.0';
 
   @override
-  String get view => 'View';
+  String get view => 'Ver';
 
   @override
   String get view_history => 'Ver historial';
@@ -726,11 +742,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get password_reset_sent_desc =>
-      'Hemos enviado un enlace de restablecimiento a su correo. Revise su bandeja de entrada.';
+      'Hemos enviado un enlace de restablecimiento a su correo. Revise su bandeja de entrada y siga las instrucciones.';
 
   @override
   String get password_reset_instructions =>
-      '¡No se preocupe! Ingrese su correo y le enviaremos instrucciones de restablecimiento.';
+      '¡Tranquilo! Ingrese su correo y le enviaremos instrucciones de restablecimiento.';
 
   @override
   String get filter_all => 'Filtrar todo';
@@ -749,4 +765,56 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get scan => 'Escanear';
+
+  @override
+  String get gemini_analysis => 'Análisis en la nube';
+
+  @override
+  String get care_guide => 'Guía de cuidados';
+
+  @override
+  String scanned_at(String date) {
+    return 'Escaneado: $date';
+  }
+
+  @override
+  String get save_to_history_coming_soon => 'Guardar en historial próximamente';
+
+  @override
+  String sign_in_link_sent(String email) {
+    return '¡Enlace de acceso enviado a $email! Revise su bandeja de entrada.';
+  }
+
+  @override
+  String get login_welcome => 'Bienvenido';
+
+  @override
+  String get login => 'Iniciar sesión o registrarse con enlace por correo';
+
+  @override
+  String get forgot_password => '¿Olvidó su contraseña?';
+
+  @override
+  String get loading => 'Cargando';
+
+  @override
+  String get google_sign_in => 'Iniciar sesión con Google';
+
+  @override
+  String get dont_have_account => '¿No tiene una cuenta?';
+
+  @override
+  String get sign_up => 'Registrarse';
+
+  @override
+  String get already_have_account => '¿Ya tiene una cuenta?';
+
+  @override
+  String get sign_in => 'Iniciar sesión';
+
+  @override
+  String get create_account => 'Crear cuenta';
+
+  @override
+  String get create_profile => 'Cree su perfil';
 }

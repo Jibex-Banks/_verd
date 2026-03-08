@@ -97,7 +97,7 @@ class ScanResultScreen extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        engine.contains('Gemini Cloud Analysis||gemini') ? 'gemini_analysis' : AppLocalizations.of(context)!.local_analysis,
+                        engine.contains('Gemini Cloud Analysis||gemini') ? AppLocalizations.of(context)!.gemini_analysis : AppLocalizations.of(context)!.local_analysis,
                         style: AppTypography.body.copyWith(
                           fontWeight: FontWeight.w600,
                           color: AppColors.primary,
@@ -402,7 +402,7 @@ class ScanResultScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
-                                  type == 'Care Guide||guide' ? 'care_guide' : AppLocalizations.of(context)!.treatment_guide,
+                                  type == 'Care Guide||guide' ? AppLocalizations.of(context)!.care_guide : AppLocalizations.of(context)!.treatment_guide,
                                   style: AppTypography.caption.copyWith(
                                     color: Colors.orange[700],
                                     fontWeight: FontWeight.w500,
@@ -472,7 +472,7 @@ class ScanResultScreen extends StatelessWidget {
                     onPressed: () {
                       AppToast.show(
                         context,
-                        message: 'Save to history coming soon',
+                        message: AppLocalizations.of(context)!.save_to_history_coming_soon,
                         variant: ToastVariant.info,
                       );
                     },

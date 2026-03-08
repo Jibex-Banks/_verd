@@ -706,6 +706,12 @@ abstract class AppLocalizations {
   /// **'Water tips'**
   String get irrigation_desc_short;
 
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
   /// No description provided for @keep_editing.
   ///
   /// In en, this message translates to:
@@ -1527,6 +1533,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Scan'**
   String get scan;
+
+  /// No description provided for @gemini_analysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud Analysis'**
+  String get gemini_analysis;
+
+  /// No description provided for @care_guide.
+  ///
+  /// In en, this message translates to:
+  /// **'Care Guide'**
+  String get care_guide;
+
+  /// No description provided for @scanned_at.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanned: {date}'**
+  String scanned_at(String date);
+
+  /// No description provided for @save_to_history_coming_soon.
+  ///
+  /// In en, this message translates to:
+  /// **'Save to history coming soon'**
+  String get save_to_history_coming_soon;
+
+  /// No description provided for @sign_in_link_sent.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in link sent to {email}! Check your inbox.'**
+  String sign_in_link_sent(String email);
+
+  /// No description provided for @login_welcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome'**
+  String get login_welcome;
+
+  /// No description provided for @login.
+  ///
+  /// In en, this message translates to:
+  /// **'Log in or sign up with email link'**
+  String get login;
+
+  /// No description provided for @forgot_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password?'**
+  String get forgot_password;
+
+  /// No description provided for @loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading'**
+  String get loading;
+
+  /// No description provided for @google_sign_in.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with Google'**
+  String get google_sign_in;
+
+  /// No description provided for @dont_have_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t have an account?'**
+  String get dont_have_account;
+
+  /// No description provided for @sign_up.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign up'**
+  String get sign_up;
+
+  /// No description provided for @already_have_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account?'**
+  String get already_have_account;
+
+  /// No description provided for @sign_in.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get sign_in;
+
+  /// No description provided for @create_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Create account'**
+  String get create_account;
+
+  /// No description provided for @create_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your profile'**
+  String get create_profile;
 }
 
 class _AppLocalizationsDelegate
