@@ -1,11 +1,23 @@
 import 'package:verd/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/shared/widgets/app_toast.dart';
 import 'package:verd/shared/widgets/app_card.dart';
 
 class HelpSupportScreen extends StatelessWidget {
   const HelpSupportScreen({super.key});
+
+  Future<void> _launchUrl(BuildContext context, Uri uri) async {
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      if (context.mounted) {
+        AppToast.show(context, message: 'Could not launch link', variant: ToastVariant.error);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,21 +59,27 @@ class HelpSupportScreen extends StatelessWidget {
               icon: Icons.email_outlined,
               title: AppLocalizations.of(context)!.email_support,
               subtitle: 'support@verd.app',
-              onTap: () {},
+              onTap: () {
+                _launchUrl(context, Uri(scheme: 'mailto', path: 'support@verd.app'));
+              },
             ),
             _buildContactItem(
               context: context,
               icon: Icons.phone_outlined,
               title: AppLocalizations.of(context)!.call_us,
               subtitle: '+1 (800) 123-4567',
-              onTap: () {},
+              onTap: () {
+                _launchUrl(context, Uri(scheme: 'tel', path: '+18001234567'));
+              },
             ),
             _buildContactItem(
               context: context,
               icon: Icons.chat_bubble_outline,
               title: AppLocalizations.of(context)!.live_chat,
               subtitle: AppLocalizations.of(context)!.live_chat_desc,
-              onTap: () {},
+              onTap: () {
+                _launchUrl(context, Uri.parse('https://wa.me/18001234567'));
+              },
             ),
             const SizedBox(height: AppSpacing.xxxl),
             

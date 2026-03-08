@@ -5,6 +5,7 @@ import 'package:camera/camera.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:verd/core/constants/app_theme.dart';
 import 'package:verd/shared/widgets/app_toast.dart';
 import 'package:verd/providers/ai_provider.dart';
@@ -30,6 +31,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
 
   Future<void> _initCamera() async {
     try {
+      await Permission.camera.request();
       final cameras = await availableCameras();
       if (cameras.isNotEmpty) {
         final firstCamera = cameras.first;

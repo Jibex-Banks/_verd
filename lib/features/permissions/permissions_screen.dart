@@ -19,20 +19,6 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
 
   List<_PermissionPageData> get _pages => [
     _PermissionPageData(
-      icon: Icons.camera_alt_outlined,
-      color: const Color(0xFF4CAF50), // Green
-      title: AppLocalizations.of(context)!.perm_camera_title,
-      description: AppLocalizations.of(context)!.perm_camera_desc,
-      benefits: [
-        AppLocalizations.of(context)!.perm_camera_benefit1,
-        AppLocalizations.of(context)!.perm_camera_benefit2,
-        AppLocalizations.of(context)!.perm_camera_benefit3,
-      ],
-      buttonText: AppLocalizations.of(context)!.perm_camera_btn,
-      permissionDetails: AppLocalizations.of(context)!.perm_camera_details,
-      permissionStrategy: () => Permission.camera.request(),
-    ),
-    _PermissionPageData(
       icon: Icons.location_on_outlined,
       color: const Color(0xFF2196F3), // Blue
       title: AppLocalizations.of(context)!.perm_location_title,

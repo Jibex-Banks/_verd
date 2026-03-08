@@ -8,6 +8,7 @@ import 'core/constants/app_theme.dart';
 import 'core/providers/theme_provider.dart';
 import 'core/providers/locale_provider.dart';
 import 'core/router/app_router.dart';
+import 'core/localization/fallback_localizations.dart';
 import 'providers/notification_provider.dart';
 import 'shared/widgets/app_toast.dart';
 
@@ -31,12 +32,11 @@ class MyApp extends ConsumerWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
+        FallbackMaterialLocalizationDelegate(),
+        FallbackCupertinoLocalizationDelegate(),
+        FallbackWidgetsLocalizationDelegate(),
       ],
-      supportedLocales: const [
-        Locale('en'),
-        Locale('fr'),
-        Locale('es'),
-      ],
+      supportedLocales: AppLocalizations.supportedLocales,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
       builder: (context, child) => _FCMHandler(child: child!),

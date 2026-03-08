@@ -13,12 +13,14 @@ class LanguageScreen extends ConsumerStatefulWidget {
 }
 
 class _LanguageScreenState extends ConsumerState<LanguageScreen> {
-  // Available supported languages mapping to our YAML files
+  // Supported languages (must have matching app_*.arb in lib/l10n)
   final List<Map<String, String>> _languages = [
     {'name': 'English', 'nativeName': 'English', 'code': 'en', 'country': 'us'},
     {'name': 'French', 'nativeName': 'Français', 'code': 'fr', 'country': 'fr'},
-    {'name': 'Hausa', 'nativeName': 'Hausa', 'code': 'ha', 'country': 'ng'},
     {'name': 'Spanish', 'nativeName': 'Español', 'code': 'es', 'country': 'es'},
+    {'name': 'Hausa', 'nativeName': 'Hausa', 'code': 'ha', 'country': 'ng'},
+    {'name': 'Yoruba', 'nativeName': 'Èdè Yorùbá', 'code': 'yo', 'country': 'ng'},
+    {'name': 'Igbo', 'nativeName': 'Igbo', 'code': 'ig', 'country': 'ng'},
     {'name': 'German', 'nativeName': 'Deutsch', 'code': 'de', 'country': 'de'},
     {'name': 'Portuguese', 'nativeName': 'Português', 'code': 'pt', 'country': 'br'},
     {'name': 'Chinese', 'nativeName': '中文', 'code': 'zh', 'country': 'cn'},
