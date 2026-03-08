@@ -802,4 +802,11 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get create_profile => 'إنشاء ملفك الشخصي';
+
+  @override
+  String get free_trial_ended => 'انتهت الفترة التجريبية';
+
+  @override
+  String get free_trial_desc =>
+      'لقد وصلت إلى الحد الأقصى المسموح به وهو 3 عمليات مسح مجانية. سجل الآن لفتح عمليات المسح غير المحدودة وحفظ تاريخ مزارعك!';
 }

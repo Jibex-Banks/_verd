@@ -268,5 +268,7 @@
   "already_have_account": "Bereits ein Konto?",
   "sign_in": "Anmelden",
   "create_account": "Konto erstellen",
-  "create_profile": "Profil anlegen"
+  "create_profile": "Profil anlegen",
+  "free_trial_ended": "Kostenlose Testversion beendet",
+  "free_trial_desc": "Sie haben Ihr Limit von 3 kostenlosen Scans erreicht. Registrieren Sie sich, um unbegrenztes Scannen freizuschalten und Ihre Farmhistorie zu speichern!"
 }

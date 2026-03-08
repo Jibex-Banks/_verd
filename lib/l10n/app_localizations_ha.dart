@@ -814,4 +814,11 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get create_profile => 'Ƙirƙiri bayanin martabanka';
+
+  @override
+  String get free_trial_ended => 'Gwajin Kyauta Ya Kare';
+
+  @override
+  String get free_trial_desc =>
+      'Ka kai iyakar gwaje-gwaje 3 na kyauta. Yi rajista don samun damar yin gwaje-gwaje marasa iyaka kuma ka adana tarihin gonarka!';
 }

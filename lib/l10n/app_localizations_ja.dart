@@ -783,4 +783,11 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get create_profile => 'プロフィールを作成';
+
+  @override
+  String get free_trial_ended => '無料トライアルが終了しました';
+
+  @override
+  String get free_trial_desc =>
+      '無料スキャンの上限（3回）に達しました。無制限のスキャンを利用し、農場の履歴を保存するには、サインアップしてください。';
 }

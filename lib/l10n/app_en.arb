@@ -268,5 +268,7 @@
   "already_have_account": "Already have an account?",
   "sign_in": "Sign in",
   "create_account": "Create account",
-  "create_profile": "Create your profile"
+  "create_profile": "Create your profile",
+  "free_trial_ended": "Free Trial Ended",
+  "free_trial_desc": "You have reached your limit of 3 free scans. Sign up to unlock unlimited scanning and save your farm history!"
 }

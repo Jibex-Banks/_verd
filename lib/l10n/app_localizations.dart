@@ -1649,6 +1649,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create your profile'**
   String get create_profile;
+
+  /// No description provided for @free_trial_ended.
+  ///
+  /// In en, this message translates to:
+  /// **'Free Trial Ended'**
+  String get free_trial_ended;
+
+  /// No description provided for @free_trial_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'You have reached your limit of 3 free scans. Sign up to unlock unlimited scanning and save your farm history!'**
+  String get free_trial_desc;
 }
 
 class _AppLocalizationsDelegate

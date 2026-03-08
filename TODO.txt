@@ -1,4 +1,4 @@
-so allow free trial(3 scans) then show the signup screen
+[x] so allow free trial(3 scans) then show the signup screen
 [x] chat and support screen contanct us 
 [x] delay camera permission till on scan page
 change icon and the size of the icon 
@@ -19,7 +19,7 @@ Why it's fast: Assuming you mean the app's launcher icon, Flutter makes this eas
 [x] 3. Chat and support screen / Contact us (EST: 30 Minutes)
 Why it takes a bit longer: We need to build a new UI screen (support_screen.dart). It will likely have a few buttons: "Email Us", "Call Us", or a link to a WhatsApp chat. We'll use the url_launcher package to actually open the phone's mail app, dialer, or browser. It's simple but requires setting up the layout, routing, and testing the links.
 
-4. Allow free trial (3 scans) then show signup screen (EST: 1 - 2 Hours)
+[x] 4. Allow free trial (3 scans) then show signup screen (EST: 1 - 2 Hours)
 Why it takes longer: This requires a mix of state management and local storage.
 
 We have to use SharedPreferences to track scan_count.

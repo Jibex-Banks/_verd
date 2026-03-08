@@ -777,4 +777,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get create_profile => '创建您的资料';
+
+  @override
+  String get free_trial_ended => '免费试用已结束';
+
+  @override
+  String get free_trial_desc => '您已达到3次免费扫描的限制。注册即可解锁无限扫描并保存您的农场历史！';
 }

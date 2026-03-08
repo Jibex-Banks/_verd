@@ -327,5 +327,7 @@
   "already_have_account": "¿Ya tiene una cuenta?",
   "sign_in": "Iniciar sesión",
   "create_account": "Crear cuenta",
-  "create_profile": "Cree su perfil"
+  "create_profile": "Cree su perfil",
+  "free_trial_ended": "Prueba gratuita finalizada",
+  "free_trial_desc": "Has alcanzado tu límite de 3 escaneos gratuitos. ¡Regístrate para desbloquear escaneos ilimitados y guardar el historial de tu granja!"
 }

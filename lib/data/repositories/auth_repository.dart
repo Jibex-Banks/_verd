@@ -71,6 +71,22 @@ class AuthRepository {
     return user;
   }
 
+  /// Sign in anonymously as a guest.
+  Future<AppUser> signInAnonymously() async {
+    final credential = await FirebaseAuth.instance.signInAnonymously();
+    final uid = credential.user!.uid;
+
+    final guest = AppUser(
+      uid: uid,
+      email: '',
+      displayName: 'Guest',
+      createdAt: DateTime.now(),
+    );
+
+    await _localStorage.cacheUser(guest);
+    return guest;
+  }
+
   /// Sign in with Google.
   /// Returns null if the user cancelled the Google sign-in flow.
   Future<AppUser?> signInWithGoogle() async {

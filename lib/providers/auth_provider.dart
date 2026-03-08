@@ -108,6 +108,13 @@ class AuthNotifier extends AsyncNotifier<AppUser?> {
     await ref.read(authRepositoryProvider).resetPassword(email);
   }
 
+  Future<void> continueAsGuest() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(
+      () => ref.read(authRepositoryProvider).signInAnonymously(),
+    );
+  }
+
   /// Update the user's profile (name, phone, location, photo).
   Future<void> updateProfile({
     String? name,

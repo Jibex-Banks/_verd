@@ -60,7 +60,7 @@ class HelpSupportScreen extends StatelessWidget {
               title: AppLocalizations.of(context)!.email_support,
               subtitle: 'support@verd.app',
               onTap: () {
-                _launchUrl(context, Uri(scheme: 'mailto', path: 'support@verd.app'));
+                _launchUrl(context, Uri(scheme: 'mailto', path: 'playbetgenius@gmail.com'));
               },
             ),
             _buildContactItem(
@@ -78,7 +78,7 @@ class HelpSupportScreen extends StatelessWidget {
               title: AppLocalizations.of(context)!.live_chat,
               subtitle: AppLocalizations.of(context)!.live_chat_desc,
               onTap: () {
-                _launchUrl(context, Uri.parse('https://wa.me/18001234567'));
+                _launchUrl(context, Uri.parse('https://wa.me/2348087400168'));
               },
             ),
             const SizedBox(height: AppSpacing.xxxl),

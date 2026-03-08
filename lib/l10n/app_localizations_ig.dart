@@ -810,4 +810,11 @@ class AppLocalizationsIg extends AppLocalizations {
 
   @override
   String get create_profile => 'Mepụta profaịlụ gị';
+
+  @override
+  String get free_trial_ended => 'Nnwale n\'efu agula';
+
+  @override
+  String get free_trial_desc =>
+      'I mezuola oke scans 3 n\'efu. Debanye aha ka ikpọghe nyocha na-akparaghị ókè ma chekwaa akụkọ ntolite ugbo gị!';
 }

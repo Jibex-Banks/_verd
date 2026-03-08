@@ -810,4 +810,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get create_profile => 'Create your profile';
+
+  @override
+  String get free_trial_ended => 'Free Trial Ended';
+
+  @override
+  String get free_trial_desc =>
+      'You have reached your limit of 3 free scans. Sign up to unlock unlimited scanning and save your farm history!';
 }

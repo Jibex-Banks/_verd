@@ -268,5 +268,7 @@
   "already_have_account": "Kana da asusu?",
   "sign_in": "Shiga",
   "create_account": "Ƙirƙiri asusu",
-  "create_profile": "Ƙirƙiri bayanin martabanka"
+  "create_profile": "Ƙirƙiri bayanin martabanka",
+  "free_trial_ended": "Gwajin Kyauta Ya Kare",
+  "free_trial_desc": "Ka kai iyakar gwaje-gwaje 3 na kyauta. Yi rajista don samun damar yin gwaje-gwaje marasa iyaka kuma ka adana tarihin gonarka!"
 }

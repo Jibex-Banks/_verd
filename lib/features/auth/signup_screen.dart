@@ -111,6 +111,19 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     }
   }
 
+  Future<void> _onContinueAsGuest() async {
+    if (_isLoading || _isGoogleLoading) return;
+    setState(() => _isGoogleLoading = true);
+    try {
+      await ref.read(authNotifierProvider.notifier).continueAsGuest();
+      if (mounted) context.go('/home');
+    } catch (e) {
+      if (mounted) _showError('Could not sign in as guest. Please try again.');
+    } finally {
+      if (mounted) setState(() => _isGoogleLoading = false);
+    }
+  }
+
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -246,7 +259,22 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 variant: AppButtonVariant.outlined,
                 icon: const Icon(Icons.g_mobiledata, size: 32),
               ),
-              const SizedBox(height: AppSpacing.xxl),
+              const SizedBox(height: AppSpacing.md),
+
+              // ── Continue as Guest ──
+              Center(
+                child: TextButton(
+                  onPressed: _isLoading || _isGoogleLoading ? null : _onContinueAsGuest,
+                  child: Text(
+                    'Continue as Guest  →',
+                    style: AppTypography.bodySmall.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.lg),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

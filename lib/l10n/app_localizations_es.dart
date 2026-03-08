@@ -817,4 +817,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get create_profile => 'Cree su perfil';
+
+  @override
+  String get free_trial_ended => 'Prueba gratuita finalizada';
+
+  @override
+  String get free_trial_desc =>
+      'Has alcanzado tu límite de 3 escaneos gratuitos. ¡Regístrate para desbloquear escaneos ilimitados y guardar el historial de tu granja!';
 }

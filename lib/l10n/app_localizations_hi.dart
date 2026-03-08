@@ -803,4 +803,11 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get create_profile => 'अपनी प्रोफाइल बनाएं';
+
+  @override
+  String get free_trial_ended => 'नि:शुल्क परीक्षण समाप्त';
+
+  @override
+  String get free_trial_desc =>
+      'आप 3 निःशुल्क स्कैन की अपनी सीमा तक पहुँच चुके हैं। असीमित स्कैनिंग अनलॉक करने और अपने खेत का इतिहास सहेजने के लिए साइन अप करें!';
 }

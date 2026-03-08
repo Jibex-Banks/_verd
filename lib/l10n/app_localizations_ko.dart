@@ -785,4 +785,11 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get create_profile => '프로필 만들기';
+
+  @override
+  String get free_trial_ended => '무료 체험 종료';
+
+  @override
+  String get free_trial_desc =>
+      '무료 스캔 한도인 3회에 도달했습니다. 무제한 스캔을 이용하고 농장 기록을 저장하려면 가입하세요!';
 }

@@ -268,5 +268,7 @@
   "already_have_account": "已有账号？",
   "sign_in": "登录",
   "create_account": "创建账号",
-  "create_profile": "创建您的资料"
+  "create_profile": "创建您的资料",
+  "free_trial_ended": "免费试用已结束",
+  "free_trial_desc": "您已达到3次免费扫描的限制。注册即可解锁无限扫描并保存您的农场历史！"
 }

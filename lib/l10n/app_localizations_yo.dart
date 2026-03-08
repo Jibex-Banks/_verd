@@ -809,4 +809,11 @@ class AppLocalizationsYo extends AppLocalizations {
 
   @override
   String get create_profile => 'Ṣẹda profaili rẹ';
+
+  @override
+  String get free_trial_ended => 'Ìdánwò Ọ̀fẹ́ ti Parí';
+
+  @override
+  String get free_trial_desc =>
+      'O ti lo ìwọ̀n ìṣàyẹ̀wò mẹ́ta rẹ tó jẹ́ ọ̀fẹ́. Forúkọsílẹ̀ láti ṣí gbogbo ìṣàyẹ̀wò àti láti tọ́jú ìtàn oko rẹ!';
 }

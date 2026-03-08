@@ -813,4 +813,11 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get create_profile => 'Criar seu perfil';
+
+  @override
+  String get free_trial_ended => 'Teste Gratuito Encerrado';
+
+  @override
+  String get free_trial_desc =>
+      'Você atingiu o limite de 3 digitalizações gratuitas. Inscreva-se para desbloquear digitalizações ilimitadas e salvar o histórico da sua fazenda!';
 }

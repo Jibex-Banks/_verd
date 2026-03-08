@@ -268,5 +268,7 @@
   "already_have_account": "Já tem uma conta?",
   "sign_in": "Entrar",
   "create_account": "Criar conta",
-  "create_profile": "Criar seu perfil"
+  "create_profile": "Criar seu perfil",
+  "free_trial_ended": "Teste Gratuito Encerrado",
+  "free_trial_desc": "Você atingiu o limite de 3 digitalizações gratuitas. Inscreva-se para desbloquear digitalizações ilimitadas e salvar o histórico da sua fazenda!"
 }

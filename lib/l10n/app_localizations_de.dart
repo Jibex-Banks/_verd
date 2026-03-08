@@ -813,4 +813,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get create_profile => 'Profil anlegen';
+
+  @override
+  String get free_trial_ended => 'Kostenlose Testversion beendet';
+
+  @override
+  String get free_trial_desc =>
+      'Sie haben Ihr Limit von 3 kostenlosen Scans erreicht. Registrieren Sie sich, um unbegrenztes Scannen freizuschalten und Ihre Farmhistorie zu speichern!';
 }

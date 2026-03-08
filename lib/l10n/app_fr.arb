@@ -327,5 +327,7 @@
   "already_have_account": "Vous avez déjà un compte?",
   "sign_in": "Se connecter",
   "create_account": "Créer un compte",
-  "create_profile": "Créez votre profil"
+  "create_profile": "Créez votre profil",
+  "free_trial_ended": "Essai gratuit terminé",
+  "free_trial_desc": "Vous avez atteint votre limite de 3 scans gratuits. Inscrivez-vous pour débloquer le scan illimité et sauvegarder l'historique de votre ferme !"
 }

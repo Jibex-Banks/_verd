@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:verd/core/constants/app_theme.dart';
 import 'package:verd/shared/widgets/app_toast.dart';
 import 'package:verd/providers/ai_provider.dart';
@@ -61,6 +62,22 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
     if (user == null) {
       AppToast.show(context, message: AppLocalizations.of(context)!.please_log_in_scanner, variant: ToastVariant.error);
       return;
+    }
+
+    // Check if guest has reached limit
+    final isAnonymous = ref.read(firebaseAuthServiceProvider).currentUser?.isAnonymous ?? false;
+    if (isAnonymous) {
+      final prefs = await SharedPreferences.getInstance();
+      final scanCount = prefs.getInt('guest_scan_count') ?? 0;
+      
+      if (scanCount >= 3) {
+        if (!mounted) return;
+        _showLimitReachedDialog();
+        return;
+      }
+      
+      // Increment counter for this successful scan initiation
+      await prefs.setInt('guest_scan_count', scanCount + 1);
     }
 
     setState(() => _isProcessing = true);
@@ -382,4 +399,36 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
       ),
     );
   }
+
+  void _showLimitReachedDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: Text(AppLocalizations.of(context)?.free_trial_ended ?? 'Free Trial Ended', style: AppTypography.h3),
+        content: Text(
+          AppLocalizations.of(context)?.free_trial_desc ?? 'You have reached your limit of 3 free scans. Sign up to unlock unlimited scanning and save your farm history!',
+          style: AppTypography.body.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(AppLocalizations.of(context)!.cancel, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: AppColors.primary,
+            ),
+            onPressed: () {
+              Navigator.pop(ctx);
+              context.push('/signup');
+            },
+            child: Text(AppLocalizations.of(context)!.sign_up, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+  }
 }
+
