@@ -380,6 +380,9 @@ class AppLocalizationsYo extends AppLocalizations {
   String get my_profile => 'Profaili Mi';
 
   @override
+  String get more_options => 'More Options';
+
+  @override
   String get name_empty_error => 'Orukọ ko le jẹ ofo';
 
   @override

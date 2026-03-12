@@ -373,6 +373,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get my_profile => '내 프로필';
 
   @override
+  String get more_options => 'More Options';
+
+  @override
   String get name_empty_error => '이름을 입력해 주세요';
 
   @override

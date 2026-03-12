@@ -377,6 +377,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get my_profile => 'मेरी प्रोफाइल';
 
   @override
+  String get more_options => 'More Options';
+
+  @override
   String get name_empty_error => 'नाम खाली नहीं हो सकता';
 
   @override

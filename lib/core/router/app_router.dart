@@ -25,6 +25,7 @@ import 'package:verd/features/profile/notification_settings_screen.dart';
 import 'package:verd/features/profile/help_support_screen.dart';
 import 'package:verd/features/profile/edit_profile_screen.dart';
 import 'package:verd/features/profile/user_insights_screen.dart';
+import 'package:verd/features/profile/settings_screen.dart';
 
 // Scan screens
 import 'package:verd/features/scan/gallery_screen.dart';
@@ -163,6 +164,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/user-insights',
         name: 'user_insights',
         builder: (context, state) => const UserInsightsScreen(),
+      ),
+      GoRoute(
+        path: '/settings',
+        name: 'settings',
+        builder: (context, state) => const SettingsScreen(),
       ),
       GoRoute(
         path: '/gallery',

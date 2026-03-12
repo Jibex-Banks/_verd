@@ -367,6 +367,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get my_profile => '我的资料';
 
   @override
+  String get more_options => 'More Options';
+
+  @override
   String get name_empty_error => '姓名不能为空';
 
   @override

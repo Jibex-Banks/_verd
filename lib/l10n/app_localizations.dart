@@ -834,6 +834,12 @@ abstract class AppLocalizations {
   /// **'My Profile'**
   String get my_profile;
 
+  /// No description provided for @more_options.
+  ///
+  /// In en, this message translates to:
+  /// **'More Options'**
+  String get more_options;
+
   /// No description provided for @name_empty_error.
   ///
   /// In en, this message translates to:

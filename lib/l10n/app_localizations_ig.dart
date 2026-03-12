@@ -380,6 +380,9 @@ class AppLocalizationsIg extends AppLocalizations {
   String get my_profile => 'Profaịlụ M';
 
   @override
+  String get more_options => 'More Options';
+
+  @override
   String get name_empty_error => 'Aha enweghị ike ịbụ tọọchị';
 
   @override

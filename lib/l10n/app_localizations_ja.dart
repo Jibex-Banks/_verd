@@ -372,6 +372,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get my_profile => 'マイプロフィール';
 
   @override
+  String get more_options => 'More Options';
+
+  @override
   String get name_empty_error => '名前は必須です';
 
   @override

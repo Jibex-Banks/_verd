@@ -380,6 +380,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get my_profile => 'My Profile';
 
   @override
+  String get more_options => 'More Options';
+
+  @override
   String get name_empty_error => 'Name cannot be empty';
 
   @override

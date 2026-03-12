@@ -381,6 +381,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get my_profile => 'Meu perfil';
 
   @override
+  String get more_options => 'More Options';
+
+  @override
   String get name_empty_error => 'O nome não pode estar vazio';
 
   @override

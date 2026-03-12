@@ -54,7 +54,9 @@ class FCMService {
 
     // 4. Get device token
     final token = await _messaging.getToken();
-    debugPrint('[FCM] Device token: $token');
+    if (kDebugMode) {
+      debugPrint('[FCM] Device token: $token');
+    }
     return token;
   }
 

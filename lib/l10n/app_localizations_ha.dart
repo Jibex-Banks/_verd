@@ -379,6 +379,9 @@ class AppLocalizationsHa extends AppLocalizations {
   String get my_profile => 'Bayanin Martabana';
 
   @override
+  String get more_options => 'More Options';
+
+  @override
   String get name_empty_error => 'Suna ba zai iya zama fanko ba';
 
   @override

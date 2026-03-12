@@ -379,6 +379,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get my_profile => 'ملفي الشخصي';
 
   @override
+  String get more_options => 'More Options';
+
+  @override
   String get name_empty_error => 'الاسم لا يمكن أن يكون فارغاً';
 
   @override

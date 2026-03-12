@@ -1,5 +1,6 @@
 import 'package:verd/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:verd/core/constants/app_theme.dart';
 import 'package:verd/core/constants/app_assets.dart';
@@ -70,20 +71,36 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
-                  Container(
-                    width: 80,
-                    height: 80,
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: AppColors.primary.withValues(alpha: 0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Image.asset(
-                      AppAssets.logoPng,
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) => const Icon(
-                        Icons.shield_outlined, // Fallback if logo png isn't found
-                        color: AppColors.primary,
+                  GestureDetector(
+                    onTap: () {
+                      // TODO: Navigate to profile screen
+                      context.push('/edit-profile');
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: AppColors.primary.withValues(alpha: 0.2),
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.person_outline,
+                            color: AppColors.primary,
+                            size: 24,
+                          ),
+                          const SizedBox(width: 8),
+                          Icon(
+                            Icons.chevron_right,
+                            color: AppColors.primary.withValues(alpha: 0.7),
+                            size: 20,
+                          ),
+                        ],
                       ),
                     ),
                   ),

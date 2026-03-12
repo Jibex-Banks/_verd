@@ -381,6 +381,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get my_profile => 'Mon profil';
 
   @override
+  String get more_options => 'More Options';
+
+  @override
   String get name_empty_error => 'Le nom ne peut pas être vide';
 
   @override

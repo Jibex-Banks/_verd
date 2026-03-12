@@ -106,6 +106,18 @@ class _SplashScreenState extends State<SplashScreen>
 
                     const SizedBox(height: 20),
 
+                    // App Name
+                    Text(
+                      'VERD',
+                      style: AppTypography.h2.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: isDark ? AppColors.primary : AppColors.gray800,
+                        letterSpacing: 4,
+                      ),
+                    ),
+
+                    const SizedBox(height: 8),
+
                     // Tagline
                     Text(
                       AppLocalizations.of(context)!.splash_tagline,

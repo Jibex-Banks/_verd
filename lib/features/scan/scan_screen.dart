@@ -422,7 +422,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
             ),
             onPressed: () {
               Navigator.pop(ctx);
-              context.push('/signup');
+              context.go('/signup');
             },
             child: Text(AppLocalizations.of(context)!.sign_up, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
           ),
