@@ -10,11 +10,15 @@ import 'package:verd/data/models/scan_result.dart';
 /// - `users/{uid}/scans/{scanId}` — per-user scan results
 class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  static bool _settingsInitialized = false;
 
   FirestoreService() {
     // Enable offline persistence (Firestore caches data locally by default
     // on mobile, but this ensures it's explicitly active).
-    _firestore.settings = const Settings(persistenceEnabled: true);
+    if (!_settingsInitialized) {
+      _firestore.settings = const Settings(persistenceEnabled: true);
+      _settingsInitialized = true;
+    }
   }
 
   // ─── Users ───

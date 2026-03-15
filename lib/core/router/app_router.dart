@@ -91,6 +91,25 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         return '/home';
       }
 
+      // 3. If user is GUEST (anonymous), prevent access to strict authenticated routes
+      final isAnonymous = FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
+      if (isAuth && isAnonymous) {
+        const guestRestrictedRoutes = [
+          '/edit-profile',
+          '/scan-history',
+          '/user-insights',
+          '/change-password',
+          '/notifications',
+          '/settings',
+        ];
+
+        // If a guest tries to access a restricted route, redirect them to home instead 
+        // (where they can navigate to the profile tab to see the guest upsell screen)
+        if (guestRestrictedRoutes.contains(state.matchedLocation)) {
+          return '/home';
+        }
+      }
+
       return null;
     },
     routes: [

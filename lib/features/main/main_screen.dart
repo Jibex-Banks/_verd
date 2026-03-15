@@ -23,7 +23,10 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _screens = [
-      HomeScreen(onScanTap: () => _onTabTapped(1)),
+      HomeScreen(
+        onScanTap: () => _onTabTapped(1),
+        onProfileTap: () => _onTabTapped(2),
+      ),
       const ScanScreen(),
       const ProfileScreen(),
     ];

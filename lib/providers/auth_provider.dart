@@ -48,7 +48,24 @@ final authStateProvider = StreamProvider<User?>((ref) {
 // ─── Cached current user profile ───
 
 final currentUserProvider = Provider<AppUser?>((ref) {
-  return ref.watch(localStorageServiceProvider).getCachedUser();
+  // 1. Try the Hive cache first (covers logged-in and guest users).
+  final cached = ref.watch(localStorageServiceProvider).getCachedUser();
+  if (cached != null) return cached;
+
+  // 2. Fallback: if Firebase has an anonymous sign-in but nothing is cached yet
+  //    (e.g. timing issue right after signInAnonymously), synthesise a guest user
+  //    so that the profile screen and scan screen don't see null.
+  final firebaseUser = FirebaseAuth.instance.currentUser;
+  if (firebaseUser != null && firebaseUser.isAnonymous) {
+    return AppUser(
+      uid: firebaseUser.uid,
+      email: '',
+      displayName: 'Guest',
+      createdAt: DateTime.now(),
+    );
+  }
+
+  return null;
 });
 
 // ─── Auth Notifier (login / register / logout actions) ───

@@ -5,6 +5,27 @@ import 'package:flutter/services.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:image/image.dart' as img;
 
+// Top-level function for Isolate execution to prevent UI stuttering
+Uint8List _processImageInIsolate(Uint8List bytes) {
+  final image = img.decodeImage(bytes);
+  if (image == null) throw Exception('Unable to decode image data');
+
+  final resized = img.copyResize(image, width: 224, height: 224);
+  final inputBytes = Uint8List(1 * 224 * 224 * 3);
+  int i = 0;
+  
+  // Convert to [1, 224, 224, 3] format
+  for (int y = 0; y < 224; y++) {
+    for (int x = 0; x < 224; x++) {
+      final p = resized.getPixel(x, y);
+      inputBytes[i++] = p.r.toInt();
+      inputBytes[i++] = p.g.toInt();
+      inputBytes[i++] = p.b.toInt();
+    }
+  }
+  return inputBytes;
+}
+
 class TFLiteAIService {
   late Interpreter _interpreter;
   late Map<int, String> _labels;
@@ -25,34 +46,26 @@ class TFLiteAIService {
     }
   }
 
-  Uint8List _preprocessImage(File imageFile) {
-    final bytes = imageFile.readAsBytesSync();
-    final image = img.decodeImage(bytes);
-    if (image == null) throw Exception('Unable to decode image');
-
-    final resized = img.copyResize(image, width: 224, height: 224);
-    final inputBytes = Uint8List(1 * 224 * 224 * 3);
-    int i = 0;
-    
-    // Convert to [1, 224, 224, 3] format
-    for (int y = 0; y < 224; y++) {
-      for (int x = 0; x < 224; x++) {
-        final p = resized.getPixel(x, y);
-        inputBytes[i++] = p.r.toInt();
-        inputBytes[i++] = p.g.toInt();
-        inputBytes[i++] = p.b.toInt();
-      }
-    }
-    return inputBytes;
-  }
-
   Future<Map<String, dynamic>> analyzeImage(File imageFile) async {
     if (!_isLoaded) {
       await initialize();
     }
 
     try {
-      final input = _preprocessImage(imageFile).reshape([1, 224, 224, 3]);
+      // 1. Input Validation
+      if (!imageFile.existsSync()) {
+        throw Exception('Image file does not exist.');
+      }
+      final fileSize = await imageFile.length();
+      if (fileSize == 0 || fileSize > 15 * 1024 * 1024) { // 15MB limit
+        throw Exception('Invalid image file size.');
+      }
+
+      // 2. Offload preprocessing to a background Isolate
+      final bytes = await imageFile.readAsBytes();
+      final preprocessedBytes = await compute(_processImageInIsolate, bytes);
+      
+      final input = preprocessedBytes.reshape([1, 224, 224, 3]);
       final output = List.filled(54, 0).reshape([1, 54]);
 
       _interpreter.run(input, output);

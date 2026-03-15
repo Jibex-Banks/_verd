@@ -46,7 +46,7 @@ class FCMService {
 
       const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
       const initSettings = InitializationSettings(android: androidInit);
-      await _localNotifications.initialize(initSettings);
+      await _localNotifications.initialize(settings: initSettings);
     }
 
     // 3. Register background handler
@@ -69,10 +69,10 @@ class FCMService {
       // If we have a notification payload, show it via local notifications on Android
       if (notification != null && android != null && !kIsWeb) {
         _localNotifications.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          NotificationDetails(
+          id: notification.hashCode,
+          title: notification.title,
+          body: notification.body,
+          notificationDetails: NotificationDetails(
             android: AndroidNotificationDetails(
               _channel.id,
               _channel.name,

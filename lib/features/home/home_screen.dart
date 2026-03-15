@@ -1,17 +1,20 @@
 import 'package:verd/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:verd/core/constants/app_theme.dart';
-import 'package:verd/core/constants/app_assets.dart';
 
 import 'package:verd/shared/widgets/skeleton_loader.dart';
 import 'package:verd/shared/widgets/bouncing_card.dart';
 
 class HomeScreen extends StatefulWidget {
   final VoidCallback? onScanTap;
+  final VoidCallback? onProfileTap;
   
-  const HomeScreen({super.key, this.onScanTap});
+  const HomeScreen({
+    super.key,
+    this.onScanTap,
+    this.onProfileTap,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -72,10 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {
-                      // TODO: Navigate to profile screen
-                      context.push('/edit-profile');
-                    },
+                    onTap: widget.onProfileTap,
                     child: Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(

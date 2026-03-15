@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:verd/core/constants/app_theme.dart';
-import 'package:verd/core/providers/theme_provider.dart';
 import 'package:verd/providers/auth_provider.dart';
 
 import 'package:verd/shared/dialogs/confirmation_dialog.dart';
@@ -21,13 +20,23 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(currentUserProvider);
+
+    // Truly not signed in (not even anonymously) — show skeleton briefly until
+    // auth state resolves, or redirect happens via the router guard.
     if (user == null) {
       return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: const ProfileSkeleton(),
       );
     }
-    
+
+    // Anonymous / guest user — show an upsell screen instead of a profile.
+    final firebaseUser = ref.watch(firebaseAuthServiceProvider).currentUser;
+    final isAnonymous = firebaseUser?.isAnonymous ?? false;
+    if (isAnonymous) {
+      return _buildGuestScreen(context);
+    }
+
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     // Deep green from the inspiration Image #3
@@ -305,136 +314,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     );
   }
 
-  Widget _buildThemeToggleItem(ThemeData theme) {
-    final currentMode = ref.watch(themeProvider);
-    
-    // Determine the active icon 
-    IconData activeIcon = Icons.brightness_auto;
-    Color activeColor = const Color(0xFF673AB7); // Deep Purple
-    
-    if (currentMode == ThemeMode.dark) {
-      activeIcon = Icons.dark_mode;
-      activeColor = const Color(0xFF3F51B5); // Indigo
-    } else if (currentMode == ThemeMode.light) {
-      activeIcon = Icons.light_mode;
-      activeColor = const Color(0xFFFF9800); // Orange
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: activeColor.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(activeIcon, color: activeColor, size: 24),
-              ),
-              const SizedBox(width: AppSpacing.lg),
-              Expanded(
-                child: Text(
-                  AppLocalizations.of(context)!.appearance,
-                  style: AppTypography.bodyLarge.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: theme.colorScheme.onSurface,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.md),
-          Padding(
-            padding: const EdgeInsets.only(left: 60.0), // Indent to match text
-            child: Container(
-              height: 40,
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  _buildCustomToggleBtn(
-                    theme: theme,
-                    title: AppLocalizations.of(context)!.system,
-                    icon: Icons.brightness_auto,
-                    isSelected: currentMode == ThemeMode.system,
-                    onTap: () => ref.read(themeProvider.notifier).setTheme(ThemeMode.system),
-                  ),
-                  _buildCustomToggleBtn(
-                    theme: theme,
-                    title: AppLocalizations.of(context)!.light,
-                    icon: Icons.light_mode,
-                    isSelected: currentMode == ThemeMode.light,
-                    onTap: () => ref.read(themeProvider.notifier).setTheme(ThemeMode.light),
-                  ),
-                  _buildCustomToggleBtn(
-                    theme: theme,
-                    title: AppLocalizations.of(context)!.dark,
-                    icon: Icons.dark_mode,
-                    isSelected: currentMode == ThemeMode.dark,
-                    onTap: () => ref.read(themeProvider.notifier).setTheme(ThemeMode.dark),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCustomToggleBtn({
-    required ThemeData theme,
-    required String title,
-    required IconData icon,
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          decoration: BoxDecoration(
-            color: isSelected ? theme.colorScheme.surfaceContainerHigh : Colors.transparent,
-            borderRadius: BorderRadius.circular(8),
-            border: isSelected 
-                ? Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5), width: 1)
-                : null,
-            boxShadow: isSelected && theme.brightness == Brightness.light
-                ? [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4, offset: const Offset(0, 2))]
-                : null,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                size: 14,
-                color: isSelected ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant,
-              ),
-              const SizedBox(width: 6),
-              Flexible(
-                child: Text(
-                  title,
-                  style: AppTypography.caption.copyWith(
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                    color: isSelected ? theme.colorScheme.onSurface : theme.colorScheme.onSurfaceVariant,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   void _showMoreOptions(BuildContext context) {
     InfoDialog.options(
       context,
@@ -454,11 +333,125 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         ),
       ],
     ).then((result) {
+      if (!context.mounted) return;
       if (result != null && result == 'profile') {
         context.push('/edit-profile');
       } else if (result != null && result == 'settings') {
         context.push('/settings');
       }
     });
+  }
+
+  /// Guest / anonymous user profile screen — prompts them to sign up.
+  Widget _buildGuestScreen(BuildContext context) {
+    final theme = Theme.of(context);
+    return Scaffold(
+      backgroundColor: theme.colorScheme.surface,
+      appBar: AppBar(
+        backgroundColor: theme.colorScheme.surface,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
+          AppLocalizations.of(context)!.profile,
+          style: AppTypography.h3.copyWith(
+            color: theme.colorScheme.onSurface,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+      ),
+      body: SafeArea(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Icon
+                Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.person_outline, size: 50, color: AppColors.primary),
+                ),
+                const SizedBox(height: AppSpacing.xl),
+                Text(
+                  'You\'re using Verd as a Guest',
+                  style: AppTypography.h3.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: AppSpacing.md),
+                Text(
+                  'Create a free account to unlock unlimited scans, save your farm history, and access all features.',
+                  style: AppTypography.body.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                    height: 1.5,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: AppSpacing.xxxl),
+
+                // Sign Up button
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    onPressed: () => context.go('/signup'),
+                    child: Text(
+                      'Create Free Account',
+                      style: AppTypography.bodyLarge.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.lg),
+
+                // Login link
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Already have an account? ',
+                      style: AppTypography.body.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      onPressed: () => context.go('/login'),
+                      child: Text(
+                        'Log In',
+                        style: AppTypography.body.copyWith(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

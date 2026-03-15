@@ -35,12 +35,13 @@ class LocalStorageService {
   // ─── User Cache ───
 
   Future<void> cacheUser(AppUser user) async {
-    await _userBox.put(user.uid, user);
+    // We only support one active user profile cached at a time.
+    await _userBox.put('currentUser', user);
   }
 
   AppUser? getCachedUser() {
     if (_userBox.isEmpty) return null;
-    return _userBox.values.first;
+    return _userBox.get('currentUser');
   }
 
   Future<void> clearUserCache() async {
