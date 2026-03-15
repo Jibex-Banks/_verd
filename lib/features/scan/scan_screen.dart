@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:verd/core/constants/app_theme.dart';
 import 'package:verd/shared/widgets/app_toast.dart';
 import 'package:verd/providers/ai_provider.dart';
@@ -84,6 +85,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
 
     try {
       final xFile = await _cameraController!.takePicture();
+      // Freeze the camera preview immediately
+      await _cameraController!.pausePreview();
+      
       final imageFile = File(xFile.path);
       
       final scanId = const Uuid().v4();
@@ -107,6 +111,72 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
       if (mounted) {
         AppToast.show(context, message: 'Error analyzing image: $e', variant: ToastVariant.error);
         debugPrint('Scan error: $e');
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isProcessing = false);
+        // Resume preview when done or if error occurs
+        _cameraController?.resumePreview();
+      }
+    }
+  }
+
+  Future<void> _pickImageAndAnalyze() async {
+    final user = ref.read(currentUserProvider);
+    if (user == null) {
+      AppToast.show(context, message: AppLocalizations.of(context)!.please_log_in_scanner, variant: ToastVariant.error);
+      return;
+    }
+
+    // Check if guest has reached limit
+    final isAnonymous = ref.read(firebaseAuthServiceProvider).currentUser?.isAnonymous ?? false;
+    if (isAnonymous) {
+      final prefs = await SharedPreferences.getInstance();
+      final scanCount = prefs.getInt('guest_scan_count') ?? 0;
+      
+      if (scanCount >= 3) {
+        if (!mounted) return;
+        _showLimitReachedDialog();
+        return;
+      }
+    }
+
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+      
+      if (image == null) return; // User canceled picking
+
+      if (isAnonymous) {
+        // Increment counter only after successful pick
+        final prefs = await SharedPreferences.getInstance();
+        final scanCount = prefs.getInt('guest_scan_count') ?? 0;
+        await prefs.setInt('guest_scan_count', scanCount + 1);
+      }
+
+      setState(() => _isProcessing = true);
+      
+      final imageFile = File(image.path);
+      final scanId = const Uuid().v4();
+
+      final result = await ref.read(aiRoutingServiceProvider).routeScan(
+        userId: user.uid,
+        scanId: scanId,
+        image: imageFile,
+      );
+
+      if (mounted) {
+        AppToast.show(context, message: AppLocalizations.of(context)!.analysis_complete, variant: ToastVariant.info);
+        context.pushNamed(
+          'scan_result',
+          extra: result,
+          queryParameters: {'image_url': result['imageUrl'] ?? ''},
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        AppToast.show(context, message: 'Error analyzing uploaded image: $e', variant: ToastVariant.error);
+        debugPrint('Upload scan error: $e');
       }
     } finally {
       if (mounted) setState(() => _isProcessing = false);
@@ -224,13 +294,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
                       children: [
                         _buildCircularIconButton(
                           icon: Icons.upload_outlined,
-                          onPressed: () {
-                            AppToast.show(
-                              context,
-                              message: AppLocalizations.of(context)!.upload_coming_soon,
-                              variant: ToastVariant.info,
-                            );
-                          },
+                          onPressed: _pickImageAndAnalyze,
                           size: 64,
                         ),
                         const SizedBox(width: AppSpacing.xl),

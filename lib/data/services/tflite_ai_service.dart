@@ -15,8 +15,8 @@ class TFLiteAIService {
   Future<void> initialize() async {
     if (_isLoaded) return;
     try {
-      _interpreter = await Interpreter.fromAsset('assets/models/verd_int8.tflite');
-      final rawLabels = await rootBundle.loadString('assets/models/labels.json');
+      _interpreter = await Interpreter.fromAsset('assets/models/verd_v2.tflite');
+      final rawLabels = await rootBundle.loadString('assets/models/verd_v2_labels.json');
       final Map<String, dynamic> decoded = json.decode(rawLabels);
       _labels = decoded.map((k, v) => MapEntry(int.parse(k), v as String));
       _isLoaded = true;
@@ -53,7 +53,7 @@ class TFLiteAIService {
 
     try {
       final input = _preprocessImage(imageFile).reshape([1, 224, 224, 3]);
-      final output = List.filled(_labels.length, 0).reshape([1, _labels.length]);
+      final output = List.filled(54, 0).reshape([1, 54]);
 
       _interpreter.run(input, output);
       

@@ -131,7 +131,7 @@ class InfoDialog extends StatelessWidget {
     return Dialog(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadius.xxl)),
-      backgroundColor: AppColors.backgroundSecondary,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: sw < 600 ? sw * 0.88 : 400),
         child: Padding(
@@ -149,7 +149,7 @@ class InfoDialog extends StatelessWidget {
               Text(
                 message,
                 style: AppTypography.body
-                    .copyWith(color: AppColors.textSecondary),
+                    .copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: AppSpacing.xxl),
@@ -255,7 +255,7 @@ class _SuccessDialogContentState extends State<_SuccessDialogContent>
     return Dialog(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadius.xxl)),
-      backgroundColor: AppColors.backgroundSecondary,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: sw < 600 ? sw * 0.88 : 400),
         child: Padding(
@@ -319,7 +319,7 @@ class _SuccessDialogContentState extends State<_SuccessDialogContent>
                 Text(
                   widget.message!,
                   style: AppTypography.body
-                      .copyWith(color: AppColors.textSecondary),
+                      .copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -433,9 +433,9 @@ class _AppBottomSheet extends StatelessWidget {
     return ConstrainedBox(
       constraints: BoxConstraints(maxHeight: sh * maxHeightFraction),
       child: Container(
-        decoration: const BoxDecoration(
-          color: AppColors.backgroundSecondary,
-          borderRadius: BorderRadius.vertical(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: const BorderRadius.vertical(
               top: Radius.circular(AppRadius.xxxl)),
         ),
         child: Column(
@@ -468,7 +468,7 @@ class _AppBottomSheet extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.close, size: 20),
                       onPressed: () => Navigator.of(context).pop(),
-                      color: AppColors.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(
                           minWidth: 44, minHeight: 44),
@@ -523,8 +523,8 @@ class _SheetOptionTile<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = option.isDangerous
-        ? AppColors.error
-        : (option.color ?? AppColors.textPrimary);
+        ? Theme.of(context).colorScheme.error
+        : (option.color ?? Theme.of(context).colorScheme.onSurface);
 
     return ListTile(
       leading: option.icon != null

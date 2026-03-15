@@ -1,8 +1,8 @@
 [x] so allow free trial(3 scans) then show the signup screen
 [x] chat and support screen contanct us 
 [x] delay camera permission till on scan page
-change icon and the size of the icon 
-to the model integration 
+[x] change icon and the size of the icon 
+[x] to the model integration 
 location permission/based learning center articles
 
 
@@ -13,7 +13,7 @@ Why it's fast: It only requires moving the requestPermission() call. Currently, 
 initState
  (or on a button tap) specifically inside scan_screen.dart. Very straightforward.
 
-2. Change icon and the size of the icon (EST: 10 - 15 Minutes)
+[x]2. Change icon and the size of the icon (EST: 10 - 15 Minutes)
 Why it's fast: Assuming you mean the app's launcher icon, Flutter makes this easy with the flutter_launcher_icons package. We just add the new icon image to your assets folder, update a few lines in pubspec.yaml, and run one terminal command to generate all the required Android/iOS icon sizes automatically.
 
 [x] 3. Chat and support screen / Contact us (EST: 30 Minutes)
@@ -34,7 +34,7 @@ We have to implement the location permission flow (handling accepted/denied stat
 We need to fetch the device's GPS coordinates using a package like geolocator.
 We need to translate those coordinates into a region/climate (or use a weather/geo API).
 The learning center currently shows hardcoded/demo articles. We would need to update the logic to sort or filter articles based on that region data (e.g. showing "Desert Pests" if the user is in a dry climate).
-6. ...to the model integration (EST: Half a day or more)
+[x]6. ...to the model integration (EST: Half a day or more)
 Why it's the most complex: If this means hooking up your custom TensorFlow Lite model offline (as discussed in a previous chat) or finalizing the Gemini online analysis, this is the heaviest task. It involves passing the camera image bytes safely, handling loading states, parsing the AI's JSON output reliably, handling network failures, and updating the UI with the final localized crop diagnosis.
 
 Recommendation: If you want some quick wins right now, we can easily knock out #1 (Delay camera permission) and #3 (Support Screen) in just a few minutes, followed by #2 (App Icon) if you have the image ready!
