@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sprout, Scan, BarChart3, User, Menu, X, Zap, Leaf, Activity, History, BookOpen, ChevronDown } from 'lucide-react'
+import { Sprout, Scan, BarChart3, User, Menu, X, Zap, Leaf, Activity, History as HistoryIcon, BookOpen, ChevronDown } from 'lucide-react'
 import { cn } from '../lib/utils'
 
 interface NavbarProps {
@@ -29,7 +29,7 @@ export function Navbar({ currentView, setView, theme, setTheme }: NavbarProps) {
 
   const userLinks: { name: string, icon: React.ReactNode, id: 'profile' | 'history' | 'learning' }[] = [
     { name: 'Profile Settings', icon: <User size={16} />, id: 'profile' },
-    { name: 'Scan History', icon: <History size={16} />, id: 'history' },
+    { name: 'Scan History', icon: <HistoryIcon size={16} />, id: 'history' },
     { name: 'Learning Center', icon: <BookOpen size={16} />, id: 'learning' },
   ]
 
@@ -60,8 +60,8 @@ export function Navbar({ currentView, setView, theme, setTheme }: NavbarProps) {
           className="flex items-center gap-2 group cursor-pointer"
           onClick={() => setView('home')}
         >
-          <div className="p-1.5 rounded-xl bg-primary/20 group-hover:scale-110 transition-transform">
-            <img src="/logo.png" alt="VERD" className="w-8 h-8 object-contain" />
+          <div className="p-2 rounded-2xl bg-primary/20 group-hover:scale-110 transition-all shadow-[0_0_20px_rgba(0,214,177,0.2)]">
+            <img src="/logo.png" alt="VERD" className="w-10 h-10 object-contain" />
           </div>
           <span className="text-2xl font-bold tracking-tighter italic text-white uppercase">VERD</span>
         </div>
