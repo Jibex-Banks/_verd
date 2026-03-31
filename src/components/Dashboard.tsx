@@ -30,11 +30,7 @@ export function Dashboard({ theme }: { theme: 'bitget' | 'greenfamily' }) {
           </div>
           
           <h1 className="text-7xl md:text-[10rem] font-bold tracking-tighter mb-10 leading-[0.8] italic">
-            {theme === 'bitget' ? (
-              <span className="text-gradient-rainbow">VERD</span>
-            ) : (
-              <span className="text-primary">VERD</span>
-            )}
+            <span className="text-white">VERD</span>
             <br />
             <span className="text-white/20 not-italic font-black">AI</span> 
             <span className="text-white/60"> AGRONOMY</span>
