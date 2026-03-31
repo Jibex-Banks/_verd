@@ -59,14 +59,14 @@ export function Dashboard({ theme, currentView }: DashboardProps) {
                   <ArrowRight size={14} className="text-primary/60 ml-2 group-hover:translate-x-1 transition-transform" />
                 </div>
                 
-                <h1 className="text-7xl md:text-[10rem] font-bold tracking-tighter mb-10 leading-[0.8] italic">
+                <h1 className="text-5xl md:text-8xl lg:text-[10rem] font-bold tracking-tighter mb-10 leading-[0.8] italic">
                   <span className="text-white">GROWING</span>
                   <br />
                   <span className="text-white/20 not-italic font-black">SMARTER</span> 
                   <span className="text-white/60"> TOGETHER</span>
                 </h1>
                 
-                <p className="text-xl md:text-2xl text-white/40 max-w-2xl leading-relaxed font-light">
+                <p className="text-lg md:text-xl lg:text-2xl text-white/40 max-w-2xl leading-relaxed font-light">
                   Think of VERD as your digital field-hand. We're here to help you spot crop issues early, so you can focus on what you do best: farming.
                 </p>
               </motion.div>
@@ -82,7 +82,7 @@ export function Dashboard({ theme, currentView }: DashboardProps) {
                     <ShieldCheck size={24} />
                     <span className="font-bold uppercase tracking-widest text-xs">Your Soil, Your Data</span>
                   </div>
-                  <p className="text-white/60 leading-relaxed text-sm mb-6">
+                  <p className="text-white/60 leading-relaxed text-sm mb-6 font-light">
                     We believe in agrarian sovereignty. That means your data serves your harvest, first and foremost. We provide the ground-truth insights to help you grow with confidence and security.
                   </p>
                   <div className="flex gap-4">
@@ -95,15 +95,15 @@ export function Dashboard({ theme, currentView }: DashboardProps) {
             </div>
 
             {/* Technology Hub & Usability */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-32">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-32">
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
                 <GlassCard className="group hover:border-primary/30 transition-all p-8 flex flex-col h-full bg-black/40 border-white/5">
                   <div className="p-3 rounded-2xl bg-primary/10 text-primary w-fit mb-6 group-hover:scale-110 transition-transform">
                     <Drone size={28} />
                   </div>
                   <h3 className="text-xl font-bold mb-3 italic">VERD Aerial</h3>
-                  <p className="text-white/40 text-sm leading-relaxed mb-6">
-                    Autonomous field monitoring with high-precision drone integration. Track crop health across hectares in minutes using the VERD aerial suite.
+                  <p className="text-white/40 text-sm leading-relaxed mb-6 font-light">
+                    Autonomous field monitoring with high-precision drone integration. Track crop health across hectares in minutes.
                   </p>
                   <ul className="text-[10px] text-white/20 space-y-2 mb-6 font-bold uppercase tracking-widest">
                     <li className="flex items-center gap-2 text-primary/60"><Zap size={10} /> RTK GPS Support</li>
@@ -122,8 +122,8 @@ export function Dashboard({ theme, currentView }: DashboardProps) {
                     <Globe size={28} />
                   </div>
                   <h3 className="text-xl font-bold mb-3 italic">VERD Hub</h3>
-                  <p className="text-white/40 text-sm leading-relaxed mb-6">
-                    The VERD network belongs to the community. Participate in the future of decentralized agricultural AI by contributing to our pathology library.
+                  <p className="text-white/40 text-sm leading-relaxed mb-6 font-light">
+                    The VERD network belongs to the community. Participate in the future of decentralized agricultural AI.
                   </p>
                   <ul className="text-[10px] text-white/20 space-y-2 mb-6 font-bold uppercase tracking-widest">
                     <li className="flex items-center gap-2 text-primary/60"><Zap size={10} /> MIT Licensed</li>
@@ -136,14 +136,14 @@ export function Dashboard({ theme, currentView }: DashboardProps) {
                 </GlassCard>
               </motion.div>
 
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="sm:col-span-2 lg:col-span-1">
                 <GlassCard className="group hover:border-primary/30 transition-all p-8 flex flex-col h-full bg-black/40 border-white/5">
                   <div className="p-3 rounded-2xl bg-primary/10 text-primary w-fit mb-6 group-hover:scale-110 transition-transform">
                     <Code2 size={28} />
                   </div>
                   <h3 className="text-xl font-bold mb-3 italic">Dev-First Design</h3>
-                  <p className="text-white/40 text-sm leading-relaxed mb-6">
-                    Built by designers, for developers. Our headless API allows for infinite customization and integration into existing ERP frameworks and mobile tools.
+                  <p className="text-white/40 text-sm leading-relaxed mb-6 font-light">
+                    Built by designers, for developers. Our headless API allows for infinite customization and integration.
                   </p>
                   <ul className="text-[10px] text-white/20 space-y-2 mb-6 font-bold uppercase tracking-widest">
                     <li className="flex items-center gap-2 text-primary/60"><Zap size={10} /> REST & gRPC API</li>
@@ -160,20 +160,20 @@ export function Dashboard({ theme, currentView }: DashboardProps) {
             {/* Expanded Onboarding Flow */}
             <div id="onboarding" className="mb-32">
               <div className="mb-12">
-                <h2 className="text-4xl font-bold italic tracking-tighter uppercase mb-2">Getting started with <span className="text-primary not-italic font-black">VERD</span></h2>
-                <p className="text-white/40 text-sm max-w-xl">It only takes a few steps to start making your harvest smarter. Let's walk through them together.</p>
+                <h2 className="text-3xl md:text-4xl font-bold italic tracking-tighter uppercase mb-2">Getting started with <span className="text-primary not-italic font-black">VERD</span></h2>
+                <p className="text-white/40 text-sm max-w-xl font-light">It only takes a few steps to start making your harvest smarter. Let's walk through them together.</p>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {[
-                  { step: '01', title: 'Create Account', desc: 'Securely create your profile so your scan history stays private and accessible everywhere.' },
-                  { step: '02', title: 'Explore Dashboard', desc: 'Get familiar with your custom field insights and recent pathological trends.' },
-                  { step: '03', title: 'Connect Sensors', desc: 'Link your field hardware or drone suite for real-time biometric data streaming.' },
-                  { step: '04', title: 'Capture Sample', desc: 'Snap a clear photo of any crop issue. Our AI spots pathology markers instantly.' },
+                  { step: '01', title: 'Create Account', desc: 'Securely create your profile so your scan history stays private.' },
+                  { step: '02', title: 'Explore Dashboard', desc: 'Get familiar with your custom field insights and pathological trends.' },
+                  { step: '03', title: 'Connect Sensors', desc: 'Link your field hardware or drone suite for real-time data.' },
+                  { step: '04', title: 'Capture Sample', desc: 'Snap a clear photo of any crop issue. Our AI spots pathology markers.' },
                   { step: '05', title: 'Review Diagnosis', desc: 'Follow suggested steps from our neural models to protect your field.' },
-                  { step: '06', title: 'Share & Grow', desc: 'Contribute to the open pathology database and learn from the global community.' }
+                  { step: '06', title: 'Share & Grow', desc: 'Contribute to the open pathology database and learn from others.' }
                 ].map((item, i) => (
                   <GlassCard key={i} className="p-8 border-white/5 bg-black/20 hover:bg-black/40 transition-all group">
-                    <span className="text-6xl font-black text-white/[0.02] group-hover:text-primary/[0.05] transition-colors leading-none block mb-4 italic">{item.step}</span>
+                    <span className="text-5xl md:text-6xl font-black text-white/[0.02] group-hover:text-primary/[0.05] transition-colors leading-none block mb-4 italic">{item.step}</span>
                     <h4 className="font-bold mb-3 text-sm text-primary uppercase tracking-widest">{item.title}</h4>
                     <p className="text-white/40 text-xs leading-relaxed font-light">{item.desc}</p>
                   </GlassCard>

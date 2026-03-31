@@ -1,0 +1,24 @@
+name: verd
+description: A premium AI-driven agronomy platform engineered by White Walkers.
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  google_fonts: ^6.1.0
+  lucide_icons_flutter: ^0.360.0
+  flutter_animate: ^4.5.0
+  vector_math: ^2.1.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/logo.png
