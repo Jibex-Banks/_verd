@@ -30,12 +30,12 @@ export function Auth({ isOpen, onClose }: { isOpen: boolean, onClose: () => void
 
           <div className="text-center mb-10">
             <h2 className="text-4xl font-bold tracking-tighter italic mb-2">
-              {mode === 'login' ? 'Welcome Back' : 'Join VERD'}
+              {mode === 'login' ? 'Welcome back, friend!' : 'Join the family'}
             </h2>
             <p className="text-white/40 text-sm">
               {mode === 'login' 
-                ? 'Access your neural diagnostics and field registry.' 
-                : 'Start your journey into AI-driven high-fidelity agronomy.'}
+                ? 'Great to see you again. Let’s check on your fields.' 
+                : 'Ready to grow smarter? Let’s set up your farm profile.'}
             </p>
           </div>
 
@@ -109,7 +109,7 @@ export function Auth({ isOpen, onClose }: { isOpen: boolean, onClose: () => void
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-primary transition-colors" size={18} />
                 <input 
                   type="email" 
-                  placeholder="name@savannah.tech" 
+                  placeholder="hello@yourfarm.com" 
                   className="w-full bg-white/5 border border-white/5 rounded-2xl py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-primary/50 transition-all"
                 />
               </div>
@@ -117,9 +117,9 @@ export function Auth({ isOpen, onClose }: { isOpen: boolean, onClose: () => void
 
             <div className="space-y-2">
               <div className="flex justify-between items-center px-1">
-                <label className="text-[10px] uppercase tracking-widest font-bold text-primary/80">Security Key</label>
+                <label className="text-[10px] uppercase tracking-widest font-bold text-primary/80">Your Password</label>
                 {mode === 'login' && (
-                  <button type="button" className="text-[10px] uppercase tracking-widest font-bold text-white/20 hover:text-primary/60 transition-colors">Recover</button>
+                  <button type="button" className="text-[10px] uppercase tracking-widest font-bold text-white/20 hover:text-primary/60 transition-colors">Forgot?</button>
                 )}
               </div>
               <div className="relative group">
@@ -132,8 +132,8 @@ export function Auth({ isOpen, onClose }: { isOpen: boolean, onClose: () => void
               </div>
             </div>
 
-            <button className="w-full py-5 bg-primary text-white font-bold rounded-2xl hover:bg-primary/90 transition-all shadow-[0_15px_40px_rgba(108,58,250,0.3)] flex items-center justify-center gap-2 group mt-8">
-              {mode === 'login' ? 'INITIALIZE SESSION' : 'AUTHORIZE ACCOUNT'}
+            <button className="w-full py-5 bg-primary text-white font-bold rounded-2xl hover:bg-primary/90 transition-all shadow-[0_15px_40px_rgba(108,58,250,0.3)] flex items-center justify-center gap-2 group mt-8 uppercase tracking-[0.3em] text-xs">
+              {mode === 'login' ? 'Sign In' : 'Create My Account'}
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </button>
           </form>
@@ -160,12 +160,12 @@ export function Auth({ isOpen, onClose }: { isOpen: boolean, onClose: () => void
 
           <div className="mt-10 text-center">
             <p className="text-xs text-white/20">
-              {mode === 'login' ? "Don't have a protocol set up?" : "Already possess authorization?"}
+              {mode === 'login' ? "New here?" : "Already have an account?"}
               <button 
                 onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}
                 className="ml-2 text-primary font-bold hover:underline"
               >
-                {mode === 'login' ? 'Create Account' : 'Initialize Session'}
+                {mode === 'login' ? 'Create Account' : 'Sign In instead'}
               </button>
             </p>
           </div>
