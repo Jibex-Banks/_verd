@@ -66,8 +66,21 @@ class ScanResult extends HiveObject {
     Map<String, dynamic>? analysis;
     if (data['analysisMap'] != null) {
       analysis = Map<String, dynamic>.from(data['analysisMap']);
+    } else if (data['analysis'] != null) {
+      // Extension writes its response to the 'analysis' field
+      final dynamic rawAnalysis = data['analysis'];
+      if (rawAnalysis is String) {
+        try {
+          String rawJson = rawAnalysis.replaceAll('```json', '').replaceAll('```', '').trim();
+          analysis = jsonDecode(rawJson) as Map<String, dynamic>;
+        } catch (_) {
+          // Silent fail - we'll show "Unknown" in UI
+        }
+      } else if (rawAnalysis is Map) {
+        analysis = Map<String, dynamic>.from(rawAnalysis);
+      }
     } else if (data['output'] != null) {
-      // It's a raw Gemini Extension result
+      // Backwards compatibility: older documents may use 'output'
       final dynamic output = data['output'];
       if (output is String) {
         try {

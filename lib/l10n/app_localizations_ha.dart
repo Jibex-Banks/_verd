@@ -708,6 +708,9 @@ class AppLocalizationsHa extends AppLocalizations {
   String get token_copied => 'An kwafi alama zuwa mahaɗin mahaɗi';
 
   @override
+  String get result_saved_successfully => 'Result saved successfully';
+
+  @override
   String get topics => 'Batutuwa';
 
   @override

@@ -271,5 +271,6 @@
   "create_profile": "プロフィールを作成",
   "free_trial_ended": "無料トライアルが終了しました",
   "free_trial_desc": "無料スキャンの上限（3回）に達しました。無制限のスキャンを利用し、農場の履歴を保存するには、サインアップしてください。",
-  "more_options": "More Options"
+  "more_options": "More Options",
+  "result_saved_successfully": "Result saved successfully"
 }

@@ -673,6 +673,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get token_copied => '令牌已复制到剪贴板';
 
   @override
+  String get result_saved_successfully => 'Result saved successfully';
+
+  @override
   String get topics => '主题';
 
   @override

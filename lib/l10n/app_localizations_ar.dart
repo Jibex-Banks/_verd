@@ -696,6 +696,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get token_copied => 'تم نسخ الرمز إلى الحافظة';
 
   @override
+  String get result_saved_successfully => 'Result saved successfully';
+
+  @override
   String get topics => 'المواضيع';
 
   @override

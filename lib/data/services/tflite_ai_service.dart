@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:image/image.dart' as img;
+import 'package:verd/data/services/crop_disease_knowledge.dart';
 
 // Top-level function for Isolate execution to prevent UI stuttering
 Uint8List _processImageInIsolate(Uint8List bytes) {
@@ -13,8 +15,8 @@ Uint8List _processImageInIsolate(Uint8List bytes) {
   final resized = img.copyResize(image, width: 224, height: 224);
   final inputBytes = Uint8List(1 * 224 * 224 * 3);
   int i = 0;
-  
-  // Convert to [1, 224, 224, 3] format
+
+  // Convert to [1, 224, 224, 3] format (normalized 0–255 uint8)
   for (int y = 0; y < 224; y++) {
     for (int x = 0; x < 224; x++) {
       final p = resized.getPixel(x, y);
@@ -26,10 +28,26 @@ Uint8List _processImageInIsolate(Uint8List bytes) {
   return inputBytes;
 }
 
+/// Result for a single prediction candidate
+class PredictionCandidate {
+  final String labelKey;
+  final double confidence;
+  final CropDiseaseKnowledge knowledge;
+
+  PredictionCandidate({
+    required this.labelKey,
+    required this.confidence,
+    required this.knowledge,
+  });
+}
+
 class TFLiteAIService {
   late Interpreter _interpreter;
   late Map<int, String> _labels;
   bool _isLoaded = false;
+
+  /// Confidence threshold below which we flag the result as uncertain
+  static const double uncertaintyThreshold = 0.60;
 
   bool get isLoaded => _isLoaded;
 
@@ -41,8 +59,9 @@ class TFLiteAIService {
       final Map<String, dynamic> decoded = json.decode(rawLabels);
       _labels = decoded.map((k, v) => MapEntry(int.parse(k), v as String));
       _isLoaded = true;
+      debugPrint('[TFLiteAIService] Model loaded with ${_labels.length} classes.');
     } catch (e) {
-      debugPrint('Error initializing TFLite model: $e');
+      debugPrint('[TFLiteAIService] Error initializing TFLite model: $e');
     }
   }
 
@@ -57,73 +76,90 @@ class TFLiteAIService {
         throw Exception('Image file does not exist.');
       }
       final fileSize = await imageFile.length();
-      if (fileSize == 0 || fileSize > 15 * 1024 * 1024) { // 15MB limit
+      if (fileSize == 0 || fileSize > 15 * 1024 * 1024) {
         throw Exception('Invalid image file size.');
       }
 
       // 2. Offload preprocessing to a background Isolate
       final bytes = await imageFile.readAsBytes();
       final preprocessedBytes = await compute(_processImageInIsolate, bytes);
-      
+
       final input = preprocessedBytes.reshape([1, 224, 224, 3]);
       final output = List.filled(54, 0).reshape([1, 54]);
 
       _interpreter.run(input, output);
-      
-      final probs = List<double>.from(output[0].map((e) => (e as num).toDouble() / 255.0)); // Normalize probabilities to 0-1
-      
-      int topIdx = 0;
-      double topScore = 0;
-      for (int i = 0; i < probs.length; i++) {
-        if (probs[i] > topScore) {
-          topScore = probs[i];
-          topIdx = i;
-        }
-      }
 
-      final label = _labels[topIdx] ?? 'unknown';
-      return _formatResult(label, topScore);
-    } catch (e) {
-       debugPrint('TFLite inference error: $e');
-       throw Exception('Failed to analyze image offline: $e');
+      // 3. Get raw output values and apply softmax for proper probabilities
+      final rawOutput = List<double>.from(
+        output[0].map((e) => (e as num).toDouble()),
+      );
+      final probabilities = _softmax(rawOutput);
+
+      // 4. Get top-3 predictions sorted by confidence
+      final indexedProbs = List.generate(
+        probabilities.length,
+        (i) => MapEntry(i, probabilities[i]),
+      );
+      indexedProbs.sort((a, b) => b.value.compareTo(a.value));
+
+      final top3 = indexedProbs.take(3).map((entry) {
+        final labelKey = _labels[entry.key] ?? 'unknown';
+        return PredictionCandidate(
+          labelKey: labelKey,
+          confidence: entry.value,
+          knowledge: CropDiseaseKnowledge.lookup(labelKey),
+        );
+      }).toList();
+
+      final topPrediction = top3.first;
+      final isUncertain = topPrediction.confidence < uncertaintyThreshold;
+
+      debugPrint('[TFLiteAIService] Top: ${topPrediction.labelKey} '
+          '(${(topPrediction.confidence * 100).toStringAsFixed(1)}%), '
+          'uncertain: $isUncertain');
+
+      return _formatResult(topPrediction, top3, isUncertain);
+    } catch (e, stack) {
+      debugPrint('[TFLiteAIService] Inference error: $e');
+      Error.throwWithStackTrace(Exception('Failed to analyze image offline: $e'), stack);
     }
   }
 
-  Map<String, dynamic> _formatResult(String rawLabel, double confidence) {
-     // Expected output from the prompt: 
-     // healthy -> Healthy
-     // unknown -> Unknown
-     // Needs Attention / Critical 
-     
-     // Typical labels look like: "tomato_early_blight", "beans_healthy", etc.
-     
-     String healthStatus = 'Needs Attention';
-     if (rawLabel.toLowerCase().contains('healthy')) {
-       healthStatus = 'Healthy';
-     } else if (rawLabel.toLowerCase().contains('critical') || rawLabel.toLowerCase().contains('virus') || rawLabel.toLowerCase().contains('blight') || rawLabel.toLowerCase().contains('necrosis')) {
-       healthStatus = 'Critical';
-     }
-
-     String formattedLabel = rawLabel.replaceAll('_', ' ');
-     // capitalize words
-     formattedLabel = formattedLabel.split(' ').map((word) => word.isNotEmpty ? '${word[0].toUpperCase()}${word.substring(1)}' : '').join(' ');
-
-     return {
-        'status': healthStatus,
-        'confidence': (confidence * 100).round(),
-        'disease': healthStatus == 'Healthy' ? null : formattedLabel,
-        'treatment': _getFallbackTreatment(rawLabel),
-        'analyzedVia': 'Local AI (TFLite)',
-     };
+  /// Applies softmax to convert raw logits to a probability distribution
+  List<double> _softmax(List<double> logits) {
+    final maxLogit = logits.reduce(math.max);
+    final exps = logits.map((x) => math.exp(x - maxLogit)).toList();
+    final sumExps = exps.reduce((a, b) => a + b);
+    return exps.map((e) => e / sumExps).toList();
   }
-  
-  String _getFallbackTreatment(String label) {
-    if (label.contains('healthy')) return 'Consistent watering and monitoring recommended.';
-    if (label.contains('rust')) return 'Apply copper-based fungicide. Remove infected plant parts.';
-    if (label.contains('blight')) return 'Improve air circulation. Water at the base, not on leaves. Apply appropriate fungicide.';
-    if (label.contains('virus')) return 'Remove and destroy infected plants immediately to prevent spread.';
-    if (label.contains('spider_mite')) return 'Use insecticidal soap or neem oil. Increase humidity around plants.';
-    return 'Consult local agricultural extension for specific treatments regarding $label.';
+
+  Map<String, dynamic> _formatResult(
+    PredictionCandidate top,
+    List<PredictionCandidate> top3,
+    bool isUncertain,
+  ) {
+    final knowledge = top.knowledge;
+
+    return {
+      'labelKey': top.labelKey,
+      'displayName': knowledge.displayName,
+      'cropType': knowledge.cropType,
+      'healthStatus': knowledge.healthStatus,
+      'confidence': top.confidence,
+      'isUncertain': isUncertain,
+      'visualSigns': knowledge.visualSigns,
+      'treatment': knowledge.treatment,
+      'actionSteps': knowledge.actionSteps,
+      'requiresManualInspection': knowledge.requiresManualInspection,
+      'disclaimer': knowledge.disclaimer,
+      'top3': top3.map((c) => {
+        'labelKey': c.labelKey,
+        'displayName': c.knowledge.displayName,
+        'cropType': c.knowledge.cropType,
+        'confidence': c.confidence,
+        'healthStatus': c.knowledge.healthStatus,
+      }).toList(),
+    };
   }
 
   void dispose() {

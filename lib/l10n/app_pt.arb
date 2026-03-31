@@ -271,5 +271,6 @@
   "create_profile": "Criar seu perfil",
   "free_trial_ended": "Teste Gratuito Encerrado",
   "free_trial_desc": "Você atingiu o limite de 3 digitalizações gratuitas. Inscreva-se para desbloquear digitalizações ilimitadas e salvar o histórico da sua fazenda!",
-  "more_options": "More Options"
+  "more_options": "More Options",
+  "result_saved_successfully": "Result saved successfully"
 }

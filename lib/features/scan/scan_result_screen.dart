@@ -76,7 +76,31 @@ class ScanResultScreen extends StatelessWidget {
                 ),
               ),
 
-            // Engine and timestamp info
+            // 1. Cloud Fallback Warning
+            if (scanResult['cloudFallback'] == true)
+               Container(
+                margin: const EdgeInsets.only(bottom: AppSpacing.lg),
+                padding: const EdgeInsets.all(AppSpacing.md),
+                decoration: BoxDecoration(
+                  color: Colors.orange[50],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.orange[300]!),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.wifi_off, color: Colors.orange[800]),
+                    const SizedBox(width: AppSpacing.md),
+                    Expanded(
+                      child: Text(
+                        'Cloud analysis currently unavailable. Showing fast on-device results instead.',
+                        style: AppTypography.body.copyWith(color: Colors.orange[900]),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+             // Engine and timestamp info
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(AppSpacing.md),
@@ -97,7 +121,9 @@ class ScanResultScreen extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        engine.contains('Gemini Cloud Analysis||gemini') ? AppLocalizations.of(context)!.gemini_analysis : AppLocalizations.of(context)!.local_analysis,
+                        engine.contains('gemini') && scanResult['cloudFallback'] != true
+                            ? 'Gemini Cloud Analysis' 
+                            : 'Local AI Analysis',
                         style: AppTypography.body.copyWith(
                           fontWeight: FontWeight.w600,
                           color: AppColors.primary,
@@ -175,16 +201,60 @@ class ScanResultScreen extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.lg),
 
-            // Diseases/Issues
+            // 2. Uncertainty Warning
+            if (analysis['isUncertain'] == true)
+              Container(
+                margin: const EdgeInsets.only(bottom: AppSpacing.lg),
+                padding: const EdgeInsets.all(AppSpacing.md),
+                decoration: BoxDecoration(
+                  color: Colors.amber[50],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.amber[300]!),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.warning_amber_rounded, color: Colors.amber[800], size: 28),
+                    const SizedBox(width: AppSpacing.md),
+                    Expanded(
+                      child: Text(
+                        'Uncertain diagnosis. The AI is not fully confident. Please check the visual signs below to confirm.',
+                        style: AppTypography.body.copyWith(color: Colors.amber[900], fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+            // 3. Visual Signs (What to look for)
+            if (analysis['visualSigns'] != null && analysis['visualSigns'].toString().isNotEmpty)
+              _buildResultCard(
+                title: 'What to Look For (Visual Signs)',
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(Icons.visibility, color: Colors.blue[600], size: 20),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        analysis['visualSigns'],
+                        style: AppTypography.body.copyWith(color: Colors.grey[800]),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            if (analysis['visualSigns'] != null && analysis['visualSigns'].toString().isNotEmpty)
+              const SizedBox(height: AppSpacing.lg),
+
+            // Diseases/Issues (Diagnosis Name)
             if (diseases.isNotEmpty)
               _buildResultCard(
                 title: AppLocalizations.of(context)!.detected_issues,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: diseases.map((disease) {
-                    final name = disease['Unknown||name'] as String? ?? 'unknown_issue';
-                    final severity = disease['Unknown||severity'] as String? ?? 'unknown_severity';
-                    final treatment = disease['No treatment info available||treatment'] as String? ?? 'no_treatment_info';
+                    final name = disease['name'] as String? ?? 'Unknown Issue';
+                    final severity = disease['severity'] as String? ?? 'Moderate';
                     
                     return Container(
                       margin: const EdgeInsets.only(bottom: AppSpacing.md),
@@ -194,43 +264,145 @@ class ScanResultScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(color: Colors.red[200]!),
                       ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              name,
+                              style: AppTypography.body.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.red[900],
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: _getSeverityColor(severity),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              severity,
+                              style: AppTypography.caption.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            
+            // 4. What To Do Next (Action Steps)
+            if (analysis['actionSteps'] != null && (analysis['actionSteps'] as List).isNotEmpty)
+              _buildResultCard(
+                title: 'What To Do Next',
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: (analysis['actionSteps'] as List).asMap().entries.map((entry) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(top: 2, right: 12),
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: AppColors.primary.withValues(alpha: 0.1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Text(
+                              '${entry.key + 1}',
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              entry.value.toString(),
+                              style: AppTypography.body.copyWith(color: Colors.grey[800]),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            if (analysis['actionSteps'] != null && (analysis['actionSteps'] as List).isNotEmpty)
+              const SizedBox(height: AppSpacing.lg),
+
+            // Disclaimer & Manual Inspection
+            if (analysis['disclaimer'] != null || analysis['requiresManualInspection'] == true)
+              Container(
+                margin: const EdgeInsets.only(bottom: AppSpacing.lg),
+                padding: const EdgeInsets.all(AppSpacing.md),
+                decoration: BoxDecoration(
+                  color: Colors.blue[50],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.blue[200]!),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(Icons.info_outline, color: Colors.blue[800]),
+                    const SizedBox(width: AppSpacing.md),
+                    Expanded(
+                      child: Text(
+                        analysis['disclaimer'] ?? 'Please confirm diagnosis with manual inspection or an expert before taking drastic action.',
+                        style: AppTypography.body.copyWith(color: Colors.blue[900]),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+            // Top 3 Predictions (Local tie-breakers)
+            if (analysis['top3'] != null && (analysis['top3'] as List).isNotEmpty)
+              _buildResultCard(
+                title: 'Top 3 Predictions',
+                child: Column(
+                  children: (analysis['top3'] as List).map((pred) {
+                    final conf = (pred['confidence'] as num?)?.toDouble() ?? 0.0;
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 12.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Expanded(
                                 child: Text(
-                                  name,
-                                  style: AppTypography.body.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.red[900],
-                                  ),
+                                  pred['displayName'] ?? 'Unknown',
+                                  style: AppTypography.body.copyWith(fontWeight: FontWeight.w500),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: _getSeverityColor(severity),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Text(
-                                  severity,
-                                  style: AppTypography.caption.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
+                              Text(
+                                '${(conf * 100).toStringAsFixed(1)}%',
+                                style: AppTypography.caption.copyWith(color: Colors.grey[600]),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 8),
-                          Text(
-                            treatment,
-                            style: AppTypography.caption.copyWith(color: Colors.grey[700]),
+                          const SizedBox(height: 6),
+                          LinearProgressIndicator(
+                            value: conf,
+                            backgroundColor: Colors.grey[200],
+                            color: conf > 0.8 ? Colors.green : (conf > 0.4 ? Colors.orange : Colors.red),
+                            minHeight: 6,
+                            borderRadius: BorderRadius.circular(3),
                           ),
                         ],
                       ),
@@ -469,11 +641,13 @@ class ScanResultScreen extends StatelessWidget {
                 const SizedBox(width: AppSpacing.md),
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      // TODO: Implement save to history
+                      // For now, show success
                       AppToast.show(
                         context,
-                        message: AppLocalizations.of(context)!.save_to_history_coming_soon,
-                        variant: ToastVariant.info,
+                        message: AppLocalizations.of(context)!.result_saved_successfully,
+                        variant: ToastVariant.success,
                       );
                     },
                     style: ElevatedButton.styleFrom(

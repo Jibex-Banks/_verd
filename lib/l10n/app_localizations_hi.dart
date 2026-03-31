@@ -696,6 +696,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get token_copied => 'टोकन क्लिपबोर्ड में कॉपी हुआ';
 
   @override
+  String get result_saved_successfully => 'Result saved successfully';
+
+  @override
   String get topics => 'विषय';
 
   @override

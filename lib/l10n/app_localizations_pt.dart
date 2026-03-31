@@ -707,6 +707,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get token_copied => 'Token copiado para a área de transferência';
 
   @override
+  String get result_saved_successfully => 'Result saved successfully';
+
+  @override
   String get topics => 'Tópicos';
 
   @override

@@ -294,5 +294,6 @@
   "create_profile": "Cree su perfil",
   "free_trial_ended": "Prueba gratuita finalizada",
   "free_trial_desc": "Has alcanzado tu límite de 3 escaneos gratuitos. ¡Regístrate para desbloquear escaneos ilimitados y guardar el historial de tu granja!",
-  "more_options": "More Options"
+  "more_options": "More Options",
+  "result_saved_successfully": "Result saved successfully"
 }

@@ -20,37 +20,75 @@ class ScanScreen extends ConsumerStatefulWidget {
   ConsumerState<ScanScreen> createState() => _ScanScreenState();
 }
 
-class _ScanScreenState extends ConsumerState<ScanScreen> {
+class _ScanScreenState extends ConsumerState<ScanScreen>
+    with WidgetsBindingObserver {
   CameraController? _cameraController;
   bool _isInit = false;
   bool _isProcessing = false;
+  bool _isCameraInitializing = false;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _initCamera();
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (!mounted) return;
+
+    if (state == AppLifecycleState.resumed) {
+      // Resume preview when app comes to foreground
+      if (_cameraController != null && _isInit) {
+        _cameraController!.resumePreview();
+      }
+    } else if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+      // Pause preview when app goes to background
+      if (_cameraController != null && _isInit) {
+        _cameraController!.pausePreview();
+      }
+    }
+  }
+
+  @override
+  void didUpdateWidget(ScanScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+  }
+
   Future<void> _initCamera() async {
+    // Guard to prevent multiple initializations
+    if (_isCameraInitializing || _isInit) return;
+
+    _isCameraInitializing = true;
     try {
       await Permission.camera.request();
       final cameras = await availableCameras();
-      if (cameras.isNotEmpty) {
-        final firstCamera = cameras.first;
-        _cameraController = CameraController(
-          firstCamera,
-          ResolutionPreset.high,
-          enableAudio: false,
-        );
-        await _cameraController!.initialize();
-        if (mounted) {
-          setState(() {
-            _isInit = true;
-          });
-        }
+      if (cameras.isEmpty) {
+        debugPrint("Camera Error: No cameras available");
+        _isCameraInitializing = false;
+        return;
+      }
+
+      final firstCamera = cameras.first;
+      _cameraController = CameraController(
+        firstCamera,
+        ResolutionPreset.high,
+        enableAudio: false,
+      );
+      
+      await _cameraController!.initialize();
+      
+      if (mounted) {
+        setState(() {
+          _isInit = true;
+        });
+        debugPrint("Camera initialized successfully");
       }
     } catch (e) {
       debugPrint("Camera Error: $e");
+    } finally {
+      _isCameraInitializing = false;
     }
   }
 
@@ -185,6 +223,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _cameraController?.dispose();
     super.dispose();
   }

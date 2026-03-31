@@ -5,6 +5,8 @@ import 'package:verd/data/services/local_ml_service.dart';
 import 'package:verd/providers/auth_provider.dart'; // To get firestore/storage providers
 
 import 'package:verd/data/services/tflite_ai_service.dart';
+import 'package:verd/data/services/gemini_direct_service.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 // AI service provider
 final aiServiceProvider = Provider<AIService>((ref) {
@@ -22,10 +24,15 @@ final localMLServiceProvider = Provider<LocalMLService>((ref) {
   return LocalMLService(tfliteService: ref.watch(tfliteAIServiceProvider));
 });
 
+final geminiDirectServiceProvider = Provider<GeminiDirectService>((ref) {
+  return GeminiDirectService(apiKey: dotenv.env['GEMINI_API_KEY'] ?? '');
+});
+
 final aiRoutingServiceProvider = Provider<AIRoutingService>((ref) {
   return AIRoutingService(
     storageService: ref.watch(storageServiceProvider),
     firestoreService: ref.watch(firestoreServiceProvider),
     localMLService: ref.watch(localMLServiceProvider),
+    geminiService: ref.watch(geminiDirectServiceProvider),
   );
 });

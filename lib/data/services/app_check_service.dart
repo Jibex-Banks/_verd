@@ -19,17 +19,17 @@ class AppCheckService {
       if (kDebugMode) {
         // Debug provider for development - only use in debug builds
         await FirebaseAppCheck.instance.activate(
-          webProvider: ReCaptchaV3Provider('6Lc3x2MqAAAAAJ0E4v8J0lJ5V8J0J0J0J0J0J0J0'), // Replace with your reCAPTCHA site key
-          androidProvider: AndroidProvider.debug,
-          appleProvider: AppleProvider.debug,
+          providerApple: const AppleDebugProvider(),
+          providerAndroid: const AndroidDebugProvider(),
+          providerWeb: ReCaptchaV3Provider('6Lc3x2MqAAAAAJ0E4v8J0lJ5V8J0J0J0J0J0J0J0'), // Replace with your reCAPTCHA site key
         );
         debugPrint('[AppCheck] Initialized with debug provider');
       } else {
         // Production providers
         await FirebaseAppCheck.instance.activate(
-          webProvider: ReCaptchaV3Provider('6Lc3x2MqAAAAAJ0E4v8J0lJ5V8J0J0J0J0J0J0J0'), // Replace with your reCAPTCHA site key
-          androidProvider: AndroidProvider.playIntegrity, // Use Play Integrity for Android
-          appleProvider: AppleProvider.deviceCheck, // Use DeviceCheck for iOS
+          providerApple: const AppleDeviceCheckProvider(), // Use DeviceCheck for iOS
+          providerAndroid: const AndroidPlayIntegrityProvider(), // Use Play Integrity for Android
+          providerWeb: ReCaptchaV3Provider('6Lc3x2MqAAAAAJ0E4v8J0lJ5V8J0J0J0J0J0J0J0'), // Replace with your reCAPTCHA site key
         );
         debugPrint('[AppCheck] Initialized with production providers');
       }

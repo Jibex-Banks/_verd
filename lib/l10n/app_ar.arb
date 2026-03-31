@@ -271,5 +271,6 @@
   "create_profile": "إنشاء ملفك الشخصي",
   "free_trial_ended": "انتهت الفترة التجريبية",
   "free_trial_desc": "لقد وصلت إلى الحد الأقصى المسموح به وهو 3 عمليات مسح مجانية. سجل الآن لفتح عمليات المسح غير المحدودة وحفظ تاريخ مزارعك!",
-  "more_options": "More Options"
+  "more_options": "More Options",
+  "result_saved_successfully": "Result saved successfully"
 }

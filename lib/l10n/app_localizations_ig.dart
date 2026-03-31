@@ -703,6 +703,9 @@ class AppLocalizationsIg extends AppLocalizations {
   String get token_copied => 'Edetere token na clipboard';
 
   @override
+  String get result_saved_successfully => 'Result saved successfully';
+
+  @override
   String get topics => 'Isiokwu';
 
   @override

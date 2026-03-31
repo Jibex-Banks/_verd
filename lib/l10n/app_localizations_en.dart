@@ -703,6 +703,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get token_copied => 'Token copied to clipboard';
 
   @override
+  String get result_saved_successfully => 'Result saved successfully';
+
+  @override
   String get topics => 'Topics';
 
   @override

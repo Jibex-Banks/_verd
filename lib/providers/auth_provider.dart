@@ -48,24 +48,10 @@ final authStateProvider = StreamProvider<User?>((ref) {
 // ─── Cached current user profile ───
 
 final currentUserProvider = Provider<AppUser?>((ref) {
-  // 1. Try the Hive cache first (covers logged-in and guest users).
-  final cached = ref.watch(localStorageServiceProvider).getCachedUser();
-  if (cached != null) return cached;
-
-  // 2. Fallback: if Firebase has an anonymous sign-in but nothing is cached yet
-  //    (e.g. timing issue right after signInAnonymously), synthesise a guest user
-  //    so that the profile screen and scan screen don't see null.
-  final firebaseUser = FirebaseAuth.instance.currentUser;
-  if (firebaseUser != null && firebaseUser.isAnonymous) {
-    return AppUser(
-      uid: firebaseUser.uid,
-      email: '',
-      displayName: 'Guest',
-      createdAt: DateTime.now(),
-    );
-  }
-
-  return null;
+  // Watch the authNotifierProvider to get the current state of the AppUser profile.
+  // This ensures that when the async build() in AuthNotifier completes,
+  // the UI (and any screen watching currentUserProvider) will reactivey update.
+  return ref.watch(authNotifierProvider).value;
 });
 
 // ─── Auth Notifier (login / register / logout actions) ───
@@ -73,12 +59,38 @@ final currentUserProvider = Provider<AppUser?>((ref) {
 class AuthNotifier extends AsyncNotifier<AppUser?> {
   @override
   Future<AppUser?> build() async {
-    // If the user is logged in, try to use the cached profile
-    final authState = ref.watch(authStateProvider);
-    return authState.whenData((user) {
-      if (user == null) return null;
-      return ref.read(localStorageServiceProvider).getCachedUser();
-    }).value;
+    // 1. Watch auth state changes (StreamProvider)
+    final authState = ref.watch(authStateProvider).value;
+    
+    // If we're definitely not authenticated, return null
+    if (authState == null) return null;
+
+    // 2. Check local Hive cache first (best for speed/offline)
+    final repository = ref.read(authRepositoryProvider);
+    final cached = repository.getCachedUser();
+    
+    // If cache belongs to the same user, use it
+    if (cached != null && cached.uid == authState.uid) {
+      return cached;
+    }
+
+    // 3. Fallback: authenticated but no cache
+    if (authState.isAnonymous) {
+      // Synthesize a guest user profile
+      final guest = AppUser(
+        uid: authState.uid,
+        email: '',
+        displayName: 'Guest',
+        createdAt: DateTime.now(),
+      );
+      // Optional: cache it for future consistency
+      await ref.read(localStorageServiceProvider).cacheUser(guest);
+      return guest;
+    } else {
+      // PROACTIVE FETCH: Missing profile for logged-in user
+      debugPrint('[AuthNotifier] Cache empty for ${authState.uid}, fetching from Firestore...');
+      return await repository.refreshProfile();
+    }
   }
 
   Future<void> login(String email, String password) async {
@@ -147,7 +159,9 @@ class AuthNotifier extends AsyncNotifier<AppUser?> {
         location: location,
         photoFile: photoFile,
       );
-      // Invalidate the currentUserProvider so the profile screen re-reads
+      // Invalidate both providers so the profile screen re-reads the updated user
+      // authNotifierProvider builds from cache, so we need to clear it to force rebuild
+      ref.invalidate(authNotifierProvider);
       ref.invalidate(currentUserProvider);
       return updated;
     });

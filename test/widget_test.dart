@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:verd/app.dart';
 
 void main() {
   testWidgets('Smoke test - App builds', (WidgetTester tester) async {

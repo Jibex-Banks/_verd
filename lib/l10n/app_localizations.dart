@@ -1446,6 +1446,12 @@ abstract class AppLocalizations {
   /// **'Token copied to clipboard'**
   String get token_copied;
 
+  /// No description provided for @result_saved_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Result saved successfully'**
+  String get result_saved_successfully;
+
   /// No description provided for @topics.
   ///
   /// In en, this message translates to:

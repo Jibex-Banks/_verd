@@ -86,5 +86,6 @@
   "system_alerts_desc": "Important app updates",
   "debug_tools": "Debug Tools",
   "copy_token": "Copy FCM Token",
-  "token_copied": "FCM Token copied to clipboard"
+  "token_copied": "FCM Token copied to clipboard",
+  "result_saved_successfully": "Result saved successfully"
 }

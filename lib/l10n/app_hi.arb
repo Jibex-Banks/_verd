@@ -271,5 +271,6 @@
   "create_profile": "अपनी प्रोफाइल बनाएं",
   "free_trial_ended": "नि:शुल्क परीक्षण समाप्त",
   "free_trial_desc": "आप 3 निःशुल्क स्कैन की अपनी सीमा तक पहुँच चुके हैं। असीमित स्कैनिंग अनलॉक करने और अपने खेत का इतिहास सहेजने के लिए साइन अप करें!",
-  "more_options": "More Options"
+  "more_options": "More Options",
+  "result_saved_successfully": "Result saved successfully"
 }

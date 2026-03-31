@@ -718,6 +718,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get token_copied => 'Jeton copié dans le presse-papiers';
 
   @override
+  String get result_saved_successfully => 'Result saved successfully';
+
+  @override
   String get topics => 'Sujets';
 
   @override

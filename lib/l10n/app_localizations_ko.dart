@@ -679,6 +679,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get token_copied => '토큰이 클립보드에 복사되었습니다';
 
   @override
+  String get result_saved_successfully => 'Result saved successfully';
+
+  @override
   String get topics => '주제';
 
   @override

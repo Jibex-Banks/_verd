@@ -78,7 +78,8 @@ class FirestoreService {
     return snapshot.docs.map((doc) => ScanResult.fromFirestore(doc)).toList();
   }
 
-  /// Listens to a scan document and waits for the Gemini Extension to populate the 'output' field.
+  /// Listens to a scan document and waits for the Gemini Extension to populate
+  /// the response field (configured as 'analysis' in the extension).
   Future<Map<String, dynamic>?> waitForScanAnalysis({
     required String userId,
     required String scanId,
@@ -93,61 +94,49 @@ class FirestoreService {
         final data = snapshot.data();
         if (data == null) return null;
 
-        // 1. Check for success field (matches Extension config)
-        if (data.containsKey('output')) {
-          final output = data['output'];
-          
-          // Check if the output itself is a structured error from the extension
-          if (output is Map && 
-              (output['cropType'] == 'Error' || 
-               output['healthStatus']?.toString().contains('Error') == true)) {
-            return {
-              'analysis': {
-                'cropType': 'Error',
-                'healthStatus': 'Configuration Error',
-                'confidence': 0.0,
-                'diseases': [
-                  {
-                    'name': 'Extension Error',
-                    'severity': 'Critical',
-                    'treatment': output['diseases']?.first['treatment']?.toString() ?? 'Model configuration invalid.'
-                  }
-                ]
-              }
-            };
-          }
-          return data;
+        debugPrint('[FirestoreService] Snapshot keys: ${data.keys.toList()}');
+
+        // 1. Check for 'status' field FIRST — extension writes errors here
+        final status = data['status'];
+        if (status is Map && status.containsKey('error')) {
+          debugPrint('[FirestoreService] Extension status error: ${status['error']}');
+          return {
+            '_extensionError': true,
+            'errorMessage': status['error'].toString(),
+          };
         }
 
         // 2. Check for explicit error fields
         if (data.containsKey('error') || data.containsKey('errorMessage')) {
+          debugPrint('[FirestoreService] Document error field: ${data['error'] ?? data['errorMessage']}');
           return {
-            'status': 'error',
-            'error': data['error'] ?? data['errorMessage'],
-            'analysis': {
-              'cropType': 'Error',
-              'healthStatus': 'Analysis Failed',
-              'confidence': 0.0,
-              'diseases': [
-                {
-                  'name': 'System Error',
-                  'severity': 'High',
-                  'treatment': data['error']?.toString() ?? data['errorMessage']?.toString() ?? 'Check Cloud Function logs.'
-                }
-              ]
-            }
+            '_extensionError': true,
+            'errorMessage': data['error']?.toString() ?? data['errorMessage']?.toString() ?? 'Unknown error',
           };
         }
 
-        // 3. Check for 'status' field (some versions use this for progress/error)
-        final status = data['status'];
-        if (status is Map && status.containsKey('error')) {
-           return {
-            'analysis': {
-              'cropType': 'Error',
-              'healthStatus': 'Extension Config Error',
-              'diseases': [{'name': 'Status Error', 'severity': 'Critical', 'treatment': status['error'].toString()}]
-            }
+        // 3. Check for the extension's Response Field: 'analysis'
+        if (data.containsKey('analysis')) {
+          final analysis = data['analysis'];
+          debugPrint('[FirestoreService] Got analysis field (type: ${analysis.runtimeType}): $analysis');
+
+          // If the analysis itself is an error placeholder (cropType == 'Error'),
+          // still return it — ai_routing_service will handle parsing.
+          return {
+            '_extensionError': false,
+            'analysis': analysis,
+            'imageUrl': data['imageUrl'],
+          };
+        }
+
+        // 4. Also check 'output' for backwards compatibility
+        if (data.containsKey('output')) {
+          final output = data['output'];
+          debugPrint('[FirestoreService] Got output field (type: ${output.runtimeType})');
+          return {
+            '_extensionError': false,
+            'analysis': output,
+            'imageUrl': data['imageUrl'],
           };
         }
 
