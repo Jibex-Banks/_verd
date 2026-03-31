@@ -48,7 +48,7 @@ export function Dashboard({ theme, currentView }: DashboardProps) {
               >
                 <div 
                   className="flex items-center gap-3 mb-8 bg-primary/10 border border-primary/20 rounded-full px-5 py-2 w-fit backdrop-blur-md cursor-pointer hover:bg-primary/20 transition-colors" 
-                  onClick={() => setShowOnboarding(true)}
+                  onClick={() => document.getElementById('onboarding')?.scrollIntoView({ behavior: 'smooth' })}
                 >
                   <span className="relative flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
@@ -157,7 +157,7 @@ export function Dashboard({ theme, currentView }: DashboardProps) {
             </div>
 
             {/* Expanded Onboarding Flow */}
-            <div className="mb-32">
+            <div id="onboarding" className="mb-32">
               <div className="mb-12">
                 <h2 className="text-4xl font-bold italic tracking-tighter uppercase mb-2">Mastering the <span className="text-primary not-italic">Neural Agri Stack</span></h2>
                 <p className="text-white/40 text-sm max-w-xl">A step-by-step guide to securing your harvest and navigating the VERD ecosystem.</p>
