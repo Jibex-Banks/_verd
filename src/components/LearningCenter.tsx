@@ -4,9 +4,8 @@ import { GlassCard } from './ui/GlassCard'
 
 export function LearningCenter() {
   const modules = [
-    { title: 'Agronomy Fundamentals', lessonsCount: 12, icon: <Sprout size={24} />, progress: 65 },
-    { title: 'Drone Diagnostics', lessonsCount: 8, icon: <Drone size={24} />, progress: 30 },
-    { title: 'Pathology Masterclass', lessonsCount: 15, icon: <Bug size={24} />, progress: 0 },
+    { title: 'VERD Fundamentals', lessonsCount: 6, icon: <Sprout size={24} />, progress: 100 },
+    { title: 'Drone Pathology', lessonsCount: 4, icon: <Drone size={24} />, progress: 30 },
   ]
 
   const featuredLesson = {
