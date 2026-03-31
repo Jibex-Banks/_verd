@@ -55,7 +55,7 @@ export function Dashboard({ theme, currentView }: DashboardProps) {
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                   </span>
                   <span className="text-xs font-bold tracking-[0.2em] uppercase text-primary/80">SEE HOW IT WORKS</span>
-                  <ArrowRight size={14} className="text-primary/60 ml-2" />
+                  <ArrowRight size={14} className="text-primary/60 ml-2 group-hover:translate-x-1 transition-transform" />
                 </div>
                 
                 <h1 className="text-7xl md:text-[10rem] font-bold tracking-tighter mb-10 leading-[0.8] italic">
@@ -100,9 +100,9 @@ export function Dashboard({ theme, currentView }: DashboardProps) {
                   <div className="p-3 rounded-2xl bg-primary/10 text-primary w-fit mb-6 group-hover:scale-110 transition-transform">
                     <Drone size={28} />
                   </div>
-                  <h3 className="text-xl font-bold mb-3 italic">Drone Agri-Tech</h3>
+                  <h3 className="text-xl font-bold mb-3 italic">VERD Aerial</h3>
                   <p className="text-white/40 text-sm leading-relaxed mb-6">
-                    Autonomous field monitoring with high-precision drone integration. Track crop health across hectares in minutes using VERD's aerial-optimized neural engines.
+                    Autonomous field monitoring with high-precision drone integration. Track crop health across hectares in minutes using the VERD aerial suite.
                   </p>
                   <ul className="text-[10px] text-white/20 space-y-2 mb-6 font-bold uppercase tracking-widest">
                     <li className="flex items-center gap-2 text-primary/60"><Zap size={10} /> RTK GPS Support</li>
@@ -120,9 +120,9 @@ export function Dashboard({ theme, currentView }: DashboardProps) {
                   <div className="p-3 rounded-2xl bg-primary/10 text-primary w-fit mb-6 group-hover:scale-110 transition-transform">
                     <Globe size={28} />
                   </div>
-                  <h3 className="text-xl font-bold mb-3 italic">Open Source Model</h3>
+                  <h3 className="text-xl font-bold mb-3 italic">VERD Hub</h3>
                   <p className="text-white/40 text-sm leading-relaxed mb-6">
-                    VERD belongs to the community. Participate in the future of decentralized agricultural AI by contributing to our pathology library and model training.
+                    The VERD network belongs to the community. Participate in the future of decentralized agricultural AI by contributing to our pathology library.
                   </p>
                   <ul className="text-[10px] text-white/20 space-y-2 mb-6 font-bold uppercase tracking-widest">
                     <li className="flex items-center gap-2 text-primary/60"><Zap size={10} /> MIT Licensed</li>
@@ -150,7 +150,7 @@ export function Dashboard({ theme, currentView }: DashboardProps) {
                     <li className="flex items-center gap-2"><Zap size={10} /> SDKs (Go, TS, Python)</li>
                   </ul>
                   <div className="mt-auto pt-4 flex items-center text-[10px] font-bold uppercase tracking-widest text-white/20 hover:text-white cursor-pointer transition-colors">
-                    REQUEST API ACCESS <ArrowRight size={12} className="ml-2" />
+                    REQUEST VERD API <ArrowRight size={12} className="ml-2" />
                   </div>
                 </GlassCard>
               </motion.div>
@@ -159,15 +159,17 @@ export function Dashboard({ theme, currentView }: DashboardProps) {
             {/* Expanded Onboarding Flow */}
             <div id="onboarding" className="mb-32">
               <div className="mb-12">
-                <h2 className="text-4xl font-bold italic tracking-tighter uppercase mb-2">Getting started with <span className="text-primary not-italic">VERD</span></h2>
+                <h2 className="text-4xl font-bold italic tracking-tighter uppercase mb-2">Getting started with <span className="text-primary not-italic font-black">VERD</span></h2>
                 <p className="text-white/40 text-sm max-w-xl">It only takes a few steps to start making your harvest smarter. Let's walk through them together.</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 {[
-                  { step: '01', title: 'Set Up Your Vault', desc: 'Securely create your digital identity so your scan history stays private and yours.' },
-                  { step: '02', title: 'Find Your Way', desc: 'Toggle between Scans, Insights, and the Tech Hub using the simple sidebar on the left.' },
-                  { step: '03', title: 'Capture a Leaf', desc: 'Snap a clear photo of any crop issue. Our AI works in the background to spot pathology markers.' },
-                  { step: '04', title: 'Get Expert Advice', desc: 'Review the results and follow the suggested steps to optimize your yield and protect your field.' }
+                  { step: '01', title: 'Create Account', desc: 'Securely create your profile so your scan history stays private and accessible everywhere.' },
+                  { step: '02', title: 'Explore Dashboard', desc: 'Get familiar with your custom field insights and recent pathological trends.' },
+                  { step: '03', title: 'Connect Sensors', desc: 'Link your field hardware or drone suite for real-time biometric data streaming.' },
+                  { step: '04', title: 'Capture Sample', desc: 'Snap a clear photo of any crop issue. Our AI spots pathology markers instantly.' },
+                  { step: '05', title: 'Review Diagnosis', desc: 'Follow suggested steps from our neural models to protect your field.' },
+                  { step: '06', title: 'Share & Grow', desc: 'Contribute to the open pathology database and learn from the global community.' }
                 ].map((item, i) => (
                   <GlassCard key={i} className="p-8 border-white/5 bg-black/20 hover:bg-black/40 transition-all group">
                     <span className="text-6xl font-black text-white/[0.02] group-hover:text-primary/[0.05] transition-colors leading-none block mb-4 italic">{item.step}</span>
@@ -180,6 +182,31 @@ export function Dashboard({ theme, currentView }: DashboardProps) {
             
             <div className="space-y-32">
               <DiagnosticScanner />
+            </div>
+
+            {/* Final Conversion Section */}
+            <div className="mt-32 mb-24 text-center">
+              <GlassCard className="max-w-4xl mx-auto p-16 border-primary/20 bg-primary/5 relative overflow-hidden group">
+                <div className="absolute inset-0 bg-primary/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <h2 className="text-5xl font-bold italic tracking-tighter mb-6 relative z-10">START YOUR <span className="text-primary not-italic font-black">JOURNEY</span></h2>
+                <p className="text-white/40 text-lg max-w-xl mx-auto mb-10 relative z-10">
+                  Join the community today and protect your harvest with the latest in decentralized AI.
+                </p>
+                <div className="flex flex-col md:flex-row gap-6 justify-center relative z-10">
+                  <button 
+                    onClick={() => setShowAuth(true)}
+                    className="px-12 py-5 bg-primary text-black font-black uppercase tracking-[0.2em] text-xs rounded-full hover:scale-105 transition-transform active:scale-95 shadow-[0_10px_40px_rgba(0,214,177,0.3)]"
+                  >
+                    Create My Identity
+                  </button>
+                  <button 
+                    onClick={() => setShowAuth(true)}
+                    className="px-12 py-5 bg-white/5 border border-white/10 text-white font-black uppercase tracking-[0.2em] text-xs rounded-full hover:bg-white/10 transition-all"
+                  >
+                    Sign In
+                  </button>
+                </div>
+              </GlassCard>
             </div>
           </motion.div>
         )}
@@ -262,7 +289,7 @@ export function Dashboard({ theme, currentView }: DashboardProps) {
       </AnimatePresence>
 
       <footer className="mt-48 pt-12 border-t border-white/5 text-white/20 text-[10px] uppercase tracking-[0.4em] flex flex-col md:flex-row justify-between items-center gap-6">
-        <p>© 2026 VERD Technologies • Agrarian Tech Stack • v1.0.4</p>
+        <p>© 2026 VERD • Engineered by White Walkers • v1.0.4</p>
         <div className="flex gap-12 font-bold">
           <a href="#" className="hover:text-primary transition-colors">Smart API</a>
           <a href="#" className="hover:text-primary transition-colors">Privacy Shield</a>

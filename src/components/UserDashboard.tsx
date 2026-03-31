@@ -27,7 +27,7 @@ export function UserDashboard() {
             Exclusive User Space
           </div>
           <h1 className="text-5xl md:text-6xl font-bold tracking-tighter italic">
-            Farmer's <span className="text-white/20 not-italic font-black">COMMAND</span>
+            Welcome <span className="text-white/20 not-italic font-black">Alex</span>
           </h1>
         </div>
         <div className="flex items-center gap-4 bg-white/5 p-2 rounded-2xl border border-white/5">
@@ -56,7 +56,7 @@ export function UserDashboard() {
               </div>
               <div>
                 <p className="text-[10px] font-bold text-white/20 uppercase tracking-widest mb-1">{stat.label}</p>
-                <p className="text-2xl font-bold tracking-tighter">{stat.value}</p>
+                <p className="text-3xl font-bold tracking-tight">{stat.value}</p>
               </div>
             </GlassCard>
           </motion.div>

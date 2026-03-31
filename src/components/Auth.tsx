@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Mail, Lock, User, ArrowRight, Globe, ShieldCheck, Phone, MapPin, Briefcase } from 'lucide-react'
+import { X, Mail, Lock, User, ArrowRight, Globe, ShieldCheck, Phone, MapPin, Briefcase, Eye, EyeOff } from 'lucide-react'
 import { GlassCard } from './ui/GlassCard'
 import { cn } from '../lib/utils'
 
@@ -9,6 +9,7 @@ type AuthMode = 'login' | 'signup'
 export function Auth({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) {
   const [mode, setMode] = useState<AuthMode>('login')
   const [isFarmer, setIsFarmer] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   if (!isOpen) return null
 
@@ -30,30 +31,33 @@ export function Auth({ isOpen, onClose }: { isOpen: boolean, onClose: () => void
 
           <div className="text-center mb-10">
             <h2 className="text-4xl font-bold tracking-tighter italic mb-2">
-              {mode === 'login' ? 'Welcome back, friend!' : 'Join the family'}
+              {mode === 'login' ? 'Welcome back!' : 'Create your account'}
             </h2>
             <p className="text-white/40 text-sm mb-8">
-              Secure your agrarian identity and keep your harvest insights synchronized across all your devices.
+              Secure your account and keep your harvest results with you on any device.
             </p>
           </div>
 
-          <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
             <AnimatePresence mode="wait">
-              {mode === 'signup' && (
+              {mode === 'signup' ? (
                 <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  className="space-y-2"
+                  key="signup"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className="space-y-4"
                 >
-                  <label className="text-[10px] uppercase tracking-widest font-bold text-primary/80 ml-1">Full Name</label>
-                  <div className="relative group">
-                    <User className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-primary transition-colors" size={18} />
-                    <input 
-                      type="text" 
-                      placeholder="Dr. Savannah" 
-                      className="w-full bg-white/5 border border-white/5 rounded-2xl py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-primary/50 transition-all"
-                    />
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase tracking-widest font-bold text-primary/80 ml-1">Full Name</label>
+                    <div className="relative group">
+                      <User className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-primary transition-colors" size={18} />
+                      <input 
+                        type="text" 
+                        placeholder="Dr. Savannah" 
+                        className="w-full bg-white/5 border border-white/5 rounded-2xl py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-primary/50 transition-all"
+                      />
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
@@ -88,7 +92,7 @@ export function Auth({ isOpen, onClose }: { isOpen: boolean, onClose: () => void
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-bold text-white/90">Are you a Farmer?</p>
-                      <p className="text-[10px] text-white/40">We'll tailor your experience for field work.</p>
+                      <p className="text-[10px] text-white/40">Custom advice for field work.</p>
                     </div>
                     <div className={cn("w-10 h-6 rounded-full transition-all relative", isFarmer ? "bg-primary" : "bg-white/10")}>
                       <motion.div 
@@ -97,43 +101,92 @@ export function Auth({ isOpen, onClose }: { isOpen: boolean, onClose: () => void
                       />
                     </div>
                   </div>
+
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase tracking-widest font-bold text-primary/80 ml-1">Email Address</label>
+                    <div className="relative group">
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-primary transition-colors" size={18} />
+                      <input 
+                        type="email" 
+                        placeholder="hello@yourfarm.com" 
+                        className="w-full bg-white/5 border border-white/5 rounded-2xl py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-primary/50 transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase tracking-widest font-bold text-primary/80 ml-1">Create Password</label>
+                    <div className="relative group">
+                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-primary transition-colors" size={18} />
+                      <input 
+                        type={showPassword ? "text" : "password"} 
+                        placeholder="••••••••" 
+                        className="w-full bg-white/5 border border-white/5 rounded-2xl py-4 pl-12 pr-12 text-sm focus:outline-none focus:border-primary/50 transition-all font-mono"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20 hover:text-white transition-colors"
+                      >
+                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <button className="w-full py-5 bg-primary text-white font-bold rounded-2xl hover:bg-primary/90 transition-all shadow-[0_15px_40px_rgba(108,58,250,0.3)] flex items-center justify-center gap-2 group mt-4 uppercase tracking-[0.3em] text-xs">
+                    Create Account
+                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                  </button>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="login"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  className="space-y-4"
+                >
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase tracking-widest font-bold text-primary/80 ml-1">Email Address</label>
+                    <div className="relative group">
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-primary transition-colors" size={18} />
+                      <input 
+                        type="email" 
+                        placeholder="hello@yourfarm.com" 
+                        className="w-full bg-white/5 border border-white/5 rounded-2xl py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-primary/50 transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center px-1">
+                      <label className="text-[10px] uppercase tracking-widest font-bold text-primary/80">Your Password</label>
+                      <button type="button" className="text-[10px] uppercase tracking-widest font-bold text-white/20 hover:text-primary/60 transition-colors">Forgot?</button>
+                    </div>
+                    <div className="relative group">
+                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-primary transition-colors" size={18} />
+                      <input 
+                        type={showPassword ? "text" : "password"} 
+                        placeholder="••••••••" 
+                        className="w-full bg-white/5 border border-white/5 rounded-2xl py-4 pl-12 pr-12 text-sm focus:outline-none focus:border-primary/50 transition-all font-mono"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20 hover:text-white transition-colors"
+                      >
+                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <button className="w-full py-5 bg-primary text-white font-bold rounded-2xl hover:bg-primary/90 transition-all shadow-[0_15px_40px_rgba(108,58,250,0.3)] flex items-center justify-center gap-2 group mt-4 uppercase tracking-[0.3em] text-xs">
+                    Sign In
+                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                  </button>
                 </motion.div>
               )}
             </AnimatePresence>
-
-            <div className="space-y-2">
-              <label className="text-[10px] uppercase tracking-widest font-bold text-primary/80 ml-1">Email Address</label>
-              <div className="relative group">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-primary transition-colors" size={18} />
-                <input 
-                  type="email" 
-                  placeholder="hello@yourfarm.com" 
-                  className="w-full bg-white/5 border border-white/5 rounded-2xl py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-primary/50 transition-all"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex justify-between items-center px-1">
-                <label className="text-[10px] uppercase tracking-widest font-bold text-primary/80">Your Password</label>
-                {mode === 'login' && (
-                  <button type="button" className="text-[10px] uppercase tracking-widest font-bold text-white/20 hover:text-primary/60 transition-colors">Forgot?</button>
-                )}
-              </div>
-              <div className="relative group">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-primary transition-colors" size={18} />
-                <input 
-                  type="password" 
-                  placeholder="••••••••" 
-                  className="w-full bg-white/5 border border-white/5 rounded-2xl py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-primary/50 transition-all"
-                />
-              </div>
-            </div>
-
-            <button className="w-full py-5 bg-primary text-white font-bold rounded-2xl hover:bg-primary/90 transition-all shadow-[0_15px_40px_rgba(108,58,250,0.3)] flex items-center justify-center gap-2 group mt-8 uppercase tracking-[0.3em] text-xs">
-              {mode === 'login' ? 'Sign In' : 'Create My Account'}
-              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-            </button>
           </form>
 
           <div className="mt-10 relative">

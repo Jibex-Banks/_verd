@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sprout, Scan, BarChart3, User, Menu, X, Zap, Leaf, Activity, History as HistoryIcon, BookOpen, ChevronDown } from 'lucide-react'
+import { Sprout, Scan, BarChart3, User, Menu, X, Zap, Leaf, Activity, History as HistoryIcon, BookOpen, ChevronDown, Lock } from 'lucide-react'
 import { cn } from '../lib/utils'
 
 interface NavbarProps {
@@ -56,15 +56,14 @@ export function Navbar({ currentView, setView, theme, setTheme }: NavbarProps) {
       )}
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
-        <div 
-          className="flex items-center gap-2 group cursor-pointer"
-          onClick={() => setView('home')}
-        >
-          <div className="p-2.5 rounded-2xl bg-white/[0.03] group-hover:bg-white/[0.08] group-hover:scale-110 transition-all shadow-[0_0_40px_rgba(0,214,177,0.3)] border border-white/5 relative overflow-hidden">
-            <div className="absolute inset-0 bg-primary/20 blur-xl group-hover:bg-primary/40 transition-all" />
-            <img src="/logo.png" alt="VERD" className="w-10 h-10 object-contain relative z-10 brightness-125 contrast-125 drop-shadow-[0_0_12px_rgba(255,255,255,0.4)]" />
+        <div className="flex items-center gap-4 cursor-pointer group" onClick={() => setView('home')}>
+          <div className="relative w-10 h-10 flex items-center justify-center rounded-2xl bg-white/5 border border-white/10 group-hover:border-white/20 transition-all overflow-hidden">
+            <img src="/logo.png?v=1" alt="VERD Logo" className="w-6 h-6 object-contain relative z-10 opacity-80 group-hover:opacity-100 transition-opacity" />
           </div>
-          <span className="text-2xl font-bold tracking-tighter italic text-white uppercase">VERD</span>
+          <div className="hidden md:block">
+            <span className="text-xl font-bold tracking-tighter italic block leading-none">VERD</span>
+            <span className="text-[8px] font-black tracking-[0.3em] text-white/20 uppercase">Agronomy Hub</span>
+          </div>
         </div>
 
         {/* Desktop Nav */}
@@ -99,10 +98,10 @@ export function Navbar({ currentView, setView, theme, setTheme }: NavbarProps) {
             <div className="relative group/user">
               <button className={cn(
                 "flex items-center gap-2 px-6 py-2.5 bg-white/5 border border-white/10 rounded-full text-sm font-bold hover:bg-white/10 transition-all",
-                ['profile', 'history', 'learning'].includes(currentView) && "border-primary text-primary"
+                ['profile', 'history', 'learning'].includes(currentView) && "border-primary/50 text-primary/80"
               )}>
                 <User size={16} />
-                Alex Gardener
+                Welcome Alex
                 <ChevronDown size={14} className="opacity-40 group-hover/user:rotate-180 transition-transform" />
               </button>
               

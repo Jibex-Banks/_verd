@@ -66,11 +66,11 @@
   .theme-green {
     --background: 160 80% 8%;
     --foreground: 160 10% 98%;
-    --primary: 160 84% 50%; /* Brighter Emerald */
-    --primary-foreground: 160 84% 10%;
+    --primary: 155 70% 45%;
+    --primary-foreground: 155 70% 5%;
     --secondary: 160 30% 12%;
     --secondary-foreground: 160 10% 98%;
-    --accent: 160 84% 39%;
+    --accent: 155 60% 15%;
     --accent-foreground: 160 84% 10%;
     --border: 160 30% 18%;
     --input: 160 30% 18%;
