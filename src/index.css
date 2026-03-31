@@ -103,3 +103,17 @@
 body {
   @apply bg-background text-foreground antialiased;
 }
+
+@utility custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: 10px;
+    opacity: 0.2;
+  }
+}

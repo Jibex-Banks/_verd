@@ -36,7 +36,7 @@ export function Auth({ isOpen, onClose, initialMode = 'login' }: { isOpen: boole
             <X size={20} />
           </button>
 
-          <div className="overflow-y-auto pr-2 custom-scrollbar">
+          <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
             <div className="text-center mb-8">
               <h2 className="text-3xl md:text-4xl font-bold tracking-tighter italic mb-2">
                 {mode === 'login' ? 'Welcome back!' : 'Create your account'}
@@ -162,6 +162,20 @@ export function Auth({ isOpen, onClose, initialMode = 'login' }: { isOpen: boole
                       </>
                     )}
                   </button>
+
+                  <div className="flex items-center gap-4 my-2">
+                    <div className="h-[1px] flex-1 bg-white/5" />
+                    <span className="text-[10px] text-white/20 font-bold uppercase tracking-widest">or</span>
+                    <div className="h-[1px] flex-1 bg-white/5" />
+                  </div>
+
+                  <button 
+                    type="button"
+                    onClick={() => setMode('login')}
+                    className="w-full py-4 border border-white/10 text-white/40 hover:text-white hover:bg-white/5 rounded-2xl transition-all text-[10px] font-bold uppercase tracking-[0.2em]"
+                  >
+                    Already have an account? Sign In
+                  </button>
                 </motion.div>
               ) : (
                 <motion.div
@@ -226,65 +240,31 @@ export function Auth({ isOpen, onClose, initialMode = 'login' }: { isOpen: boole
                       </>
                     )}
                   </button>
+
+                  <div className="flex items-center gap-4 my-2">
+                    <div className="h-[1px] flex-1 bg-white/5" />
+                    <span className="text-[10px] text-white/20 font-bold uppercase tracking-widest">or</span>
+                    <div className="h-[1px] flex-1 bg-white/5" />
+                  </div>
+
+                  <button 
+                    type="button"
+                    onClick={() => setMode('signup')}
+                    className="w-full py-4 border border-white/10 text-white/40 hover:text-white hover:bg-white/5 rounded-2xl transition-all text-[10px] font-bold uppercase tracking-[0.2em]"
+                  >
+                    New here? Create Account
+                  </button>
                 </motion.div>
               )}
             </AnimatePresence>
           </form>
 
-          <div className="mt-10 relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-white/5"></div>
-            </div>
-            <div className="relative flex justify-center text-[10px] uppercase tracking-widest font-bold">
-              <span className="bg-transparent px-4 text-white/20">Third-Party Auth</span>
-            </div>
+          <div className="mt-8 text-center text-white/10 uppercase tracking-[0.3em] text-[8px] font-black">
+            Powered by White Walkers
           </div>
-
-          <div className="grid grid-cols-2 gap-4 mt-8">
-            <button 
-              disabled={isLoading}
-              onClick={() => {
-                setIsLoading(true);
-                setTimeout(() => {
-                  setIsLoading(false);
-                  onClose();
-                }, 1500);
-              }}
-              className="flex items-center justify-center gap-3 py-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all text-sm font-medium disabled:opacity-50"
-            >
-              <Globe size={18} />
-              GitHub
-            </button>
-            <button 
-              disabled={isLoading}
-              onClick={() => {
-                setIsLoading(true);
-                setTimeout(() => {
-                  setIsLoading(false);
-                  onClose();
-                }, 1500);
-              }}
-              className="flex items-center justify-center gap-3 py-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all text-sm font-medium disabled:opacity-50"
-            >
-              <ShieldCheck size={18} />
-              Google
-            </button>
-          </div>
-
-          <div className="mt-10 text-center">
-            <p className="text-xs text-white/20">
-              {mode === 'login' ? "New here?" : "Already have an account?"}
-              <button 
-                onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}
-                className="ml-2 text-primary font-bold hover:underline"
-              >
-                {mode === 'login' ? 'Create Account' : 'Sign In instead'}
-              </button>
-            </p>
-          </div>
-          </div>
-        </GlassCard>
-      </motion.div>
-    </div>
+        </div>
+      </GlassCard>
+    </motion.div>
+  </div>
   )
 }
