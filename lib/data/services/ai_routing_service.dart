@@ -8,7 +8,7 @@ import 'package:verd/data/services/firestore_service.dart';
 import 'package:verd/data/services/gemini_direct_service.dart';
 
 /// Routes crop scan images intelligently to the correct AI engine.
-/// 
+///
 /// If online, it stores the image to trigger the Firebase Gemini Extension.
 /// If offline, it routes the image to the local TFLite model.
 class AIRoutingService {
@@ -23,10 +23,10 @@ class AIRoutingService {
     required FirestoreService firestoreService,
     required LocalMLService localMLService,
     required GeminiDirectService geminiService,
-  })  : _storageService = storageService,
-        _firestoreService = firestoreService,
-        _localMLService = localMLService,
-        _geminiService = geminiService;
+  }) : _storageService = storageService,
+       _firestoreService = firestoreService,
+       _localMLService = localMLService,
+       _geminiService = geminiService;
 
   /// Determines device online status, routes the image, and returns the result.
   Future<Map<String, dynamic>> routeScan({
@@ -35,7 +35,9 @@ class AIRoutingService {
     required File image,
   }) async {
     final connectivityResult = await _connectivity.checkConnectivity();
-    final isOnline = !connectivityResult.contains(ConnectivityResult.none) && connectivityResult.isNotEmpty;
+    final isOnline =
+        !connectivityResult.contains(ConnectivityResult.none) &&
+        connectivityResult.isNotEmpty;
 
     if (isOnline) {
       // --- ONLINE PATH (Direct Gemini API) ---
@@ -56,11 +58,13 @@ class AIRoutingService {
           'engine': 'gemini_direct_api',
           'timestamp': DateTime.now().toIso8601String(),
           'imageUrl': imageUrl,
-          'analysis': analysisData
+          'analysis': analysisData,
         };
 
         // 3. Save the *completed* scan to Firestore for user history
-        debugPrint('[AIRoutingService] Analysis complete. Saving to Firestore...');
+        debugPrint(
+          '[AIRoutingService] Analysis complete. Saving to Firestore...',
+        );
         final completeScan = ScanResult(
           id: scanId,
           userId: userId,
@@ -68,21 +72,28 @@ class AIRoutingService {
           plantName: analysisData['cropType'] ?? 'Unknown',
           diagnosis: analysisData['healthStatus'] ?? 'Unknown',
           confidence: (analysisData['confidence'] as num?)?.toDouble() ?? 0.0,
-          recommendations: (analysisData['diseases'] as List<dynamic>?)
-              ?.map((e) => e['treatment'].toString())
-              .toList() ?? [],
+          recommendations:
+              (analysisData['diseases'] as List<dynamic>?)
+                  ?.map((e) => e['treatment'].toString())
+                  .toList() ??
+              [],
           scannedAt: DateTime.now(),
           synced: true,
           analysisMap: analysisData, // Store the raw map
         );
-        
-        await _firestoreService.saveScanRaw(userId, scanId, completeScan.toFirestore());
+
+        await _firestoreService.saveScanRaw(
+          userId,
+          scanId,
+          completeScan.toFirestore(),
+        );
 
         return result;
-
       } catch (e) {
-        debugPrint('[AIRoutingService] Online analysis failed — falling back to local model: $e');
-        
+        debugPrint(
+          '[AIRoutingService] Online analysis failed — falling back to local model: $e',
+        );
+
         // Automatic fallback: use local TFLite model
         final localResult = await _localMLService.analyzeCropOffline(image);
         return {

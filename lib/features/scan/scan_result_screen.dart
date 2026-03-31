@@ -7,24 +7,22 @@ class ScanResultScreen extends StatelessWidget {
   final Map<String, dynamic> scanResult;
   final String? imageUrl;
 
-  const ScanResultScreen({
-    super.key,
-    required this.scanResult,
-    this.imageUrl,
-  });
+  const ScanResultScreen({super.key, required this.scanResult, this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
     final analysis = scanResult['analysis'] as Map<String, dynamic>? ?? {};
     final engine = scanResult['engine'] as String? ?? 'unknown';
     final timestamp = scanResult['timestamp'] as String? ?? '';
-    
+
     final cropType = analysis['cropType'] as String? ?? 'Unknown Crop';
     final healthStatus = analysis['healthStatus'] as String? ?? 'Unknown';
     final confidence = (analysis['confidence'] as num?)?.toDouble() ?? 0.0;
     final diseases = analysis['diseases'] as List<dynamic>? ?? [];
-    final personalizedRecommendations = scanResult['personalizedRecommendations'] as List<dynamic>? ?? [];
-    final learningResources = scanResult['learningResources'] as List<dynamic>? ?? [];
+    final personalizedRecommendations =
+        scanResult['personalizedRecommendations'] as List<dynamic>? ?? [];
+    final learningResources =
+        scanResult['learningResources'] as List<dynamic>? ?? [];
     final contextualInsights = analysis['contextualInsights'] as String?;
 
     return Scaffold(
@@ -78,7 +76,7 @@ class ScanResultScreen extends StatelessWidget {
 
             // 1. Cloud Fallback Warning
             if (scanResult['cloudFallback'] == true)
-               Container(
+              Container(
                 margin: const EdgeInsets.only(bottom: AppSpacing.lg),
                 padding: const EdgeInsets.all(AppSpacing.md),
                 decoration: BoxDecoration(
@@ -93,14 +91,16 @@ class ScanResultScreen extends StatelessWidget {
                     Expanded(
                       child: Text(
                         'Cloud analysis currently unavailable. Showing fast on-device results instead.',
-                        style: AppTypography.body.copyWith(color: Colors.orange[900]),
+                        style: AppTypography.body.copyWith(
+                          color: Colors.orange[900],
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
 
-             // Engine and timestamp info
+            // Engine and timestamp info
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(AppSpacing.md),
@@ -115,14 +115,17 @@ class ScanResultScreen extends StatelessWidget {
                   Row(
                     children: [
                       Icon(
-                        engine.contains('gemini') ? Icons.cloud : Icons.phone_android,
+                        engine.contains('gemini')
+                            ? Icons.cloud
+                            : Icons.phone_android,
                         size: 16,
                         color: AppColors.primary,
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        engine.contains('gemini') && scanResult['cloudFallback'] != true
-                            ? 'Gemini Cloud Analysis' 
+                        engine.contains('gemini') &&
+                                scanResult['cloudFallback'] != true
+                            ? 'Gemini Cloud Analysis'
                             : 'Local AI Analysis',
                         style: AppTypography.body.copyWith(
                           fontWeight: FontWeight.w600,
@@ -134,7 +137,9 @@ class ScanResultScreen extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     'Scanned: ${_formatTimestamp(timestamp)}',
-                    style: AppTypography.caption.copyWith(color: Colors.grey[600]),
+                    style: AppTypography.caption.copyWith(
+                      color: Colors.grey[600],
+                    ),
                   ),
                 ],
               ),
@@ -159,13 +164,17 @@ class ScanResultScreen extends StatelessWidget {
                     children: [
                       Text(
                         AppLocalizations.of(context)!.confidence_label,
-                        style: AppTypography.body.copyWith(color: Colors.grey[600]),
+                        style: AppTypography.body.copyWith(
+                          color: Colors.grey[600],
+                        ),
                       ),
                       Text(
                         '${(confidence * 100).toStringAsFixed(1)}%',
                         style: AppTypography.body.copyWith(
                           fontWeight: FontWeight.w600,
-                          color: confidence > 0.8 ? Colors.green : Colors.orange,
+                          color: confidence > 0.8
+                              ? Colors.green
+                              : Colors.orange,
                         ),
                       ),
                     ],
@@ -213,12 +222,19 @@ class ScanResultScreen extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.warning_amber_rounded, color: Colors.amber[800], size: 28),
+                    Icon(
+                      Icons.warning_amber_rounded,
+                      color: Colors.amber[800],
+                      size: 28,
+                    ),
                     const SizedBox(width: AppSpacing.md),
                     Expanded(
                       child: Text(
                         'Uncertain diagnosis. The AI is not fully confident. Please check the visual signs below to confirm.',
-                        style: AppTypography.body.copyWith(color: Colors.amber[900], fontWeight: FontWeight.w500),
+                        style: AppTypography.body.copyWith(
+                          color: Colors.amber[900],
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ],
@@ -226,7 +242,8 @@ class ScanResultScreen extends StatelessWidget {
               ),
 
             // 3. Visual Signs (What to look for)
-            if (analysis['visualSigns'] != null && analysis['visualSigns'].toString().isNotEmpty)
+            if (analysis['visualSigns'] != null &&
+                analysis['visualSigns'].toString().isNotEmpty)
               _buildResultCard(
                 title: 'What to Look For (Visual Signs)',
                 child: Row(
@@ -237,13 +254,16 @@ class ScanResultScreen extends StatelessWidget {
                     Expanded(
                       child: Text(
                         analysis['visualSigns'],
-                        style: AppTypography.body.copyWith(color: Colors.grey[800]),
+                        style: AppTypography.body.copyWith(
+                          color: Colors.grey[800],
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-            if (analysis['visualSigns'] != null && analysis['visualSigns'].toString().isNotEmpty)
+            if (analysis['visualSigns'] != null &&
+                analysis['visualSigns'].toString().isNotEmpty)
               const SizedBox(height: AppSpacing.lg),
 
             // Diseases/Issues (Diagnosis Name)
@@ -254,8 +274,9 @@ class ScanResultScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: diseases.map((disease) {
                     final name = disease['name'] as String? ?? 'Unknown Issue';
-                    final severity = disease['severity'] as String? ?? 'Moderate';
-                    
+                    final severity =
+                        disease['severity'] as String? ?? 'Moderate';
+
                     return Container(
                       margin: const EdgeInsets.only(bottom: AppSpacing.md),
                       padding: const EdgeInsets.all(AppSpacing.md),
@@ -299,52 +320,66 @@ class ScanResultScreen extends StatelessWidget {
                   }).toList(),
                 ),
               ),
-            
+
             // 4. What To Do Next (Action Steps)
-            if (analysis['actionSteps'] != null && (analysis['actionSteps'] as List).isNotEmpty)
+            if (analysis['actionSteps'] != null &&
+                (analysis['actionSteps'] as List).isNotEmpty)
               _buildResultCard(
                 title: 'What To Do Next',
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: (analysis['actionSteps'] as List).asMap().entries.map((entry) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(top: 2, right: 12),
-                            padding: const EdgeInsets.all(6),
-                            decoration: BoxDecoration(
-                              color: AppColors.primary.withValues(alpha: 0.1),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Text(
-                              '${entry.key + 1}',
-                              style: TextStyle(
-                                color: AppColors.primary,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
+                  children: (analysis['actionSteps'] as List)
+                      .asMap()
+                      .entries
+                      .map((entry) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(
+                                  top: 2,
+                                  right: 12,
+                                ),
+                                padding: const EdgeInsets.all(6),
+                                decoration: BoxDecoration(
+                                  color: AppColors.primary.withValues(
+                                    alpha: 0.1,
+                                  ),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Text(
+                                  '${entry.key + 1}',
+                                  style: TextStyle(
+                                    color: AppColors.primary,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
+                                ),
                               ),
-                            ),
+                              Expanded(
+                                child: Text(
+                                  entry.value.toString(),
+                                  style: AppTypography.body.copyWith(
+                                    color: Colors.grey[800],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          Expanded(
-                            child: Text(
-                              entry.value.toString(),
-                              style: AppTypography.body.copyWith(color: Colors.grey[800]),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
+                        );
+                      })
+                      .toList(),
                 ),
               ),
-            if (analysis['actionSteps'] != null && (analysis['actionSteps'] as List).isNotEmpty)
+            if (analysis['actionSteps'] != null &&
+                (analysis['actionSteps'] as List).isNotEmpty)
               const SizedBox(height: AppSpacing.lg),
 
             // Disclaimer & Manual Inspection
-            if (analysis['disclaimer'] != null || analysis['requiresManualInspection'] == true)
+            if (analysis['disclaimer'] != null ||
+                analysis['requiresManualInspection'] == true)
               Container(
                 margin: const EdgeInsets.only(bottom: AppSpacing.lg),
                 padding: const EdgeInsets.all(AppSpacing.md),
@@ -360,8 +395,11 @@ class ScanResultScreen extends StatelessWidget {
                     const SizedBox(width: AppSpacing.md),
                     Expanded(
                       child: Text(
-                        analysis['disclaimer'] ?? 'Please confirm diagnosis with manual inspection or an expert before taking drastic action.',
-                        style: AppTypography.body.copyWith(color: Colors.blue[900]),
+                        analysis['disclaimer'] ??
+                            'Please confirm diagnosis with manual inspection or an expert before taking drastic action.',
+                        style: AppTypography.body.copyWith(
+                          color: Colors.blue[900],
+                        ),
                       ),
                     ),
                   ],
@@ -369,12 +407,14 @@ class ScanResultScreen extends StatelessWidget {
               ),
 
             // Top 3 Predictions (Local tie-breakers)
-            if (analysis['top3'] != null && (analysis['top3'] as List).isNotEmpty)
+            if (analysis['top3'] != null &&
+                (analysis['top3'] as List).isNotEmpty)
               _buildResultCard(
                 title: 'Top 3 Predictions',
                 child: Column(
                   children: (analysis['top3'] as List).map((pred) {
-                    final conf = (pred['confidence'] as num?)?.toDouble() ?? 0.0;
+                    final conf =
+                        (pred['confidence'] as num?)?.toDouble() ?? 0.0;
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 12.0),
                       child: Column(
@@ -386,13 +426,17 @@ class ScanResultScreen extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   pred['displayName'] ?? 'Unknown',
-                                  style: AppTypography.body.copyWith(fontWeight: FontWeight.w500),
+                                  style: AppTypography.body.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               Text(
                                 '${(conf * 100).toStringAsFixed(1)}%',
-                                style: AppTypography.caption.copyWith(color: Colors.grey[600]),
+                                style: AppTypography.caption.copyWith(
+                                  color: Colors.grey[600],
+                                ),
                               ),
                             ],
                           ),
@@ -400,7 +444,9 @@ class ScanResultScreen extends StatelessWidget {
                           LinearProgressIndicator(
                             value: conf,
                             backgroundColor: Colors.grey[200],
-                            color: conf > 0.8 ? Colors.green : (conf > 0.4 ? Colors.orange : Colors.red),
+                            color: conf > 0.8
+                                ? Colors.green
+                                : (conf > 0.4 ? Colors.orange : Colors.red),
                             minHeight: 6,
                             borderRadius: BorderRadius.circular(3),
                           ),
@@ -427,7 +473,11 @@ class ScanResultScreen extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.lightbulb, color: Colors.blue[700], size: 20),
+                          Icon(
+                            Icons.lightbulb,
+                            color: Colors.blue[700],
+                            size: 20,
+                          ),
                           const SizedBox(width: 8),
                           Text(
                             AppLocalizations.of(context)!.personalized_insights,
@@ -441,7 +491,9 @@ class ScanResultScreen extends StatelessWidget {
                       const SizedBox(height: 8),
                       Text(
                         contextualInsights,
-                        style: AppTypography.body.copyWith(color: Colors.grey[700]),
+                        style: AppTypography.body.copyWith(
+                          color: Colors.grey[700],
+                        ),
                       ),
                     ],
                   ),
@@ -451,7 +503,9 @@ class ScanResultScreen extends StatelessWidget {
             // Personalized Recommendations
             if (personalizedRecommendations.isNotEmpty)
               _buildResultCard(
-                title: AppLocalizations.of(context)!.personlized_recommendations,
+                title: AppLocalizations.of(
+                  context,
+                )!.personlized_recommendations,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -475,12 +529,18 @@ class ScanResultScreen extends StatelessWidget {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(Icons.check_circle, color: Colors.green, size: 16),
+                            Icon(
+                              Icons.check_circle,
+                              color: Colors.green,
+                              size: 16,
+                            ),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
                                 recommendation.toString(),
-                                style: AppTypography.caption.copyWith(color: Colors.grey[700]),
+                                style: AppTypography.caption.copyWith(
+                                  color: Colors.grey[700],
+                                ),
                               ),
                             ),
                           ],
@@ -514,10 +574,12 @@ class ScanResultScreen extends StatelessWidget {
                     const SizedBox(height: 12),
                     ...learningResources.map((resource) {
                       final title = resource['title'] as String? ?? 'Unknown';
-                      final description = resource['description'] as String? ?? '';
-                      final priority = resource['priority'] as String? ?? 'medium';
+                      final description =
+                          resource['description'] as String? ?? '';
+                      final priority =
+                          resource['priority'] as String? ?? 'medium';
                       final type = resource['type'] as String? ?? 'guide';
-                      
+
                       return Container(
                         margin: const EdgeInsets.only(bottom: AppSpacing.md),
                         padding: const EdgeInsets.all(AppSpacing.md),
@@ -546,7 +608,9 @@ class ScanResultScreen extends StatelessWidget {
                                     vertical: 2,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: priority == 'urgent' ? Colors.red : Colors.orange,
+                                    color: priority == 'urgent'
+                                        ? Colors.red
+                                        : Colors.orange,
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Text(
@@ -562,7 +626,9 @@ class ScanResultScreen extends StatelessWidget {
                             const SizedBox(height: 4),
                             Text(
                               description,
-                              style: AppTypography.caption.copyWith(color: Colors.grey[700]),
+                              style: AppTypography.caption.copyWith(
+                                color: Colors.grey[700],
+                              ),
                             ),
                             const SizedBox(height: 8),
                             Row(
@@ -574,7 +640,11 @@ class ScanResultScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
-                                  type == 'Care Guide||guide' ? AppLocalizations.of(context)!.care_guide : AppLocalizations.of(context)!.treatment_guide,
+                                  type == 'Care Guide||guide'
+                                      ? AppLocalizations.of(context)!.care_guide
+                                      : AppLocalizations.of(
+                                          context,
+                                        )!.treatment_guide,
                                   style: AppTypography.caption.copyWith(
                                     color: Colors.orange[700],
                                     fontWeight: FontWeight.w500,
@@ -646,7 +716,9 @@ class ScanResultScreen extends StatelessWidget {
                       // For now, show success
                       AppToast.show(
                         context,
-                        message: AppLocalizations.of(context)!.result_saved_successfully,
+                        message: AppLocalizations.of(
+                          context,
+                        )!.result_saved_successfully,
                         variant: ToastVariant.success,
                       );
                     },
@@ -654,8 +726,10 @@ class ScanResultScreen extends StatelessWidget {
                       backgroundColor: AppColors.primary,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
-                    child: Text(AppLocalizations.of(context)!.save_result,
-                        style: const TextStyle(color: Colors.white)),
+                    child: Text(
+                      AppLocalizations.of(context)!.save_result,
+                      style: const TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ],
@@ -666,10 +740,7 @@ class ScanResultScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildResultCard({
-    required String title,
-    required Widget child,
-  }) {
+  Widget _buildResultCard({required String title, required Widget child}) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(AppSpacing.md),

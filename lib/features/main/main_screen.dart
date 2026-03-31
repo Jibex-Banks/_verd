@@ -43,10 +43,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       body: ConnectivityBanner(
-        child: IndexedStack(
-          index: _currentIndex,
-          children: _screens,
-        ),
+        child: IndexedStack(index: _currentIndex, children: _screens),
       ),
       bottomNavigationBar: SafeArea(
         bottom: true,
@@ -72,26 +69,42 @@ class _MainScreenState extends State<MainScreen> {
           child: GNav(
             selectedIndex: _currentIndex,
             onTabChange: _onTabTapped,
-            rippleColor: AppColors.primary.withValues(alpha: 0.2), // tab button ripple color when pressed
-            hoverColor: AppColors.primary.withValues(alpha: 0.1), // tab button hover color
+            rippleColor: AppColors.primary.withValues(
+              alpha: 0.2,
+            ), // tab button ripple color when pressed
+            hoverColor: AppColors.primary.withValues(
+              alpha: 0.1,
+            ), // tab button hover color
             haptic: true, // haptic feedback
-            tabBorderRadius: 24, 
-            tabActiveBorder: Border.all(color: AppColors.primary, width: 1), // tab button border
-            tabBorder: Border.all(color: Colors.transparent, width: 1), // tab button border
+            tabBorderRadius: 24,
+            tabActiveBorder: Border.all(
+              color: AppColors.primary,
+              width: 1,
+            ), // tab button border
+            tabBorder: Border.all(
+              color: Colors.transparent,
+              width: 1,
+            ), // tab button border
             tabShadow: [
               BoxShadow(
-                color: AppColors.primary.withValues(alpha: 0.1), 
-                blurRadius: 8
-              )
+                color: AppColors.primary.withValues(alpha: 0.1),
+                blurRadius: 8,
+              ),
             ], // tab button shadow
             curve: Curves.easeOutExpo, // tab animation curves
-            duration: const Duration(milliseconds: 300), // tab animation duration
-            gap: 8, // the tab button gap between icon and text 
+            duration: const Duration(
+              milliseconds: 300,
+            ), // tab animation duration
+            gap: 8, // the tab button gap between icon and text
             color: AppColors.gray500, // unselected icon color
             activeColor: Colors.white, // selected icon and text color
             iconSize: 26, // tab button icon size
-            tabBackgroundColor: AppColors.primary, // selected tab background color
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12), // navigation bar padding
+            tabBackgroundColor:
+                AppColors.primary, // selected tab background color
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 12,
+            ), // navigation bar padding
             tabs: [
               GButton(
                 icon: Icons.home_outlined,

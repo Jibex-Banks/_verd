@@ -43,7 +43,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
       if (_cameraController != null && _isInit) {
         _cameraController!.resumePreview();
       }
-    } else if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+    } else if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
       // Pause preview when app goes to background
       if (_cameraController != null && _isInit) {
         _cameraController!.pausePreview();
@@ -76,9 +77,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
         ResolutionPreset.high,
         enableAudio: false,
       );
-      
+
       await _cameraController!.initialize();
-      
+
       if (mounted) {
         setState(() {
           _isInit = true;
@@ -99,22 +100,27 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
 
     final user = ref.read(currentUserProvider);
     if (user == null) {
-      AppToast.show(context, message: AppLocalizations.of(context)!.please_log_in_scanner, variant: ToastVariant.error);
+      AppToast.show(
+        context,
+        message: AppLocalizations.of(context)!.please_log_in_scanner,
+        variant: ToastVariant.error,
+      );
       return;
     }
 
     // Check if guest has reached limit
-    final isAnonymous = ref.read(firebaseAuthServiceProvider).currentUser?.isAnonymous ?? false;
+    final isAnonymous =
+        ref.read(firebaseAuthServiceProvider).currentUser?.isAnonymous ?? false;
     if (isAnonymous) {
       final prefs = await SharedPreferences.getInstance();
       final scanCount = prefs.getInt('guest_scan_count') ?? 0;
-      
+
       if (scanCount >= 3) {
         if (!mounted) return;
         _showLimitReachedDialog();
         return;
       }
-      
+
       // Increment counter for this successful scan initiation
       await prefs.setInt('guest_scan_count', scanCount + 1);
     }
@@ -125,20 +131,22 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
       final xFile = await _cameraController!.takePicture();
       // Freeze the camera preview immediately
       await _cameraController!.pausePreview();
-      
+
       final imageFile = File(xFile.path);
-      
+
       final scanId = const Uuid().v4();
 
       // Route the scan through the AI service (handles online Gemini Extension & offline TFLite)
-      final result = await ref.read(aiRoutingServiceProvider).routeScan(
-        userId: user.uid,
-        scanId: scanId,
-        image: imageFile,
-      );
+      final result = await ref
+          .read(aiRoutingServiceProvider)
+          .routeScan(userId: user.uid, scanId: scanId, image: imageFile);
 
       if (mounted) {
-        AppToast.show(context, message: AppLocalizations.of(context)!.analysis_complete, variant: ToastVariant.info);
+        AppToast.show(
+          context,
+          message: AppLocalizations.of(context)!.analysis_complete,
+          variant: ToastVariant.info,
+        );
         context.pushNamed(
           'scan_result',
           extra: result,
@@ -147,7 +155,11 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
       }
     } catch (e) {
       if (mounted) {
-        AppToast.show(context, message: 'Error analyzing image: $e', variant: ToastVariant.error);
+        AppToast.show(
+          context,
+          message: 'Error analyzing image: $e',
+          variant: ToastVariant.error,
+        );
         debugPrint('Scan error: $e');
       }
     } finally {
@@ -162,16 +174,21 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
   Future<void> _pickImageAndAnalyze() async {
     final user = ref.read(currentUserProvider);
     if (user == null) {
-      AppToast.show(context, message: AppLocalizations.of(context)!.please_log_in_scanner, variant: ToastVariant.error);
+      AppToast.show(
+        context,
+        message: AppLocalizations.of(context)!.please_log_in_scanner,
+        variant: ToastVariant.error,
+      );
       return;
     }
 
     // Check if guest has reached limit
-    final isAnonymous = ref.read(firebaseAuthServiceProvider).currentUser?.isAnonymous ?? false;
+    final isAnonymous =
+        ref.read(firebaseAuthServiceProvider).currentUser?.isAnonymous ?? false;
     if (isAnonymous) {
       final prefs = await SharedPreferences.getInstance();
       final scanCount = prefs.getInt('guest_scan_count') ?? 0;
-      
+
       if (scanCount >= 3) {
         if (!mounted) return;
         _showLimitReachedDialog();
@@ -182,7 +199,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
     try {
       final ImagePicker picker = ImagePicker();
       final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-      
+
       if (image == null) return; // User canceled picking
 
       if (isAnonymous) {
@@ -193,18 +210,20 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
       }
 
       setState(() => _isProcessing = true);
-      
+
       final imageFile = File(image.path);
       final scanId = const Uuid().v4();
 
-      final result = await ref.read(aiRoutingServiceProvider).routeScan(
-        userId: user.uid,
-        scanId: scanId,
-        image: imageFile,
-      );
+      final result = await ref
+          .read(aiRoutingServiceProvider)
+          .routeScan(userId: user.uid, scanId: scanId, image: imageFile);
 
       if (mounted) {
-        AppToast.show(context, message: AppLocalizations.of(context)!.analysis_complete, variant: ToastVariant.info);
+        AppToast.show(
+          context,
+          message: AppLocalizations.of(context)!.analysis_complete,
+          variant: ToastVariant.info,
+        );
         context.pushNamed(
           'scan_result',
           extra: result,
@@ -213,7 +232,11 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
       }
     } catch (e) {
       if (mounted) {
-        AppToast.show(context, message: 'Error analyzing uploaded image: $e', variant: ToastVariant.error);
+        AppToast.show(
+          context,
+          message: 'Error analyzing uploaded image: $e',
+          variant: ToastVariant.error,
+        );
         debugPrint('Upload scan error: $e');
       }
     } finally {
@@ -235,7 +258,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
       body: Stack(
         children: [
           // ── Camera Background ──
-          if (_isInit && _cameraController != null && _cameraController!.value.isInitialized)
+          if (_isInit &&
+              _cameraController != null &&
+              _cameraController!.value.isInitialized)
             Positioned.fill(
               child: AspectRatio(
                 aspectRatio: _cameraController!.value.aspectRatio,
@@ -243,7 +268,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
               ),
             )
           else
-            const Center(child: CircularProgressIndicator(color: AppColors.primary)),
+            const Center(
+              child: CircularProgressIndicator(color: AppColors.primary),
+            ),
 
           // ── UI Overlay ──
           Positioned.fill(
@@ -252,7 +279,10 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                 children: [
                   // ── Top Bar ──
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl, vertical: AppSpacing.md),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.xl,
+                      vertical: AppSpacing.md,
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -269,7 +299,10 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                   // ── Instruction Pill ──
                   const SizedBox(height: AppSpacing.xl),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl, vertical: AppSpacing.md),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.xxl,
+                      vertical: AppSpacing.md,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFF4CAF50), // Green
                       borderRadius: BorderRadius.circular(30),
@@ -293,33 +326,53 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                           width: MediaQuery.sizeOf(context).width * 0.8,
                           height: MediaQuery.sizeOf(context).width * 0.8,
                           decoration: BoxDecoration(
-                            border: Border.all(color: const Color(0xFF4CAF50), width: 1.5),
+                            border: Border.all(
+                              color: const Color(0xFF4CAF50),
+                              width: 1.5,
+                            ),
                             borderRadius: BorderRadius.circular(24),
                           ),
                           child: Stack(
                             children: [
                               // Rule of Thirds Grid Lines (Horizontal)
                               Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Container(height: 1, color: Colors.white.withValues(alpha: 0.2)),
-                                  Container(height: 1, color: Colors.white.withValues(alpha: 0.2)),
+                                  Container(
+                                    height: 1,
+                                    color: Colors.white.withValues(alpha: 0.2),
+                                  ),
+                                  Container(
+                                    height: 1,
+                                    color: Colors.white.withValues(alpha: 0.2),
+                                  ),
                                 ],
                               ),
                               // Rule of Thirds Grid Lines (Vertical)
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Container(width: 1, color: Colors.white.withValues(alpha: 0.2)),
-                                  Container(width: 1, color: Colors.white.withValues(alpha: 0.2)),
+                                  Container(
+                                    width: 1,
+                                    color: Colors.white.withValues(alpha: 0.2),
+                                  ),
+                                  Container(
+                                    width: 1,
+                                    color: Colors.white.withValues(alpha: 0.2),
+                                  ),
                                 ],
                               ),
                             ],
                           ),
                         ),
-                        
+
                         // ── Corner Brackets ──
-                        ..._buildCornerBrackets(MediaQuery.sizeOf(context).width * 0.8, 24.0),
+                        ..._buildCornerBrackets(
+                          MediaQuery.sizeOf(context).width * 0.8,
+                          24.0,
+                        ),
                       ],
                     ),
                   ),
@@ -347,10 +400,17 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                           child: _isProcessing
                               ? const Padding(
                                   padding: EdgeInsets.all(22.0),
-                                  child: CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 3,
+                                  ),
                                 )
                               : IconButton(
-                                  icon: const Icon(Icons.camera_alt_outlined, color: Colors.white, size: 36),
+                                  icon: const Icon(
+                                    Icons.camera_alt_outlined,
+                                    color: Colors.white,
+                                    size: 36,
+                                  ),
                                   onPressed: _takeScanPicture,
                                 ),
                         ),
@@ -387,7 +447,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                       const SizedBox(height: AppSpacing.sm),
                       Text(
                         AppLocalizations.of(context)!.analyzing_delay_desc,
-                        style: AppTypography.body.copyWith(color: Colors.white70),
+                        style: AppTypography.body.copyWith(
+                          color: Colors.white70,
+                        ),
                       ),
                     ],
                   ),
@@ -428,30 +490,60 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
       Positioned(
         top: -1,
         left: -1,
-        child: _buildCorner(lineLength, thickness, color, isTop: true, isLeft: true),
+        child: _buildCorner(
+          lineLength,
+          thickness,
+          color,
+          isTop: true,
+          isLeft: true,
+        ),
       ),
       // Top Right
       Positioned(
         top: -1,
         right: -1,
-        child: _buildCorner(lineLength, thickness, color, isTop: true, isLeft: false),
+        child: _buildCorner(
+          lineLength,
+          thickness,
+          color,
+          isTop: true,
+          isLeft: false,
+        ),
       ),
       // Bottom Left
       Positioned(
         bottom: -1,
         left: -1,
-        child: _buildCorner(lineLength, thickness, color, isTop: false, isLeft: true),
+        child: _buildCorner(
+          lineLength,
+          thickness,
+          color,
+          isTop: false,
+          isLeft: true,
+        ),
       ),
       // Bottom Right
       Positioned(
         bottom: -1,
         right: -1,
-        child: _buildCorner(lineLength, thickness, color, isTop: false, isLeft: false),
+        child: _buildCorner(
+          lineLength,
+          thickness,
+          color,
+          isTop: false,
+          isLeft: false,
+        ),
       ),
     ];
   }
 
-  Widget _buildCorner(double length, double thickness, Color color, {required bool isTop, required bool isLeft}) {
+  Widget _buildCorner(
+    double length,
+    double thickness,
+    Color color, {
+    required bool isTop,
+    required bool isLeft,
+  }) {
     // Instead of using complex paths, define an L shape with containers
     return SizedBox(
       width: length,
@@ -473,7 +565,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                   topLeft: Radius.circular(isTop && isLeft ? thickness : 0),
                   topRight: Radius.circular(isTop && !isLeft ? thickness : 0),
                   bottomLeft: Radius.circular(!isTop && isLeft ? thickness : 0),
-                  bottomRight: Radius.circular(!isTop && !isLeft ? thickness : 0),
+                  bottomRight: Radius.circular(
+                    !isTop && !isLeft ? thickness : 0,
+                  ),
                 ),
               ),
             ),
@@ -493,7 +587,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                   topLeft: Radius.circular(isTop && isLeft ? thickness : 0),
                   topRight: Radius.circular(isTop && !isLeft ? thickness : 0),
                   bottomLeft: Radius.circular(!isTop && isLeft ? thickness : 0),
-                  bottomRight: Radius.circular(!isTop && !isLeft ? thickness : 0),
+                  bottomRight: Radius.circular(
+                    !isTop && !isLeft ? thickness : 0,
+                  ),
                 ),
               ),
             ),
@@ -509,29 +605,43 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
       barrierDismissible: false,
       builder: (ctx) => AlertDialog(
         backgroundColor: Theme.of(context).colorScheme.surface,
-        title: Text(AppLocalizations.of(context)?.free_trial_ended ?? 'Free Trial Ended', style: AppTypography.h3),
+        title: Text(
+          AppLocalizations.of(context)?.free_trial_ended ?? 'Free Trial Ended',
+          style: AppTypography.h3,
+        ),
         content: Text(
-          AppLocalizations.of(context)?.free_trial_desc ?? 'You have reached your limit of 3 free scans. Sign up to unlock unlimited scanning and save your farm history!',
-          style: AppTypography.body.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+          AppLocalizations.of(context)?.free_trial_desc ??
+              'You have reached your limit of 3 free scans. Sign up to unlock unlimited scanning and save your farm history!',
+          style: AppTypography.body.copyWith(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text(AppLocalizations.of(context)!.cancel, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+            child: Text(
+              AppLocalizations.of(context)!.cancel,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
           ),
           FilledButton(
-            style: FilledButton.styleFrom(
-              backgroundColor: AppColors.primary,
-            ),
+            style: FilledButton.styleFrom(backgroundColor: AppColors.primary),
             onPressed: () {
               Navigator.pop(ctx);
               context.go('/signup');
             },
-            child: Text(AppLocalizations.of(context)!.sign_up, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            child: Text(
+              AppLocalizations.of(context)!.sign_up,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 }
-

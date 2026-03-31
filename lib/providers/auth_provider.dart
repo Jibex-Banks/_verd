@@ -61,14 +61,14 @@ class AuthNotifier extends AsyncNotifier<AppUser?> {
   Future<AppUser?> build() async {
     // 1. Watch auth state changes (StreamProvider)
     final authState = ref.watch(authStateProvider).value;
-    
+
     // If we're definitely not authenticated, return null
     if (authState == null) return null;
 
     // 2. Check local Hive cache first (best for speed/offline)
     final repository = ref.read(authRepositoryProvider);
     final cached = repository.getCachedUser();
-    
+
     // If cache belongs to the same user, use it
     if (cached != null && cached.uid == authState.uid) {
       return cached;
@@ -88,7 +88,9 @@ class AuthNotifier extends AsyncNotifier<AppUser?> {
       return guest;
     } else {
       // PROACTIVE FETCH: Missing profile for logged-in user
-      debugPrint('[AuthNotifier] Cache empty for ${authState.uid}, fetching from Firestore...');
+      debugPrint(
+        '[AuthNotifier] Cache empty for ${authState.uid}, fetching from Firestore...',
+      );
       return await repository.refreshProfile();
     }
   }
@@ -96,7 +98,9 @@ class AuthNotifier extends AsyncNotifier<AppUser?> {
   Future<void> login(String email, String password) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      final user = await ref.read(authRepositoryProvider).login(email, password);
+      final user = await ref
+          .read(authRepositoryProvider)
+          .login(email, password);
       await _handleFcmSetup(user.uid);
       return user;
     });
@@ -123,11 +127,9 @@ class AuthNotifier extends AsyncNotifier<AppUser?> {
   }) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      final user = await ref.read(authRepositoryProvider).register(
-            name: name,
-            email: email,
-            password: password,
-          );
+      final user = await ref
+          .read(authRepositoryProvider)
+          .register(name: name, email: email, password: password);
       await _handleFcmSetup(user.uid);
       return user;
     });
@@ -153,12 +155,14 @@ class AuthNotifier extends AsyncNotifier<AppUser?> {
   }) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      final updated = await ref.read(authRepositoryProvider).updateProfile(
-        name: name,
-        phone: phone,
-        location: location,
-        photoFile: photoFile,
-      );
+      final updated = await ref
+          .read(authRepositoryProvider)
+          .updateProfile(
+            name: name,
+            phone: phone,
+            location: location,
+            photoFile: photoFile,
+          );
       // Invalidate both providers so the profile screen re-reads the updated user
       // authNotifierProvider builds from cache, so we need to clear it to force rebuild
       ref.invalidate(authNotifierProvider);
@@ -178,5 +182,6 @@ class AuthNotifier extends AsyncNotifier<AppUser?> {
   }
 }
 
-final authNotifierProvider =
-    AsyncNotifierProvider<AuthNotifier, AppUser?>(AuthNotifier.new);
+final authNotifierProvider = AsyncNotifierProvider<AuthNotifier, AppUser?>(
+  AuthNotifier.new,
+);
