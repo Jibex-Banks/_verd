@@ -7,6 +7,7 @@ import { Dashboard } from './components/Dashboard'
 
 function App() {
   const [theme, setTheme] = useState<'bitget' | 'greenfamily'>('bitget')
+  const [currentView, setCurrentView] = useState<'home' | 'scan' | 'insights'>('home')
 
   // Listen for theme changes from the Root element classes
   useEffect(() => {
@@ -32,10 +33,9 @@ function App() {
     <div className="min-h-screen text-white font-sans selection:bg-primary/30 selection:text-white overflow-x-hidden">
       {theme === 'bitget' ? <LiquidMetalBackground /> : <NeuralBackground />}
       
-      <Navbar />
-      <ThemeToggle />
+      <Navbar currentView={currentView} setView={setCurrentView} theme={theme} setTheme={setTheme} />
 
-      <Dashboard theme={theme} />
+      <Dashboard theme={theme} currentView={currentView} />
     </div>
   )
 }

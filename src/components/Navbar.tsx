@@ -1,9 +1,16 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sprout, Scan, BarChart3, User, Menu, X } from 'lucide-react'
+import { Sprout, Scan, BarChart3, User, Menu, X, Zap, Leaf } from 'lucide-react'
 import { cn } from '../lib/utils'
 
-export function Navbar() {
+interface NavbarProps {
+  currentView: 'home' | 'scan' | 'insights'
+  setView: (view: 'home' | 'scan' | 'insights') => void
+  theme: 'bitget' | 'greenfamily'
+  setTheme: (theme: 'bitget' | 'greenfamily') => void
+}
+
+export function Navbar({ currentView, setView, theme, setTheme }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
@@ -13,11 +20,24 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const navLinks = [
-    { name: 'Home', icon: <Sprout size={18} />, href: '#' },
-    { name: 'Scan', icon: <Scan size={18} />, href: '#scan' },
-    { name: 'Insights', icon: <BarChart3 size={18} />, href: '#insights' },
+  const navLinks: { name: string, icon: React.ReactNode, id: 'home' | 'scan' | 'insights' }[] = [
+    { name: 'Home', icon: <Sprout size={18} />, id: 'home' },
+    { name: 'Scan', icon: <Scan size={18} />, id: 'scan' },
+    { name: 'Insights', icon: <BarChart3 size={18} />, id: 'insights' },
   ]
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'bitget' ? 'greenfamily' : 'bitget'
+    setTheme(newTheme)
+    
+    const root = window.document.documentElement
+    root.classList.remove('dark', 'theme-green')
+    if (newTheme === 'bitget') {
+      root.classList.add('dark')
+    } else {
+      root.classList.add('theme-green')
+    }
+  }
 
   return (
     <nav 
@@ -29,29 +49,50 @@ export function Navbar() {
       )}
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
-        <div className="flex items-center gap-2 group cursor-pointer">
+        <div 
+          className="flex items-center gap-2 group cursor-pointer"
+          onClick={() => setView('home')}
+        >
           <div className="p-2 rounded-xl bg-primary/20 text-primary group-hover:rotate-12 transition-transform">
             <Sprout size={24} />
           </div>
-          <span className="text-2xl font-bold tracking-tighter italic text-white">VERD</span>
+          <span className="text-2xl font-bold tracking-tighter italic text-white uppercase">VERD</span>
         </div>
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <a 
-              key={link.name} 
-              href={link.href}
-              className="flex items-center gap-2 text-sm font-medium text-white/60 hover:text-white transition-colors group"
+          <div className="flex items-center gap-1 bg-white/5 p-1 rounded-full border border-white/10">
+            {navLinks.map((link) => (
+              <button 
+                key={link.id} 
+                onClick={() => setView(link.id)}
+                className={cn(
+                  "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300",
+                  currentView === link.id 
+                    ? "bg-primary text-white shadow-lg" 
+                    : "text-white/40 hover:text-white"
+                )}
+              >
+                {link.icon}
+                {link.name}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={toggleTheme}
+              className="p-3 rounded-full bg-white/5 border border-white/10 text-white/40 hover:text-white transition-all hover:border-primary/50 group/theme"
+              title="Switch Theme"
             >
-              <span className="text-white/20 group-hover:text-primary transition-colors">{link.icon}</span>
-              {link.name}
-            </a>
-          ))}
-          <button className="flex items-center gap-2 px-6 py-2.5 bg-white/5 border border-white/10 rounded-full text-sm font-bold hover:bg-white/10 transition-all">
-            <User size={16} className="text-primary" />
-            Profile
-          </button>
+              {theme === 'bitget' ? <Zap size={18} className="group-hover/theme:text-primary transition-colors" /> : <Leaf size={18} className="group-hover/theme:text-emerald-500 transition-colors" />}
+            </button>
+            
+            <button className="flex items-center gap-2 px-6 py-2.5 bg-white/5 border border-white/10 rounded-full text-sm font-bold hover:bg-white/10 transition-all">
+              <User size={16} className="text-primary" />
+              Profile
+            </button>
+          </div>
         </div>
 
         {/* Mobile Toggle */}
@@ -74,21 +115,35 @@ export function Navbar() {
           >
             <div className="flex flex-col gap-6">
               {navLinks.map((link) => (
-                <a 
-                  key={link.name} 
-                  href={link.href}
-                  className="flex items-center gap-4 text-lg font-medium text-white/60"
-                  onClick={() => setMobileMenuOpen(false)}
+                <button 
+                  key={link.id} 
+                  onClick={() => {
+                    setView(link.id)
+                    setMobileMenuOpen(false)
+                  }}
+                  className={cn(
+                    "flex items-center gap-4 text-lg font-medium transition-colors",
+                    currentView === link.id ? "text-primary" : "text-white/60"
+                  )}
                 >
-                  <span className="text-primary">{link.icon}</span>
+                  {link.icon}
                   {link.name}
-                </a>
+                </button>
               ))}
               <hr className="border-white/5" />
-              <button className="flex items-center justify-center gap-3 py-4 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-primary/20">
-                <User size={20} />
-                Access Profile
-              </button>
+              <div className="flex items-center justify-between">
+                <button 
+                  onClick={toggleTheme}
+                  className="flex items-center gap-3 text-white/60"
+                >
+                  {theme === 'bitget' ? <Zap size={20} /> : <Leaf size={20} />}
+                  Change Theme
+                </button>
+                <button className="flex items-center gap-3 py-3 px-6 bg-primary text-white rounded-2xl font-bold shadow-lg">
+                  <User size={20} />
+                  Profile
+                </button>
+              </div>
             </div>
           </motion.div>
         )}
