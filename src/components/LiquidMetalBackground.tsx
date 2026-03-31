@@ -15,12 +15,13 @@ export function LiquidMetalBackground() {
   }
 
   return (
-    <div className="absolute inset-0 -z-10">
+    <div className="absolute inset-0 -z-10 bg-black">
+      <div className="absolute inset-0 opacity-30">
       <LiquidMetal
         width="100%"
         height="100%"
-        colorBack="#00042e"
-        colorTint="#5b4dc7"
+        colorBack="#0d0f14"
+        colorTint="#00D6B1"
         repetition={4}
         softness={0.45}
         shiftRed={-0.5}
@@ -31,6 +32,7 @@ export function LiquidMetalBackground() {
         speed={0.4}
         scale={2.2}
       />
+      </div>
     </div>
   )
 }

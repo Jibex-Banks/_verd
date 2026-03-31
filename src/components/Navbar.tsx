@@ -60,8 +60,9 @@ export function Navbar({ currentView, setView, theme, setTheme }: NavbarProps) {
           className="flex items-center gap-2 group cursor-pointer"
           onClick={() => setView('home')}
         >
-          <div className="p-2 rounded-2xl bg-primary/20 group-hover:scale-110 transition-all shadow-[0_0_20px_rgba(0,214,177,0.2)]">
-            <img src="/logo.png" alt="VERD" className="w-10 h-10 object-contain" />
+          <div className="p-2.5 rounded-2xl bg-white/[0.03] group-hover:bg-white/[0.08] group-hover:scale-110 transition-all shadow-[0_0_40px_rgba(0,214,177,0.3)] border border-white/5 relative overflow-hidden">
+            <div className="absolute inset-0 bg-primary/20 blur-xl group-hover:bg-primary/40 transition-all" />
+            <img src="/logo.png" alt="VERD" className="w-10 h-10 object-contain relative z-10 brightness-125 contrast-125 drop-shadow-[0_0_12px_rgba(255,255,255,0.4)]" />
           </div>
           <span className="text-2xl font-bold tracking-tighter italic text-white uppercase">VERD</span>
         </div>
@@ -164,18 +165,35 @@ export function Navbar({ currentView, setView, theme, setTheme }: NavbarProps) {
                 </button>
               ))}
               <hr className="border-white/5" />
+              <div className="flex flex-col gap-4">
+                <p className="text-[10px] font-bold text-white/20 uppercase tracking-[0.3em] px-2">Account Management</p>
+                {userLinks.map((link) => (
+                  <button 
+                    key={link.id} 
+                    onClick={() => {
+                      setView(link.id)
+                      setMobileMenuOpen(false)
+                    }}
+                    className={cn(
+                      "flex items-center gap-4 text-base font-medium transition-colors px-2",
+                      currentView === link.id ? "text-primary" : "text-white/40"
+                    )}
+                  >
+                    {link.icon}
+                    {link.name}
+                  </button>
+                ))}
+              </div>
+              <hr className="border-white/5" />
               <div className="flex items-center justify-between">
                 <button 
                   onClick={toggleTheme}
-                  className="flex items-center gap-3 text-white/60"
+                  className="flex items-center gap-3 text-white/60 text-sm"
                 >
-                  {theme === 'bitget' ? <Zap size={20} /> : <Leaf size={20} />}
-                  Change Theme
+                  {theme === 'bitget' ? <Zap size={18} /> : <Leaf size={18} />}
+                  Switch Theme
                 </button>
-                <button className="flex items-center gap-3 py-3 px-6 bg-primary text-white rounded-2xl font-bold shadow-lg">
-                  <User size={20} />
-                  Profile
-                </button>
+                <button className="text-red-400 text-sm font-bold">Sign Out</button>
               </div>
             </div>
           </motion.div>
