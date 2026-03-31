@@ -57,8 +57,8 @@ export function Navbar({ currentView, setView, theme, setTheme }: NavbarProps) {
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
         <div className="flex items-center gap-4 cursor-pointer group" onClick={() => setView('home')}>
-          <div className="relative w-10 h-10 flex items-center justify-center rounded-2xl bg-white/5 border border-white/10 group-hover:border-white/20 transition-all overflow-hidden">
-            <img src="/logo.png?v=1" alt="VERD Logo" className="w-6 h-6 object-contain relative z-10 opacity-80 group-hover:opacity-100 transition-opacity" />
+          <div className="relative w-14 h-14 flex items-center justify-center rounded-2xl bg-white/5 border border-white/10 group-hover:border-white/20 transition-all overflow-hidden">
+            <img src="/logo.png?v=1" alt="VERD Logo" className="w-10 h-10 object-contain relative z-10 opacity-80 group-hover:opacity-100 transition-opacity" />
           </div>
           <div className="hidden md:block">
             <span className="text-xl font-bold tracking-tighter italic block leading-none">VERD</span>

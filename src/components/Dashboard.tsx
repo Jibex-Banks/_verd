@@ -19,6 +19,7 @@ interface DashboardProps {
 export function Dashboard({ theme, currentView }: DashboardProps) {
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [showAuth, setShowAuth] = useState(false)
+  const [authMode, setAuthMode] = useState<'login' | 'signup'>('login')
 
   const handleOnboardingComplete = () => {
     setShowOnboarding(false)
@@ -28,7 +29,7 @@ export function Dashboard({ theme, currentView }: DashboardProps) {
   return (
     <main className="container mx-auto px-6 py-12 lg:py-24 relative">
       <Onboarding isOpen={showOnboarding} onClose={handleOnboardingComplete} />
-      <Auth isOpen={showAuth} onClose={() => setShowAuth(false)} />
+      <Auth isOpen={showAuth} onClose={() => setShowAuth(false)} initialMode={authMode} />
 
       <AnimatePresence mode="wait">
         {currentView === 'home' && (
@@ -194,13 +195,13 @@ export function Dashboard({ theme, currentView }: DashboardProps) {
                 </p>
                 <div className="flex flex-col md:flex-row gap-6 justify-center relative z-10">
                   <button 
-                    onClick={() => setShowAuth(true)}
+                    onClick={() => { setAuthMode('signup'); setShowAuth(true); }}
                     className="px-12 py-5 bg-primary text-black font-black uppercase tracking-[0.2em] text-xs rounded-full hover:scale-105 transition-transform active:scale-95 shadow-[0_10px_40px_rgba(0,214,177,0.3)]"
                   >
                     Create My Identity
                   </button>
                   <button 
-                    onClick={() => setShowAuth(true)}
+                    onClick={() => { setAuthMode('login'); setShowAuth(true); }}
                     className="px-12 py-5 bg-white/5 border border-white/10 text-white font-black uppercase tracking-[0.2em] text-xs rounded-full hover:bg-white/10 transition-all"
                   >
                     Sign In
