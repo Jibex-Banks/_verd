@@ -1,13 +1,55 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Zap, Camera, Upload, CheckCircle2, AlertTriangle, Info, ScanLine } from 'lucide-react'
+import { toPng } from 'html-to-image'
 import { cn } from '../lib/utils'
 import { GlassCard } from './ui/GlassCard'
+import { ResultShareCard } from './ui/ResultShareCard'
+import { db, auth } from '../lib/firebase'
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
 
-export function DiagnosticScanner() {
+export function DiagnosticScanner({ theme }: { theme: 'bitget' | 'greenfamily' }) {
   const [scanning, setScanning] = useState(false)
   const [progress, setProgress] = useState(0)
   const [result, setResult] = useState<null | 'complete'>(null)
+  const shareCardRef = useRef<HTMLDivElement>(null)
+
+  const saveResult = async () => {
+    if (!auth.currentUser) return
+
+    try {
+      await addDoc(collection(db, 'scans'), {
+        userId: auth.currentUser.uid,
+        cropName: 'Maize', // This would be dynamic in a real app
+        disease: 'Leaf Rust',
+        confidence: 98.2,
+        recommendation: 'Apply organic fungicide immediately and increase spacing between crops.',
+        timestamp: serverTimestamp(),
+        theme
+      })
+    } catch (err) {
+      console.error('Error saving scan:', err)
+    }
+  }
+
+  const handleShare = async () => {
+    if (shareCardRef.current === null) return
+
+    try {
+      const dataUrl = await toPng(shareCardRef.current, {
+        cacheBust: true,
+        backgroundColor: '#000',
+        pixelRatio: 2,
+      })
+      
+      const link = document.createElement('a')
+      link.download = `VERD-Result-${Date.now()}.png`
+      link.href = dataUrl
+      link.click()
+    } catch (err) {
+      console.error('Error generating image:', err)
+    }
+  }
 
   const startScan = () => {
     setScanning(true)
@@ -22,6 +64,7 @@ export function DiagnosticScanner() {
     } else if (progress >= 100) {
       setScanning(false)
       setResult('complete')
+      saveResult()
     }
   }, [scanning, progress])
 
@@ -121,15 +164,32 @@ export function DiagnosticScanner() {
                     We found **Leaf Rust** on your plant. This can spread quickly in your local climate.
                   </p>
                   
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3 text-sm text-white/60 bg-white/5 p-4 rounded-2xl border border-white/5">
-                      <Info size={20} className="text-primary shrink-0" />
-                      <span>Immediate organic fungicide application required.</span>
-                    </div>
-                    <button className="w-full py-5 bg-primary text-white font-bold rounded-2xl hover:bg-primary/90 transition-all shadow-[0_15px_40px_rgba(108,58,250,0.4)] flex items-center justify-center gap-2 group">
-                      GET TREATMENT PLAN
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <button className="flex-1 py-5 bg-primary text-white font-bold rounded-2xl hover:bg-primary/90 transition-all shadow-[0_15px_40px_rgba(108,58,250,0.4)] flex items-center justify-center gap-2 group">
+                      TREATMENT PLAN
                       <CheckCircle2 size={18} className="group-hover:translate-x-1 transition-transform" />
                     </button>
+                    <button 
+                      onClick={handleShare}
+                      className="px-8 py-5 bg-white/5 border border-white/10 text-white font-bold rounded-2xl hover:bg-white/10 transition-all flex items-center justify-center gap-2 group"
+                    >
+                      SHARE
+                      <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-3.316m0 0a3 3 0 110 3.316" />
+                      </svg>
+                    </button>
+                  </div>
+
+                  {/* Hidden card for PNG generation */}
+                  <div style={{ position: 'absolute', left: '-9999px', top: '-9999px' }}>
+                    <ResultShareCard 
+                      ref={shareCardRef}
+                      cropName="Maize"
+                      disease="Leaf Rust"
+                      confidence={98.2}
+                      recommendation="Apply organic fungicide immediately and increase spacing between crops."
+                      theme={theme}
+                    />
                   </div>
                 </div>
               </motion.div>

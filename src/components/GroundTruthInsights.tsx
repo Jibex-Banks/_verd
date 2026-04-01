@@ -1,59 +1,152 @@
-import { MapPin, Activity, Droplets, Wind, ClipboardCheck, FlaskConical, Sprout } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { MapPin, Activity, Droplets, Wind, ClipboardCheck, FlaskConical, Sprout, Loader2 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { cn } from '../lib/utils'
 import { GlassCard } from './ui/GlassCard'
+import { db, auth } from '../lib/firebase'
+import { collection, query, where, orderBy, limit, getDocs, doc, getDoc } from 'firebase/firestore'
 
 export function GroundTruthInsights() {
+  const [loading, setLoading] = useState(true)
+  const [indexError, setIndexError] = useState<string | null>(null)
+  const [userName, setUserName] = useState('User')
+  const [location, setLocation] = useState('Savannah Belt')
+  const [farmSize, setFarmSize] = useState('--')
+  const [lastDisease, setLastDisease] = useState<string | null>(null)
+  const [scanCount, setScanCount] = useState(0)
+
+  useEffect(() => {
+    const fetchInsightsData = async () => {
+      if (!auth.currentUser) return
+
+      try {
+        setIndexError(null)
+        // 1. Fetch User Profile
+        const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid))
+        if (userDoc.exists()) {
+          const data = userDoc.data()
+          setUserName(data.fullName?.split(' ')[0] || 'User')
+          setLocation(data.location || 'Savannah Belt')
+          setFarmSize(data.farmSize ? `${data.farmSize}ha` : '--')
+        }
+
+        // 2. Fetch Latest Scan Result & Count
+        const scansRef = collection(db, 'scans')
+        const q = query(
+          scansRef,
+          where('userId', '==', auth.currentUser.uid),
+          orderBy('timestamp', 'desc')
+        )
+        const querySnapshot = await getDocs(q)
+        setScanCount(querySnapshot.size)
+        
+        if (!querySnapshot.empty) {
+          setLastDisease(querySnapshot.docs[0].data().disease)
+        }
+      } catch (err: any) {
+        console.error('Error fetching insights:', err)
+        if (err.message?.includes('index')) {
+          setIndexError('Insights require a database index. Please check the developer console.')
+        }
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchInsightsData()
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
+        <Loader2 className="animate-spin text-primary" size={48} />
+        <p className="text-[10px] font-bold text-white/20 uppercase tracking-widest">Aggregating Field Data...</p>
+      </div>
+    )
+  }
+
+  if (indexError) {
+    return (
+      <div className="max-w-2xl mx-auto pt-20">
+        <GlassCard className="p-12 text-center border-amber-500/20 bg-amber-500/5">
+          <div className="p-4 bg-amber-500/20 text-amber-500 rounded-3xl w-fit mx-auto mb-6">
+            <Activity size={32} />
+          </div>
+          <h2 className="text-2xl font-bold italic mb-4">Insights Unavailable</h2>
+          <p className="text-white/60 text-sm leading-relaxed mb-8">
+            {indexError}
+          </p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="px-8 py-4 bg-amber-500 text-black font-bold rounded-2xl hover:scale-105 transition-transform uppercase tracking-widest text-[10px]"
+          >
+            Retry Sync
+          </button>
+        </GlassCard>
+      </div>
+    )
+  }
+
   return (
     <section className="space-y-12">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <MetricCard 
           icon={<MapPin className="text-red-500" />} 
-          label="Region" 
-          value="Your Fields" 
-          subValue="Savannah Belt" 
+          label="Field Scope" 
+          value={location} 
+          subValue={`Size: ${farmSize}`} 
           delay={0.1}
         />
         <MetricCard 
           icon={<Activity className="text-emerald-500" />} 
-          label="Soil Profile" 
-          value="Loamy-Clay" 
-          subValue="High Potassium" 
+          label="Diagnostics" 
+          value={`${scanCount} Scans`} 
+          subValue="Total Coverage" 
           delay={0.2}
         />
         <MetricCard 
           icon={<Droplets className="text-blue-500" />} 
-          label="Humidity" 
+          label="Hydration" 
           value="45%" 
-          subValue="Semi-Arid" 
+          subValue="Savannah Zone" 
           delay={0.3}
         />
         <MetricCard 
           icon={<Wind className="text-orange-500" />} 
-          label="Climate Var" 
-          value="Sudano-Sahel" 
-          subValue="Seasonal" 
+          label="Pathogen Risk" 
+          value={lastDisease === 'Healthy' ? 'Low' : 'Elevated'} 
+          subValue={lastDisease || 'No Data'} 
           delay={0.4}
         />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
-          <h2 className="text-3xl font-bold tracking-tight">Alex</h2>
-          <h3 className="text-2xl font-bold tracking-tight">How to Protect Your Crops</h3>
+          <h2 className="text-3xl font-bold tracking-tight italic">{userName}'s <span className="text-primary not-italic font-black uppercase">Interventions</span></h2>
+          <h3 className="text-lg text-white/40 font-bold uppercase tracking-widest">Targeted Agronomy Protocol</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {lastDisease && lastDisease !== 'Healthy' ? (
+              <RecipeCard 
+                title={`${lastDisease} Mitigation`}
+                description={`Specific protocol for ${lastDisease} identified in your latest field diagnostic.`}
+                ingredients={["Targeted Fungicide", "Copper-based Spray", "Pruning Shear Hook"]}
+                impact="High Accuracy"
+                icon={<FlaskConical className="text-purple-400" />}
+              />
+            ) : (
+              <RecipeCard 
+                title="Preventative Spore Guard"
+                description="General airborne protection for healthy fields in the Savannah Belt."
+                ingredients={["Neem Oil Solution", "Garlic Extract", "Water (1L)"]}
+                impact="Maintenance"
+                icon={<FlaskConical className="text-purple-400" />}
+              />
+            )}
             <RecipeCard 
-              title="Organic Fungicide Mix"
-              description="Effective against Puccinia sorghi detected in regional biometric clusters."
-              ingredients={["Neem Oil (50ml)", "Liquid Soap (10ml)", "Warm Water (1L)"]}
-              impact="98% Effective"
-              icon={<FlaskConical className="text-purple-400" />}
-            />
-            <RecipeCard 
-              title="Nutrient Boost (K+)"
-              description="Correcting potassium deficiency in sandy-loam transitions."
-              ingredients={["Wood Ash (2kg)", "Compost Tea (5L)", "Mulch Layer"]}
-              impact="Very Effective"
+              title="Soil Enrichment (K+)"
+              description="Potassium-focused nutrient strategy for improved resistance."
+              ingredients={["Wood Ash Extract", "Organic Mulch", "Compost Tea"]}
+              impact="Soil Health"
               icon={<Sprout className="text-green-400" />}
             />
           </div>

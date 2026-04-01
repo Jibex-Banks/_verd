@@ -64,7 +64,7 @@ export function Onboarding({ isOpen, onClose }: { isOpen: boolean, onClose: () =
           <X size={24} />
         </button>
 
-        <div className="p-12 md:p-16">
+        <div className="p-8 md:p-16">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentStep}
