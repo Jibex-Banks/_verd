@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 
 enum StatusBarVariant { success, error, warning, info }
 
@@ -70,26 +70,38 @@ class AppStatusBar extends StatelessWidget {
         action: action,
       );
 
-  Color get _bg => switch (variant) {
-    StatusBarVariant.success => AppColors.success.withValues(alpha: 0.10),
-    StatusBarVariant.error   => AppColors.error.withValues(alpha: 0.10),
-    StatusBarVariant.warning => AppColors.warning.withValues(alpha: 0.10),
-    StatusBarVariant.info    => AppColors.info.withValues(alpha: 0.10),
-  };
+  Color _bg(BuildContext context) {
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
+    final errorColor = Theme.of(context).colorScheme.error;
+    return switch (variant) {
+      StatusBarVariant.success => designTheme.accentGreen.withOpacity(0.10),
+      StatusBarVariant.error   => errorColor.withOpacity(0.10),
+      StatusBarVariant.warning => const Color(0xFFF1C40F).withOpacity(0.10),
+      StatusBarVariant.info    => designTheme.primary.withOpacity(0.10),
+    };
+  }
 
-  Color get _fg => switch (variant) {
-    StatusBarVariant.success => AppColors.successDark,
-    StatusBarVariant.error   => AppColors.errorDark,
-    StatusBarVariant.warning => AppColors.warningDark,
-    StatusBarVariant.info    => AppColors.infoDark,
-  };
+  Color _fg(BuildContext context) {
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
+    final errorColor = Theme.of(context).colorScheme.error;
+    return switch (variant) {
+      StatusBarVariant.success => designTheme.accentGreen,
+      StatusBarVariant.error   => errorColor,
+      StatusBarVariant.warning => const Color(0xFFD4AC0D),
+      StatusBarVariant.info    => designTheme.primary,
+    };
+  }
 
-  Color get _border => switch (variant) {
-    StatusBarVariant.success => AppColors.success,
-    StatusBarVariant.error   => AppColors.error,
-    StatusBarVariant.warning => AppColors.warning,
-    StatusBarVariant.info    => AppColors.info,
-  };
+  Color _border(BuildContext context) {
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
+    final errorColor = Theme.of(context).colorScheme.error;
+    return switch (variant) {
+      StatusBarVariant.success => designTheme.accentGreen,
+      StatusBarVariant.error   => errorColor,
+      StatusBarVariant.warning => const Color(0xFFF1C40F),
+      StatusBarVariant.info    => designTheme.primary,
+    };
+  }
 
   IconData get _icon => switch (variant) {
     StatusBarVariant.success => Icons.check_circle_outline,
@@ -100,64 +112,63 @@ class AppStatusBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
     final scaleFactor = MediaQuery.textScalerOf(context).scale(1.0).clamp(0.8, 1.3);
+    final bg = _bg(context);
+    final fg = _fg(context);
+    final borderColor = _border(context);
 
     return Semantics(
-      // Announce to screen readers using the appropriate role
       liveRegion: true,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.lg,
-          vertical: AppSpacing.md,
+          horizontal: 16.0,
+          vertical: 12.0,
         ),
         decoration: BoxDecoration(
-          color: _bg,
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          border: Border.all(color: _border.withValues(alpha: 0.3), width: 1),
+          color: bg,
+          borderRadius: BorderRadius.circular(12.0),
+          border: Border.all(color: borderColor.withOpacity(0.3), width: 1),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Leading icon or custom widget
             if (leading != null)
               leading!
             else if (showIcon)
-              Icon(_icon, size: 18, color: _fg),
+              Icon(_icon, size: 18, color: fg),
 
-            const SizedBox(width: AppSpacing.sm),
+            const SizedBox(width: 8.0),
 
-            // Message — flexible so it wraps on narrow screens
             Expanded(
               child: Text(
                 message,
-                style: AppTypography.bodySmall.copyWith(
-                  color: _fg,
-                  fontWeight: AppTypography.medium,
-                  fontSize: AppTypography.sm * scaleFactor,
+                style: designTheme.bodyRegular.copyWith(
+                  color: fg,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14.0 * scaleFactor,
                 ),
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
 
-            // Optional trailing action
             if (action != null) ...[
-              const SizedBox(width: AppSpacing.xs),
+              const SizedBox(width: 4.0),
               action!,
             ],
 
-            // Dismiss button — meets 44px touch target
             if (onDismiss != null) ...[
-              const SizedBox(width: AppSpacing.xs),
+              const SizedBox(width: 4.0),
               GestureDetector(
                 onTap: onDismiss,
                 behavior: HitTestBehavior.opaque,
                 child: SizedBox(
-                  width: 44,
-                  height: 44,
+                  width: designTheme.touchTargetMin,
+                  height: designTheme.touchTargetMin,
                   child: Center(
-                    child: Icon(Icons.close, size: 16, color: _fg),
+                    child: Icon(Icons.close, size: 16, color: fg),
                   ),
                 ),
               ),

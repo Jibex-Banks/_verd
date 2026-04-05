@@ -1,6 +1,6 @@
 import 'package:verd/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // CONFIRMATION DIALOG
@@ -74,7 +74,7 @@ class ConfirmationDialog extends StatelessWidget {
       confirmLabel: AppLocalizations.of(context)!.delete,
       cancelLabel: AppLocalizations.of(context)!.cancel,
       isDangerous: true,
-      icon: const Icon(Icons.delete_outline, color: AppColors.error, size: 32),
+      icon: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.error, size: 32),
     );
   }
 
@@ -87,8 +87,8 @@ class ConfirmationDialog extends StatelessWidget {
       confirmLabel: AppLocalizations.of(context)!.logout,
       cancelLabel: AppLocalizations.of(context)!.stay,
       isDangerous: false,
-      icon: const Icon(Icons.logout_outlined,
-          color: AppColors.textSecondary, size: 32),
+      icon: Icon(Icons.logout_outlined,
+          color: Theme.of(context).extension<AppDesignSystem>()?.textDim, size: 32),
     );
   }
 
@@ -108,19 +108,19 @@ class ConfirmationDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
     final sw = MediaQuery.sizeOf(context).width;
-    final theme = Theme.of(context);
-    final confirmColor = isDangerous ? theme.colorScheme.error : theme.colorScheme.primary;
+    final confirmColor = isDangerous ? Theme.of(context).colorScheme.error : designTheme.primary;
 
     return Dialog(
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.xxl)),
-      backgroundColor: theme.colorScheme.surfaceContainerHigh,
+          borderRadius: BorderRadius.circular(28.0)), // Use a generous radius for premium feel
+      backgroundColor: designTheme.surface,
       // Constrain width on tablets
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: sw < 600 ? sw * 0.88 : 400),
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.xxl),
+          padding: const EdgeInsets.all(32.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -131,31 +131,37 @@ class ConfirmationDialog extends StatelessWidget {
                   height: 64,
                   decoration: BoxDecoration(
                     color: isDangerous
-                        ? AppColors.error.withValues(alpha: 0.1)
-                        : AppColors.primary50,
+                         ? Theme.of(context).colorScheme.error.withOpacity(0.1)
+                        : designTheme.primary.withOpacity(0.1),
                     shape: BoxShape.circle,
                   ),
                   child: Center(child: icon),
                 ),
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: 16.0),
               ],
 
               // Title
               Text(
                 title,
-                style: AppTypography.h3.copyWith(color: theme.colorScheme.onSurface),
+                style: designTheme.titleLarge.copyWith(
+                  color: designTheme.textMain,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 22.0,
+                ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: 8.0),
 
               // Message
               Text(
                 message,
-                style: AppTypography.body
-                    .copyWith(color: theme.colorScheme.onSurfaceVariant),
+                style: designTheme.bodyRegular.copyWith(
+                  color: designTheme.textDim,
+                  fontSize: 16.0,
+                ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: AppSpacing.xxl),
+              const SizedBox(height: 32.0),
 
               // Buttons
               Row(children: [
@@ -164,20 +170,23 @@ class ConfirmationDialog extends StatelessWidget {
                   child: OutlinedButton(
                     onPressed: () => Navigator.of(context).pop(false),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: theme.colorScheme.onSurface,
-                      padding: const EdgeInsets.symmetric(vertical: 13),
+                      backgroundColor: Colors.transparent,
+                      foregroundColor: designTheme.textMain,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
                       side: BorderSide(
-                          color: theme.colorScheme.outlineVariant, width: 1.5),
+                          color: designTheme.textMain.withOpacity(0.1), width: 1.5),
                       shape: RoundedRectangleBorder(
                           borderRadius:
-                          BorderRadius.circular(AppRadius.button)),
+                          BorderRadius.circular(12.0)),
                     ),
                     child: Text(cancelLabel,
-                        style: AppTypography.button
-                            .copyWith(color: theme.colorScheme.onSurface)),
+                        style: designTheme.bodyRegular.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: designTheme.textMain,
+                        )),
                   ),
                 ),
-                const SizedBox(width: AppSpacing.md),
+                const SizedBox(width: 16.0),
                 // Confirm
                 Expanded(
                   child: ElevatedButton(
@@ -185,14 +194,17 @@ class ConfirmationDialog extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: confirmColor,
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 13),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
                       elevation: 0,
                       shape: RoundedRectangleBorder(
                           borderRadius:
-                          BorderRadius.circular(AppRadius.button)),
+                          BorderRadius.circular(12.0)),
                     ),
                     child: Text(confirmLabel,
-                        style: AppTypography.button.copyWith(color: theme.colorScheme.onPrimary)),
+                        style: designTheme.bodyRegular.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        )),
                   ),
                 ),
               ]),

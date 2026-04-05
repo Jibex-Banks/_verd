@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 import 'package:verd/shared/widgets/app_button.dart';
 
 /// Zero / empty state widget with optional illustration, title, subtitle,
@@ -55,6 +55,7 @@ class EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
     final size = MediaQuery.sizeOf(context);
     final scaleFactor = MediaQuery.textScalerOf(context).scale(1.0).clamp(0.8, 1.3);
     // Icon container scales with screen
@@ -64,7 +65,7 @@ class EmptyState extends StatelessWidget {
       child: SingleChildScrollView(
         padding: EdgeInsets.symmetric(
           horizontal: size.width * 0.1,
-          vertical: AppSpacing.xxl,
+          vertical: 32.0,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -75,42 +76,42 @@ class EmptyState extends StatelessWidget {
               Container(
                 width: iconContainerSize,
                 height: iconContainerSize,
-                decoration: const BoxDecoration(
-                  color: AppColors.gray100,
+                decoration: BoxDecoration(
+                  color: designTheme.surface,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   icon,
                   size: iconContainerSize * 0.45,
-                  color: AppColors.gray400,
+                  color: designTheme.textDim,
                 ),
               ),
 
-            const SizedBox(height: AppSpacing.xl),
+            const SizedBox(height: 24.0),
 
             Text(
               title,
-              style: AppTypography.h3.copyWith(
-                color: AppColors.textPrimary,
-                fontSize: AppTypography.xl * scaleFactor,
+              style: designTheme.titleLarge.copyWith(
+                color: designTheme.textMain,
+                fontSize: 24.0 * scaleFactor, // mapping h3 / xl text
               ),
               textAlign: TextAlign.center,
             ),
 
             if (subtitle != null) ...[
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: 8.0),
               Text(
                 subtitle!,
-                style: AppTypography.body.copyWith(
-                  color: AppColors.textSecondary,
-                  fontSize: AppTypography.base * scaleFactor,
+                style: designTheme.bodyRegular.copyWith(
+                  color: designTheme.textDim,
+                  fontSize: 16.0 * scaleFactor,
                 ),
                 textAlign: TextAlign.center,
               ),
             ],
 
             if (actionLabel != null && onAction != null) ...[
-              const SizedBox(height: AppSpacing.xxl),
+              const SizedBox(height: 32.0),
               AppButton(
                 text: actionLabel!,
                 onPressed: onAction,
@@ -119,7 +120,7 @@ class EmptyState extends StatelessWidget {
             ],
 
             if (secondaryActionLabel != null && onSecondaryAction != null) ...[
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: 8.0),
               AppButton(
                 text: secondaryActionLabel!,
                 onPressed: onSecondaryAction,

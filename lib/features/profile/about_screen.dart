@@ -1,7 +1,7 @@
 import 'package:verd/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 import 'package:verd/shared/widgets/app_card.dart';
 import 'package:verd/shared/widgets/app_toast.dart';
 
@@ -10,10 +10,12 @@ class AboutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final designTheme = AppDesignSystem.of(context);
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
+      backgroundColor: designTheme.background,
       appBar: AppBar(
+        backgroundColor: designTheme.background,
+        elevation: 0,
         leadingWidth: 80,
         leading: TextButton(
           onPressed: () {
@@ -21,30 +23,36 @@ class AboutScreen extends StatelessWidget {
           },
           child: Text(
             AppLocalizations.of(context)!.back,
-            style: AppTypography.buttonSmall.copyWith(color: AppColors.primary),
+            style: designTheme.bodyRegular.copyWith(
+              color: designTheme.primary,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
         title: Text(
           AppLocalizations.of(context)!.about_verd,
-          style: AppTypography.h4.copyWith(color: AppColors.textPrimary),
+          style: designTheme.titleLarge.copyWith(
+            color: designTheme.textMain,
+            fontWeight: FontWeight.w800,
+          ),
         ),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppSpacing.xl),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: 12.0),
             // Logo
             Container(
               width: 100,
               height: 100,
               decoration: BoxDecoration(
-                color: AppColors.primary,
+                color: designTheme.primary,
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.3),
+                    color: designTheme.primary.withValues(alpha: 0.3),
                     blurRadius: 15,
                     offset: const Offset(0, 8),
                   ),
@@ -58,78 +66,82 @@ class AboutScreen extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: 16.0),
             Text(
               'VERD', // Brand name, not translated
-              style: AppTypography.h1.copyWith(
+              style: designTheme.titleLarge.copyWith(
                 fontWeight: FontWeight.w800,
-                color: theme.colorScheme.onSurface,
+                fontSize: 32,
+                color: designTheme.textMain,
               ),
             ),
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: 4.0),
             Text(
               AppLocalizations.of(context)!.version,
-              style: AppTypography.bodySmall.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+              style: designTheme.bodyRegular.copyWith(
+                fontSize: 13,
+                color: designTheme.textDim,
               ),
             ),
-            const SizedBox(height: AppSpacing.huge),
+            const SizedBox(height: 48.0),
 
             // Our Mission Card
             AppCard(
               variant: AppCardVariant.elevated,
-              padding: const EdgeInsets.all(AppSpacing.xl),
+              padding: const EdgeInsets.all(24.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     AppLocalizations.of(context)!.our_mission,
-                    style: AppTypography.h3.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onSurface,
+                    style: designTheme.titleLarge.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: designTheme.textMain,
+                      fontSize: 18,
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.md),
+                  const SizedBox(height: 12.0),
                   Text(
                     AppLocalizations.of(context)!.mission_desc,
-                    style: AppTypography.body.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
+                    style: designTheme.bodyRegular.copyWith(
+                      color: designTheme.textDim,
                       height: 1.5,
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: 16.0),
 
             // Features Card
             AppCard(
               variant: AppCardVariant.elevated,
-              padding: const EdgeInsets.all(AppSpacing.xl),
+              padding: const EdgeInsets.all(24.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     AppLocalizations.of(context)!.features,
-                    style: AppTypography.h3.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onSurface,
+                    style: designTheme.titleLarge.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: designTheme.textMain,
+                      fontSize: 18,
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.md),
-                  _buildFeatureItem(context, AppLocalizations.of(context)!.feature_ai),
-                  _buildFeatureItem(context, AppLocalizations.of(context)!.feature_learning),
-                  _buildFeatureItem(context, AppLocalizations.of(context)!.feature_offline),
-                  _buildFeatureItem(context, AppLocalizations.of(context)!.feature_history),
+                  const SizedBox(height: 12.0),
+                  _buildFeatureItem(context, AppLocalizations.of(context)!.feature_ai, designTheme),
+                  _buildFeatureItem(context, AppLocalizations.of(context)!.feature_learning, designTheme),
+                  _buildFeatureItem(context, AppLocalizations.of(context)!.feature_offline, designTheme),
+                  _buildFeatureItem(context, AppLocalizations.of(context)!.feature_history, designTheme),
                 ],
               ),
             ),
-            const SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: 24.0),
 
             // Terms of Service Card
             AppCard(
               variant: AppCardVariant.elevated,
-              padding: const EdgeInsets.all(AppSpacing.lg),
+              padding: const EdgeInsets.all(16.0),
               onTap: () {
                 AppToast.show(
                   context,
@@ -142,43 +154,43 @@ class AboutScreen extends StatelessWidget {
                 children: [
                   Text(
                     AppLocalizations.of(context)!.terms_of_service,
-                    style: AppTypography.bodyLarge.copyWith(
+                    style: designTheme.bodyRegular.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: theme.colorScheme.onSurface,
+                      color: designTheme.textMain,
                     ),
                   ),
-                  const Icon(
+                  Icon(
                     Icons.chevron_right,
-                    color: AppColors.gray400,
+                    color: designTheme.textDim,
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: AppSpacing.xl),
+            const SizedBox(height: 32.0),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildFeatureItem(BuildContext context, String text) {
-    final theme = Theme.of(context);
+  Widget _buildFeatureItem(BuildContext context, String text, AppDesignSystem designTheme) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      padding: const EdgeInsets.only(bottom: 12.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(
+          Icon(
             Icons.check,
-            color: AppColors.primary,
+            color: designTheme.primary,
             size: 20,
           ),
-          const SizedBox(width: AppSpacing.md),
+          const SizedBox(width: 12.0),
           Expanded(
             child: Text(
               text,
-              style: AppTypography.body.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+              style: designTheme.bodyRegular.copyWith(
+                color: designTheme.textDim,
+                fontSize: 14,
               ),
             ),
           ),

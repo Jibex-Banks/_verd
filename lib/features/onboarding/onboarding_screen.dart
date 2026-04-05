@@ -2,7 +2,7 @@ import 'package:verd/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:verd/core/constants/app_assets.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 import 'package:verd/shared/widgets/app_button.dart';
 import 'package:verd/shared/widgets/progress_dots.dart';
 
@@ -62,9 +62,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final designTheme = AppDesignSystem.of(context);
     return Scaffold(
-      backgroundColor: colorScheme.surface,
+      backgroundColor: designTheme.background,
       body: SafeArea(
         child: Column(
           children: [
@@ -90,8 +90,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             // ── Bottom Section (Button + Dots) ──
             Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.xxl,
-                vertical: AppSpacing.xxl,
+                horizontal: 24.0,
+                vertical: 24.0,
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -102,12 +102,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         : AppLocalizations.of(context)!.next,
                     onPressed: _onNextPressed,
                   ),
-                  const SizedBox(height: AppSpacing.lg),
+                  const SizedBox(height: 16.0),
                   ProgressDots(
                     count: _pages.length,
                     currentIndex: _currentIndex,
-                    activeColor: AppColors.primary,
-                    inactiveColor: AppColors.gray300,
                   ),
                 ],
               ),
@@ -119,43 +117,24 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   Widget _buildTopBar() {
-    // ignore: unused_local_variable
-    final showLogo = _pages[_currentIndex].showLogo;
-    final colorScheme = Theme.of(context).colorScheme;
+    final designTheme = AppDesignSystem.of(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.xl,
-        vertical: AppSpacing.md,
+        horizontal: 20.0,
+        vertical: 12.0,
       ),
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // if (showLogo)
-          //   Column(
-          //     children: [
-          //       SvgPicture.asset(AppAssets.logoSvg, height: 40),
-          //       const SizedBox(height: 4),
-          //       Text(
-          //         'WELCOME!',
-          //         style: TextStyle(
-          //           fontFamily: AppTypography.primaryFont,
-          //           fontSize: 20,
-          //           fontWeight: FontWeight.bold,
-          //           letterSpacing: 0.5,
-          //           color: colorScheme.onSurface,
-          //         ),
-          //       ),
-          //     ],
-          //   ),
           Align(
             alignment: Alignment.centerRight,
             child: TextButton(
               onPressed: _finishOnboarding,
               child: Text(
                 AppLocalizations.of(context)!.skip,
-                style: AppTypography.body.copyWith(
-                  color: colorScheme.onSurfaceVariant,
+                style: designTheme.bodyRegular.copyWith(
+                  color: designTheme.textDim,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -167,41 +146,39 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   Widget _buildPageContent(_OnboardingPageData data) {
+    final designTheme = AppDesignSystem.of(context);
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppSpacing.xxl),
+      padding: const EdgeInsets.all(24.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Illustration takes up available space flexibly, but single child scroll view doesn't allow Flexible.
-          // Adjust layout to use SizedBox for the image.
           SizedBox(
             height: MediaQuery.sizeOf(context).height * 0.35,
             child: Image.asset(
               data.imagePath,
               fit: BoxFit.contain,
-              // Fallback placeholder during dev if images aren't present yet
-              errorBuilder: (context, error, stackTrace) => const Icon(
+              errorBuilder: (context, error, stackTrace) => Icon(
                 Icons.image_not_supported,
                 size: 100,
-                color: AppColors.gray300,
+                color: designTheme.textDim,
               ),
             ),
           ),
-          const SizedBox(height: AppSpacing.xxxl),
+          const SizedBox(height: 40.0),
           
           Text(
             data.title,
-            style: AppTypography.h3.copyWith(
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.onSurface,
+            style: designTheme.titleLarge.copyWith(
+              fontWeight: FontWeight.w800,
+              color: designTheme.textMain,
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: 12.0),
           Text(
             data.description,
-            style: AppTypography.body.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            style: designTheme.bodyRegular.copyWith(
+              color: designTheme.textDim,
             ),
             textAlign: TextAlign.center,
           ),

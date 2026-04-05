@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 
 enum AppCardVariant { elevated, outlined, filled, ghost }
 
@@ -27,31 +27,27 @@ class AppCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final radius = borderRadius ?? AppRadius.card;
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
+    final radius = borderRadius ?? designTheme.radiusStandard;
 
     // Responsive padding: scales slightly with screen width
     final sw = MediaQuery.sizeOf(context).width;
     final defaultPadding = sw < 360
-        ? const EdgeInsets.all(AppSpacing.md)
-        : const EdgeInsets.all(AppSpacing.cardPadding);
+        ? const EdgeInsets.all(16.0)
+        : const EdgeInsets.all(24.0);
     final effectivePadding = padding ?? defaultPadding;
 
     BoxDecoration decoration = switch (variant) {
-      AppCardVariant.elevated => BoxDecoration(
-        color: backgroundColor ?? theme.colorScheme.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(radius),
-        boxShadow: [
-          if (theme.brightness == Brightness.light) AppShadows.card
-        ],
-      ),
+      AppCardVariant.elevated => backgroundColor != null
+          ? BoxDecoration(color: backgroundColor, borderRadius: BorderRadius.circular(radius))
+          : designTheme.glassDecoration(opacity: 0.08, blur: 15.0),
       AppCardVariant.outlined => BoxDecoration(
-        color: backgroundColor ?? theme.colorScheme.surface,
+        color: backgroundColor ?? Colors.transparent,
         borderRadius: BorderRadius.circular(radius),
-        border: Border.all(color: theme.colorScheme.outlineVariant, width: 1.5),
+        border: Border.all(color: designTheme.textDim.withOpacity(0.2), width: 1.5),
       ),
       AppCardVariant.filled => BoxDecoration(
-        color: backgroundColor ?? theme.colorScheme.surfaceContainerHighest,
+        color: backgroundColor ?? designTheme.surface,
         borderRadius: BorderRadius.circular(radius),
       ),
       AppCardVariant.ghost => BoxDecoration(
@@ -105,42 +101,44 @@ class AppStatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
     final scaleFactor = MediaQuery.textScalerOf(context).scale(1.0).clamp(0.8, 1.3);
 
     return AppCard(
-      variant: AppCardVariant.elevated,
+      variant: AppCardVariant.elevated, // Will inherit glassmorphism now
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 40,
-            height: 40,
+            // Touch-target minimum compliance applied to layout hitboxes
+            width: designTheme.touchTargetMin,
+            height: designTheme.touchTargetMin,
             decoration: BoxDecoration(
-              color: iconBackgroundColor ?? theme.colorScheme.primaryContainer,
-              borderRadius: BorderRadius.circular(AppRadius.md),
+              color: iconBackgroundColor ?? designTheme.primary.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(12.0),
             ),
             child: Center(child: icon),
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: 8.0),
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
             child: Text(
               value,
-              style: AppTypography.h3.copyWith(
-                color: valueColor ?? theme.colorScheme.onSurface,
-                fontSize: AppTypography.xl * scaleFactor,
+              style: designTheme.titleLarge.copyWith(
+                color: valueColor ?? designTheme.textMain,
+                fontSize: 28.0 * scaleFactor,
+                fontStyle: FontStyle.normal, // Overriding default italic for stats
               ),
             ),
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: 4.0),
           Text(
             label,
-            style: AppTypography.bodySmall.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-              fontSize: AppTypography.sm * scaleFactor,
+            style: designTheme.bodyRegular.copyWith(
+              color: designTheme.textDim,
+              fontSize: 14.0 * scaleFactor,
             ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 
 /// Animated page-indicator dots.
 /// The active dot expands to [activeDotWidth]; others stay [dotSize] circles.
@@ -27,6 +27,7 @@ class ProgressDots extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
     // Scale dot size on very small screens
     final sw = MediaQuery.sizeOf(context).width;
     final scale = sw < 320 ? 0.8 : 1.0;
@@ -47,8 +48,8 @@ class ProgressDots extends StatelessWidget {
             height: effectiveDotSize,
             decoration: BoxDecoration(
               color: isActive
-                  ? (activeColor ?? AppColors.primary)
-                  : (inactiveColor ?? AppColors.gray300),
+                  ? (activeColor ?? designTheme.primary)
+                  : (inactiveColor ?? designTheme.textDim.withOpacity(0.3)),
               borderRadius: BorderRadius.circular(effectiveDotSize / 2),
             ),
           );

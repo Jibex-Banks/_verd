@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // SUCCESS INDICATOR
@@ -61,7 +61,8 @@ class _SuccessIndicatorState extends State<SuccessIndicator>
 
   @override
   Widget build(BuildContext context) {
-    final color = widget.color ?? AppColors.success;
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
+    final color = widget.color ?? designTheme.accentGreen;
     final s = widget.size;
 
     return AnimatedBuilder(
@@ -81,7 +82,7 @@ class _SuccessIndicatorState extends State<SuccessIndicator>
                   width: s,
                   height: s,
                   decoration: BoxDecoration(
-                    color: color.withValues(alpha: 0.12),
+                    color: color.withOpacity(0.12),
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -215,36 +216,35 @@ class SuccessDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
     if (autoDismiss) {
       Future.delayed(autoDismissDuration, () {
         if (context.mounted) Navigator.of(context).pop();
       });
     }
 
-    final theme = Theme.of(context);
-
     return Dialog(
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.xxl)),
-      backgroundColor: theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(designTheme.radiusStandard)),
+      backgroundColor: designTheme.surface,
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.xxl),
+        padding: const EdgeInsets.all(32.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             const SuccessIndicator(size: 88),
-            const SizedBox(height: AppSpacing.xl),
+            const SizedBox(height: 24.0),
             Text(title,
-                style: AppTypography.h3, textAlign: TextAlign.center),
+                style: designTheme.titleLarge.copyWith(fontWeight: FontWeight.w700), textAlign: TextAlign.center),
             if (message != null) ...[
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: 8.0),
               Text(message!,
-                  style: AppTypography.body
-                      .copyWith(color: theme.colorScheme.onSurfaceVariant),
+                  style: designTheme.bodyRegular
+                      .copyWith(color: designTheme.textDim),
                   textAlign: TextAlign.center),
             ],
             if (actionLabel != null) ...[
-              const SizedBox(height: AppSpacing.xxl),
+              const SizedBox(height: 32.0),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -253,14 +253,14 @@ class SuccessDialog extends StatelessWidget {
                     onAction?.call();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: theme.colorScheme.primary,
-                    foregroundColor: theme.colorScheme.onPrimary,
-                    padding: const EdgeInsets.symmetric(vertical: 13),
+                    backgroundColor: designTheme.primary,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                     elevation: 0,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppRadius.button)),
+                        borderRadius: BorderRadius.circular(12.0)),
                   ),
-                  child: Text(actionLabel!, style: AppTypography.button),
+                  child: Text(actionLabel!, style: designTheme.bodyRegular.copyWith(fontWeight: FontWeight.w600, color: Colors.white)),
                 ),
               ),
             ],
@@ -280,25 +280,27 @@ class SuccessBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
     return Container(
       padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.md, vertical: AppSpacing.xs),
+          horizontal: 12.0, vertical: 4.0),
       decoration: BoxDecoration(
-        color: AppColors.success.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(AppRadius.full),
+        color: designTheme.accentGreen.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(100),
         border:
-            Border.all(color: AppColors.success.withValues(alpha: 0.3)),
+            Border.all(color: designTheme.accentGreen.withOpacity(0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.check_circle_outline,
-              color: AppColors.success, size: 14),
+          Icon(Icons.check_circle_outline,
+              color: designTheme.accentGreen, size: 14),
           const SizedBox(width: 4),
           Text(label,
-              style: AppTypography.caption.copyWith(
-                color: AppColors.successDark,
-                fontWeight: AppTypography.semibold,
+              style: designTheme.bodyRegular.copyWith(
+                color: designTheme.accentGreen,
+                fontWeight: FontWeight.w600,
+                fontSize: 12.0,
               )),
         ],
       ),

@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:verd/core/constants/app_assets.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 import 'package:verd/data/services/firebase_auth_service.dart';
 import 'package:verd/providers/auth_provider.dart';
 import 'package:verd/shared/widgets/app_button.dart';
@@ -133,40 +133,41 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
+    final designTheme = AppDesignSystem.of(context);
     return Scaffold(
-      backgroundColor: cs.surface,
+      backgroundColor: designTheme.background,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(AppSpacing.xxl),
+            padding: const EdgeInsets.all(32.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 SvgPicture.asset(AppAssets.logoSvg, height: 64),
-                const SizedBox(height: AppSpacing.xl),
+                const SizedBox(height: 32.0),
 
                 Text(
                   AppLocalizations.of(context)!.login_welcome,
-                  style: AppTypography.h2.copyWith(
+                  style: designTheme.displayLarge.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: cs.onSurface,
+                    color: designTheme.textMain,
+                    fontSize: 32,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: 8.0),
                 Text(
                   AppLocalizations.of(context)!.login,
-                  style: AppTypography.body.copyWith(
-                    color: cs.onSurfaceVariant,
+                  style: designTheme.bodyRegular.copyWith(
+                    color: designTheme.textDim,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: AppSpacing.xxxl),
+                const SizedBox(height: 48.0),
 
                 AppTextField.email(controller: _emailController),
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: 24.0),
                 AppTextField.password(controller: _passwordController,
                   textInputAction: TextInputAction.done,
                   onSubmitted: (_) => _onLogin(),
@@ -183,9 +184,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                       child: Text(
                         AppLocalizations.of(context)!.email_me_link,
-                        style: AppTypography.bodySmall.copyWith(
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.w500,
+                        style: designTheme.bodyRegular.copyWith(
+                          fontSize: 13,
+                          color: designTheme.primary,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
@@ -197,45 +199,46 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                       child: Text(
                         AppLocalizations.of(context)!.forgot_password,
-                        style: AppTypography.bodySmall.copyWith(
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.w500,
+                        style: designTheme.bodyRegular.copyWith(
+                          fontSize: 13,
+                          color: designTheme.primary,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.xl),
+                const SizedBox(height: 32.0),
 
                 AppButton(
                   text: _isLoading ? AppLocalizations.of(context)!.loading : AppLocalizations.of(context)!.sign_in.toUpperCase(),
                   onPressed: _isLoading || _isGoogleLoading ? null : _onLogin,
                   isLoading: _isLoading,
                 ),
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: 24.0),
                 
                 // ── OR Divider ──
                 Row(
                   children: [
-                    Expanded(child: Divider(color: cs.outlineVariant, thickness: 1)),
+                    Expanded(child: Divider(color: designTheme.textDim.withOpacity(0.2), thickness: 1)),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-                      child: Text(AppLocalizations.of(context)!.orDivider, style: AppTypography.bodySmall.copyWith(color: cs.onSurfaceVariant, fontWeight: FontWeight.bold)),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Text(AppLocalizations.of(context)!.orDivider, style: designTheme.bodyRegular.copyWith(fontSize: 13, color: designTheme.textDim, fontWeight: FontWeight.bold)),
                     ),
-                    Expanded(child: Divider(color: cs.outlineVariant, thickness: 1)),
+                    Expanded(child: Divider(color: designTheme.textDim.withOpacity(0.2), thickness: 1)),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: 24.0),
 
                 // ── Google Sign In Button ──
                 AppButton(
-                  text: _isGoogleLoading ? AppLocalizations.of(context)!.loading.toUpperCase() : AppLocalizations.of(context)!.google_sign_in.toUpperCase(),
+                  text: _isGoogleLoading ? AppLocalizations.of(context)!.loading : AppLocalizations.of(context)!.google_sign_in,
                   onPressed: _isLoading || _isGoogleLoading ? null : _onGoogleSignIn,
                   isLoading: _isGoogleLoading,
                   variant: AppButtonVariant.outlined,
                   icon: const Icon(Icons.g_mobiledata, size: 32),
                 ),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: 16.0),
 
                 // ── Continue as Guest ──
                 Center(
@@ -243,32 +246,36 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     onPressed: _isLoading || _isGoogleLoading ? null : _onContinueAsGuest,
                     child: Text(
                       'Continue as Guest  →',
-                      style: AppTypography.bodySmall.copyWith(
-                        color: cs.onSurfaceVariant,
-                        fontWeight: FontWeight.w500,
+                      style: designTheme.bodyRegular.copyWith(
+                        fontSize: 14,
+                        color: designTheme.textDim,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: 24.0),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 4,
                   children: [
                     Text(
                       AppLocalizations.of(context)!.dont_have_account,
-                      style: AppTypography.bodySmall.copyWith(
-                        color: cs.onSurfaceVariant,
+                      style: designTheme.bodyRegular.copyWith(
+                        fontSize: 13,
+                        color: designTheme.textDim,
                       ),
                     ),
-                    const SizedBox(width: 4),
                     GestureDetector(
                       onTap: () => context.push('/signup'),
                       child: Text(
                         AppLocalizations.of(context)!.sign_up,
-                        style: AppTypography.bodySmall.copyWith(
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.w600,
+                        style: designTheme.bodyRegular.copyWith(
+                          fontSize: 14,
+                          color: designTheme.primary,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),

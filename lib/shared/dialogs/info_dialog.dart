@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // INFO DIALOG
@@ -126,47 +126,48 @@ class InfoDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
     final sw = MediaQuery.sizeOf(context).width;
 
     return Dialog(
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.xxl)),
-      backgroundColor: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(28.0)),
+      backgroundColor: designTheme.surface,
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: sw < 600 ? sw * 0.88 : 400),
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.xxl),
+          padding: const EdgeInsets.all(32.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               if (icon != null) ...[
                 icon!,
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: 16.0),
               ],
               Text(title,
-                  style: AppTypography.h3, textAlign: TextAlign.center),
-              const SizedBox(height: AppSpacing.sm),
+                  style: designTheme.titleLarge.copyWith(fontWeight: FontWeight.w700), textAlign: TextAlign.center),
+              const SizedBox(height: 8.0),
               Text(
                 message,
-                style: AppTypography.body
-                    .copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                style: designTheme.bodyRegular
+                    .copyWith(color: designTheme.textDim),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: AppSpacing.xxl),
+              const SizedBox(height: 32.0),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () => Navigator.of(context).pop(),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
+                    backgroundColor: designTheme.primary,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 13),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                         borderRadius:
-                        BorderRadius.circular(AppRadius.button)),
+                        BorderRadius.circular(12.0)),
                   ),
-                  child: Text(okLabel, style: AppTypography.button),
+                  child: Text(okLabel, style: designTheme.bodyRegular.copyWith(fontWeight: FontWeight.w600, color: Colors.white)),
                 ),
               ),
             ],
@@ -249,17 +250,18 @@ class _SuccessDialogContentState extends State<_SuccessDialogContent>
 
   @override
   Widget build(BuildContext context) {
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
     final sw = MediaQuery.sizeOf(context).width;
     const s = 88.0;
 
     return Dialog(
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.xxl)),
-      backgroundColor: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(28.0)),
+      backgroundColor: designTheme.surface,
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: sw < 600 ? sw * 0.88 : 400),
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.xxl),
+          padding: const EdgeInsets.all(32.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -280,8 +282,8 @@ class _SuccessDialogContentState extends State<_SuccessDialogContent>
                             width: s,
                             height: s,
                             decoration: BoxDecoration(
-                              color: AppColors.success
-                                  .withValues(alpha: 0.12),
+                              color: designTheme.accentGreen
+                                  .withOpacity(0.12),
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -295,7 +297,7 @@ class _SuccessDialogContentState extends State<_SuccessDialogContent>
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
-                                color: AppColors.success, width: 2.5),
+                                color: designTheme.accentGreen, width: 2.5),
                           ),
                         ),
                       ),
@@ -303,7 +305,7 @@ class _SuccessDialogContentState extends State<_SuccessDialogContent>
                         size: Size(s * 0.42, s * 0.42),
                         painter: _CheckPainter(
                           progress: _checkDraw.value,
-                          color: AppColors.success,
+                          color: designTheme.accentGreen,
                           strokeWidth: s * 0.055,
                         ),
                       ),
@@ -311,20 +313,20 @@ class _SuccessDialogContentState extends State<_SuccessDialogContent>
                   ),
                 ),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: 24.0),
               Text(widget.title,
-                  style: AppTypography.h3, textAlign: TextAlign.center),
+                  style: designTheme.titleLarge.copyWith(fontWeight: FontWeight.w700), textAlign: TextAlign.center),
               if (widget.message != null) ...[
-                const SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: 8.0),
                 Text(
                   widget.message!,
-                  style: AppTypography.body
-                      .copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  style: designTheme.bodyRegular
+                      .copyWith(color: designTheme.textDim),
                   textAlign: TextAlign.center,
                 ),
               ],
               if (widget.actionLabel != null) ...[
-                const SizedBox(height: AppSpacing.xxl),
+                const SizedBox(height: 32.0),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -333,17 +335,16 @@ class _SuccessDialogContentState extends State<_SuccessDialogContent>
                       widget.onAction?.call();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
+                      backgroundColor: designTheme.primary,
                       foregroundColor: Colors.white,
                       padding:
-                      const EdgeInsets.symmetric(vertical: 13),
+                      const EdgeInsets.symmetric(vertical: 14),
                       elevation: 0,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              AppRadius.button)),
+                          borderRadius: BorderRadius.circular(12.0)),
                     ),
                     child: Text(widget.actionLabel!,
-                        style: AppTypography.button),
+                        style: designTheme.bodyRegular.copyWith(fontWeight: FontWeight.w600, color: Colors.white)),
                   ),
                 ),
               ],
@@ -427,6 +428,7 @@ class _AppBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
     final sh = MediaQuery.sizeOf(context).height;
     final bottomPad = MediaQuery.paddingOf(context).bottom;
 
@@ -434,9 +436,9 @@ class _AppBottomSheet extends StatelessWidget {
       constraints: BoxConstraints(maxHeight: sh * maxHeightFraction),
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
+          color: designTheme.surface,
           borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(AppRadius.xxxl)),
+              top: Radius.circular(32.0)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -444,14 +446,14 @@ class _AppBottomSheet extends StatelessWidget {
             // Drag handle
             if (showDragHandle)
               Padding(
-                padding: const EdgeInsets.only(top: AppSpacing.md),
+                padding: const EdgeInsets.only(top: 12.0),
                 child: Container(
                   width: 36,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: AppColors.gray300,
+                    color: designTheme.textMain.withOpacity(0.1),
                     borderRadius:
-                    BorderRadius.circular(AppRadius.full),
+                    BorderRadius.circular(100),
                   ),
                 ),
               ),
@@ -459,16 +461,15 @@ class _AppBottomSheet extends StatelessWidget {
             // Title row
             if (title != null)
               Padding(
-                padding: const EdgeInsets.fromLTRB(
-                    AppSpacing.lg, AppSpacing.lg, AppSpacing.sm, 0),
+                padding: const EdgeInsets.fromLTRB(16.0, 16.0, 8.0, 0),
                 child: Row(
                   children: [
                     Expanded(
-                        child: Text(title!, style: AppTypography.h4)),
+                        child: Text(title!, style: designTheme.titleLarge.copyWith(fontSize: 20.0, fontWeight: FontWeight.w700))),
                     IconButton(
                       icon: const Icon(Icons.close, size: 20),
                       onPressed: () => Navigator.of(context).pop(),
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      color: designTheme.textDim,
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(
                           minWidth: 44, minHeight: 44),
@@ -477,16 +478,16 @@ class _AppBottomSheet extends StatelessWidget {
                 ),
               )
             else
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: 8.0),
 
             // Scrollable body
             Flexible(
               child: SingleChildScrollView(
                 padding: EdgeInsets.fromLTRB(
-                  AppSpacing.lg,
-                  AppSpacing.md,
-                  AppSpacing.lg,
-                  bottomPad + AppSpacing.lg,
+                  16.0,
+                  12.0,
+                  16.0,
+                  bottomPad + 24.0,
                 ),
                 child: child,
               ),
@@ -522,20 +523,21 @@ class _SheetOptionTile<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
     final color = option.isDangerous
         ? Theme.of(context).colorScheme.error
-        : (option.color ?? Theme.of(context).colorScheme.onSurface);
+        : (option.color ?? designTheme.textMain);
 
     return ListTile(
       leading: option.icon != null
           ? Icon(option.icon, color: color, size: 22)
           : null,
       title: Text(option.label,
-          style: AppTypography.body.copyWith(color: color)),
+          style: designTheme.bodyRegular.copyWith(color: color, fontWeight: FontWeight.w500)),
       onTap: () => Navigator.of(context).pop(option.value),
-      minVerticalPadding: 12,
+      minVerticalPadding: 16,
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.md)),
+          borderRadius: BorderRadius.circular(12.0)),
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 
 enum ToastVariant { success, error, warning, info }
 
@@ -88,11 +88,11 @@ class _ToastWidgetState extends State<_ToastWidget>
     super.dispose();
   }
 
-  Color get _bg => switch (widget.variant) {
-        ToastVariant.success => AppColors.success,
-        ToastVariant.error   => AppColors.error,
-        ToastVariant.warning => AppColors.warning,
-        ToastVariant.info    => AppColors.gray900,
+  Color _bg(BuildContext context, AppDesignSystem theme) => switch (widget.variant) {
+        ToastVariant.success => theme.accentGreen,
+        ToastVariant.error   => Theme.of(context).colorScheme.error,
+        ToastVariant.warning => Colors.orange,
+        ToastVariant.info    => theme.surface,
       };
 
   IconData get _icon => switch (widget.variant) {
@@ -104,59 +104,60 @@ class _ToastWidgetState extends State<_ToastWidget>
 
   @override
   Widget build(BuildContext context) {
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
     final sw = MediaQuery.sizeOf(context).width;
-    final bottomPad = MediaQuery.paddingOf(context).bottom + AppSpacing.xxl;
+    final bottomPad = MediaQuery.paddingOf(context).bottom + 32.0;
 
     return Positioned(
       bottom: bottomPad,
-      left: AppSpacing.lg,
-      right: AppSpacing.lg,
+      left: 16.0,
+      right: 16.0,
       child: SlideTransition(
         position: _slide,
         child: FadeTransition(
           opacity: _opacity,
           child: SafeArea(
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: sw - AppSpacing.xxl),
+              constraints: BoxConstraints(maxWidth: sw - 32.0),
               child: Material(
                 color: Colors.transparent,
                 child: GestureDetector(
                   onTap: widget.onTap ?? widget.onDismiss,
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.lg,
-                      vertical: AppSpacing.md,
+                      horizontal: 16.0,
+                      vertical: 12.0,
                     ),
                     decoration: BoxDecoration(
-                      color: _bg,
-                      borderRadius: BorderRadius.circular(AppRadius.xl),
-                      boxShadow: [AppShadows.lg],
+                      color: _bg(context, designTheme),
+                      borderRadius: BorderRadius.circular(designTheme.radiusStandard),
+                      boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 10, offset: Offset(0, 4))],
                     ),
                     child: Row(
                       children: [
-                        Icon(_icon, color: Colors.white, size: 20),
-                        const SizedBox(width: AppSpacing.md),
+                        Icon(_icon, color: designTheme.textMain, size: 20),
+                        const SizedBox(width: 12.0),
                         Expanded(
                           child: Text(
                             widget.message,
-                            style: AppTypography.body.copyWith(
-                              color: Colors.white,
-                              fontWeight: AppTypography.medium,
+                            style: designTheme.bodyRegular.copyWith(
+                              color: designTheme.textMain,
+                              fontWeight: FontWeight.w500,
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        const SizedBox(width: AppSpacing.sm),
+                        const SizedBox(width: 8.0),
                         GestureDetector(
                           onTap: widget.onDismiss,
                           behavior: HitTestBehavior.opaque,
-                          child: const SizedBox(
-                            width: 44,
-                            height: 44,
+                          child: SizedBox(
+                            width: designTheme.touchTargetMin,
+                            height: designTheme.touchTargetMin,
                             child: Center(
                               child: Icon(Icons.close,
-                                  color: Colors.white70, size: 16),
+                                  color: designTheme.textDim, size: 16),
                             ),
                           ),
                         ),

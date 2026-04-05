@@ -2,7 +2,7 @@ import 'package:verd/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 import 'package:verd/providers/ai_provider.dart';
 import 'package:verd/providers/auth_provider.dart';
 import 'package:verd/shared/widgets/app_toast.dart';
@@ -54,11 +54,18 @@ class _UserInsightsScreenState extends ConsumerState<UserInsightsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final designTheme = AppDesignSystem.of(context);
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: designTheme.background,
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.farming_insights),
-        backgroundColor: AppColors.primary,
+        title: Text(
+          AppLocalizations.of(context)!.farming_insights,
+          style: designTheme.titleLarge.copyWith(
+            color: Colors.white, 
+            fontWeight: FontWeight.w800
+          ),
+        ),
+        backgroundColor: const Color(0xFF13401A), // Match profile header
         foregroundColor: Colors.white,
         elevation: 0,
         actions: [
@@ -69,7 +76,7 @@ class _UserInsightsScreenState extends ConsumerState<UserInsightsScreen> {
         ],
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? Center(child: CircularProgressIndicator(color: designTheme.primary))
           : _insights == null
               ? _buildEmptyState()
               : _buildInsightsContent(),
@@ -77,6 +84,7 @@ class _UserInsightsScreenState extends ConsumerState<UserInsightsScreen> {
   }
 
   Widget _buildEmptyState() {
+    final designTheme = AppDesignSystem.of(context);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -84,20 +92,21 @@ class _UserInsightsScreenState extends ConsumerState<UserInsightsScreen> {
           Icon(
             Icons.analytics_outlined,
             size: 64,
-            color: Colors.grey[400],
+            color: designTheme.textDim.withOpacity(0.3),
           ),
           const SizedBox(height: 16),
           Text(
             AppLocalizations.of(context)!.no_insights_yet,
-            style: AppTypography.h3.copyWith(
-              color: Colors.grey[600],
+            style: designTheme.titleLarge.copyWith(
+              color: designTheme.textMain,
+              fontWeight: FontWeight.w800,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             AppLocalizations.of(context)!.start_scanning_desc,
-            style: AppTypography.body.copyWith(
-              color: Colors.grey[500],
+            style: designTheme.bodyRegular.copyWith(
+              color: designTheme.textDim,
             ),
             textAlign: TextAlign.center,
           ),
@@ -105,10 +114,15 @@ class _UserInsightsScreenState extends ConsumerState<UserInsightsScreen> {
           ElevatedButton(
             onPressed: () => context.pushNamed('scan_result'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              backgroundColor: designTheme.primary,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
-            child: Text(AppLocalizations.of(context)!.start_scanning),
+            child: Text(
+              AppLocalizations.of(context)!.start_scanning,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
         ],
       ),
@@ -116,6 +130,7 @@ class _UserInsightsScreenState extends ConsumerState<UserInsightsScreen> {
   }
 
   Widget _buildInsightsContent() {
+    final designTheme = AppDesignSystem.of(context);
     final insights = _insights!;
     final scanCount = insights['scanCount'] as int? ?? 0;
     final cropTypes = insights['cropTypes'] as List<String>? ?? [];
@@ -123,6 +138,7 @@ class _UserInsightsScreenState extends ConsumerState<UserInsightsScreen> {
     final error = insights['error'] as String?;
 
     if (error != null) {
+      final isDark = Theme.of(context).brightness == Brightness.dark;
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -132,20 +148,21 @@ class _UserInsightsScreenState extends ConsumerState<UserInsightsScreen> {
               Icon(
                 Icons.error_outline,
                 size: 64,
-                color: Colors.red[400],
+                color: isDark ? const Color(0xFFEF5350) : const Color(0xFFD32F2F),
               ),
               const SizedBox(height: 16),
               Text(
                 AppLocalizations.of(context)!.insights_error,
-                style: AppTypography.h3.copyWith(
-                  color: Colors.red[600],
+                style: designTheme.titleLarge.copyWith(
+                  color: designTheme.textMain,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
                 error,
-                style: AppTypography.body.copyWith(
-                  color: Colors.grey[600],
+                style: designTheme.bodyRegular.copyWith(
+                  color: designTheme.textDim,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -156,23 +173,23 @@ class _UserInsightsScreenState extends ConsumerState<UserInsightsScreen> {
     }
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppSpacing.lg),
+      padding: const EdgeInsets.all(24.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Overview Stats
           _buildStatsCard(scanCount, cropTypes.length, lastUpdated),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: 24.0),
 
           // AI Insights
           if (insights['insights'] != null)
             _buildInsightsCard(insights['insights']),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: 24.0),
 
           // Crop Diversity
           if (cropTypes.isNotEmpty)
             _buildCropDiversityCard(cropTypes),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: 24.0),
 
           // Recommendations
           _buildRecommendationsCard(),
@@ -182,25 +199,33 @@ class _UserInsightsScreenState extends ConsumerState<UserInsightsScreen> {
   }
 
   Widget _buildStatsCard(int scanCount, int cropCount, String lastUpdated) {
+    final designTheme = AppDesignSystem.of(context);
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.lg),
+      padding: const EdgeInsets.all(24.0),
       decoration: BoxDecoration(
-        color: AppColors.primary50,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.primary200),
+        color: designTheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: designTheme.textDim.withOpacity(0.1)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             AppLocalizations.of(context)!.farming_overview,
-            style: AppTypography.h4.copyWith(
-              color: AppColors.primary900,
-              fontWeight: FontWeight.bold,
+            style: designTheme.bodyRegular.copyWith(
+              color: designTheme.primary,
+              fontWeight: FontWeight.w800,
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           Row(
             children: [
               Expanded(
@@ -208,7 +233,8 @@ class _UserInsightsScreenState extends ConsumerState<UserInsightsScreen> {
                   AppLocalizations.of(context)!.total_scans,
                   scanCount.toString(),
                   Icons.camera_alt,
-                  AppColors.primary,
+                  designTheme.primary,
+                  designTheme,
                 ),
               ),
               const SizedBox(width: 16),
@@ -217,16 +243,18 @@ class _UserInsightsScreenState extends ConsumerState<UserInsightsScreen> {
                   AppLocalizations.of(context)!.crop_types,
                   cropCount.toString(),
                   Icons.eco,
-                  AppColors.primary,
+                  const Color(0xFF4CAF50), // Green for crops
+                  designTheme,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 20),
           Text(
             'Last updated: ${_formatDate(lastUpdated)}',
-            style: AppTypography.caption.copyWith(
-              color: AppColors.primary700,
+            style: designTheme.bodyRegular.copyWith(
+              fontSize: 12,
+              color: designTheme.textDim,
             ),
           ),
         ],
@@ -234,29 +262,32 @@ class _UserInsightsScreenState extends ConsumerState<UserInsightsScreen> {
     );
   }
 
-  Widget _buildStatItem(String label, String value, IconData icon, Color color) {
+  Widget _buildStatItem(String label, String value, IconData icon, Color color, AppDesignSystem designTheme) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         children: [
-          Icon(icon, color: color, size: 24),
-          const SizedBox(height: 4),
+          Icon(icon, color: color, size: 28),
+          const SizedBox(height: 8),
           Text(
             value,
-            style: AppTypography.h3.copyWith(
+            style: designTheme.titleLarge.copyWith(
               color: color,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w800,
+              fontSize: 24,
             ),
           ),
           Text(
             label,
-            style: AppTypography.caption.copyWith(
-              color: Colors.grey[600],
+            style: designTheme.bodyRegular.copyWith(
+              fontSize: 12,
+              color: designTheme.textDim,
             ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
@@ -264,18 +295,19 @@ class _UserInsightsScreenState extends ConsumerState<UserInsightsScreen> {
   }
 
   Widget _buildInsightsCard(dynamic insights) {
+    final designTheme = AppDesignSystem.of(context);
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.lg),
+      padding: const EdgeInsets.all(24.0),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[300]!),
+        color: designTheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: designTheme.textDim.withOpacity(0.1)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -284,29 +316,31 @@ class _UserInsightsScreenState extends ConsumerState<UserInsightsScreen> {
         children: [
           Row(
             children: [
-              Icon(Icons.lightbulb, color: Colors.amber[600], size: 24),
+              const Icon(Icons.lightbulb, color: Color(0xFFFFB300), size: 24),
               const SizedBox(width: 8),
               Text(
                 AppLocalizations.of(context)!.ai_insights_title,
-                style: AppTypography.h4.copyWith(
-                  fontWeight: FontWeight.bold,
+                style: designTheme.bodyRegular.copyWith(
+                  fontWeight: FontWeight.w800,
+                  color: designTheme.textMain,
                 ),
               ),
             ],
           ),
           const SizedBox(height: 16),
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.blue[50],
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.blue[200]!),
+              color: designTheme.primary.withOpacity(0.05),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: designTheme.primary.withOpacity(0.1)),
             ),
             child: Text(
               insights.toString(),
-              style: AppTypography.body.copyWith(
-                color: Colors.grey[700],
-                height: 1.5,
+              style: designTheme.bodyRegular.copyWith(
+                color: designTheme.textMain,
+                height: 1.6,
+                fontSize: 14,
               ),
             ),
           ),
@@ -316,18 +350,19 @@ class _UserInsightsScreenState extends ConsumerState<UserInsightsScreen> {
   }
 
   Widget _buildCropDiversityCard(List<String> cropTypes) {
+    final designTheme = AppDesignSystem.of(context);
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.lg),
+      padding: const EdgeInsets.all(24.0),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[300]!),
+        color: designTheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: designTheme.textDim.withOpacity(0.1)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -336,12 +371,13 @@ class _UserInsightsScreenState extends ConsumerState<UserInsightsScreen> {
         children: [
           Row(
             children: [
-              Icon(Icons.eco, color: Colors.green[600], size: 24),
+              const Icon(Icons.eco, color: Color(0xFF43A047), size: 24),
               const SizedBox(width: 8),
               Text(
                 AppLocalizations.of(context)!.crop_diversity,
-                style: AppTypography.h4.copyWith(
-                  fontWeight: FontWeight.bold,
+                style: designTheme.bodyRegular.copyWith(
+                  fontWeight: FontWeight.w800,
+                  color: designTheme.textMain,
                 ),
               ),
             ],
@@ -352,17 +388,18 @@ class _UserInsightsScreenState extends ConsumerState<UserInsightsScreen> {
             runSpacing: 8,
             children: cropTypes.map((crop) {
               return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                 decoration: BoxDecoration(
-                  color: Colors.green[100],
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.green[300]!),
+                  color: const Color(0xFF43A047).withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: const Color(0xFF43A047).withValues(alpha: 0.2)),
                 ),
                 child: Text(
                   crop,
-                  style: AppTypography.caption.copyWith(
-                    color: Colors.green[800],
-                    fontWeight: FontWeight.w500,
+                  style: designTheme.bodyRegular.copyWith(
+                    fontSize: 12,
+                    color: const Color(0xFF2E7D32),
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               );
@@ -374,18 +411,19 @@ class _UserInsightsScreenState extends ConsumerState<UserInsightsScreen> {
   }
 
   Widget _buildRecommendationsCard() {
+    final designTheme = AppDesignSystem.of(context);
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.lg),
+      padding: const EdgeInsets.all(24.0),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[300]!),
+        color: designTheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: designTheme.textDim.withOpacity(0.1)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -394,12 +432,13 @@ class _UserInsightsScreenState extends ConsumerState<UserInsightsScreen> {
         children: [
           Row(
             children: [
-              Icon(Icons.trending_up, color: Colors.purple[600], size: 24),
+              const Icon(Icons.trending_up, color: Color(0xFF8E24AA), size: 24),
               const SizedBox(width: 8),
               Text(
                 AppLocalizations.of(context)!.recommendations,
-                style: AppTypography.h4.copyWith(
-                  fontWeight: FontWeight.bold,
+                style: designTheme.bodyRegular.copyWith(
+                  fontWeight: FontWeight.w800,
+                  color: designTheme.textMain,
                 ),
               ),
             ],
@@ -411,17 +450,19 @@ class _UserInsightsScreenState extends ConsumerState<UserInsightsScreen> {
             AppLocalizations.of(context)!.rec_document,
           ].map((recommendation) {
             return Padding(
-              padding: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.only(bottom: 12),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.check_circle, color: Colors.green, size: 16),
-                  const SizedBox(width: 8),
+                  const Icon(Icons.check_circle, color: Color(0xFF43A047), size: 18),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       recommendation,
-                      style: AppTypography.body.copyWith(
-                        color: Colors.grey[700],
+                      style: designTheme.bodyRegular.copyWith(
+                        color: designTheme.textMain,
+                        fontSize: 14,
+                        height: 1.4,
                       ),
                     ),
                   ),

@@ -1,7 +1,7 @@
 import 'package:verd/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 
 import 'package:verd/shared/widgets/skeleton_loader.dart';
 import 'package:verd/shared/widgets/bouncing_card.dart';
@@ -36,22 +36,23 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         body: const DashboardSkeleton(),
       );
     }
-    final theme = Theme.of(context);
+    final designTheme = AppDesignSystem.of(context);
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
+      backgroundColor: designTheme.surface,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl, vertical: AppSpacing.lg),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // ── Header ──
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
                     child: Column(
@@ -59,16 +60,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Text(
                           AppLocalizations.of(context)!.welcome_to_verd,
-                          style: AppTypography.h2.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.onSurface,
+                          style: designTheme.titleLarge.copyWith(
+                            fontWeight: FontWeight.w900,
+                            color: designTheme.textMain,
+                            fontSize: 32.0,
+                            letterSpacing: -0.5,
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           AppLocalizations.of(context)!.smart_companion,
-                          style: AppTypography.bodySmall.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
+                          style: designTheme.bodyRegular.copyWith(
+                            color: designTheme.textDim,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
@@ -77,91 +82,79 @@ class _HomeScreenState extends State<HomeScreen> {
                   GestureDetector(
                     onTap: widget.onProfileTap,
                     child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(16),
+                      width: 52,
+                      height: 52,
+                      decoration: designTheme.glassDecoration(
+                        opacity: 0.1,
+                      ).copyWith(
+                        color: designTheme.primary.withOpacity(0.1),
                         border: Border.all(
-                          color: AppColors.primary.withValues(alpha: 0.2),
-                          width: 1,
+                          color: designTheme.primary.withOpacity(0.2),
+                          width: 1.5,
                         ),
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.person_outline,
-                            color: AppColors.primary,
-                            size: 24,
-                          ),
-                          const SizedBox(width: 8),
-                          Icon(
-                            Icons.chevron_right,
-                            color: AppColors.primary.withValues(alpha: 0.7),
-                            size: 20,
-                          ),
-                        ],
+                      child: Center(
+                        child: Icon(
+                          Icons.person_rounded,
+                          color: designTheme.primary,
+                          size: 26,
+                        ),
                       ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: AppSpacing.xxxl),
+              const SizedBox(height: 32.0),
 
               // ── Quick Actions ──
               Text(
                 AppLocalizations.of(context)!.quick_actions,
-                style: AppTypography.h3.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.onSurface,
+                style: designTheme.titleLarge.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: designTheme.textMain,
+                  fontSize: 20.0,
                 ),
               ),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: 12.0),
               _buildQuickActionCard(
-                iconBackgroundColor: const Color(0xFF4CAF50),
-                icon: Icons.camera_alt,
+                iconBackgroundColor: designTheme.accentGreen,
+                icon: Icons.camera_alt_rounded,
                 title: AppLocalizations.of(context)!.scan_crop,
                 subtitle: AppLocalizations.of(context)!.scan_crop_desc_short,
                 onTap: widget.onScanTap,
               ),
               _buildQuickActionCard(
-                iconBackgroundColor: const Color(0xFF1976D2),
-                icon: Icons.menu_book,
+                iconBackgroundColor: designTheme.secondary,
+                icon: Icons.menu_book_rounded,
                 title: AppLocalizations.of(context)!.learning_center_title,
                 subtitle: AppLocalizations.of(context)!.learning_center_desc_short,
-                onTap: () {
-                  context.push('/learning-center');
-                },
+                onTap: () => context.push('/learning-center'),
               ),
               _buildQuickActionCard(
-                iconBackgroundColor: const Color(0xFFFF9800),
-                icon: Icons.bar_chart,
+                iconBackgroundColor: designTheme.semanticWarning,
+                icon: Icons.history_rounded,
                 title: AppLocalizations.of(context)!.view_history,
                 subtitle: AppLocalizations.of(context)!.view_history_desc_short,
-                onTap: () {
-                  context.push('/scan-history');
-                },
+                onTap: () => context.push('/scan-history'),
               ),
               _buildQuickActionCard(
-                iconBackgroundColor: const Color(0xFF9C27B0),
-                icon: Icons.photo_library,
+                iconBackgroundColor: designTheme.primary,
+                icon: Icons.photo_library_rounded,
                 title: AppLocalizations.of(context)!.gallery,
                 subtitle: AppLocalizations.of(context)!.gallery_desc_short,
-                onTap: () {
-                  context.push('/gallery');
-                },
+                onTap: () => context.push('/gallery'),
               ),
-              const SizedBox(height: AppSpacing.xxxl),
-
+              const SizedBox(height: 32.0),
               // ── Tip of the Day ──
               Container(
-                padding: const EdgeInsets.all(AppSpacing.xl),
+                padding: const EdgeInsets.all(20.0),
                 decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(20),
+                  color: designTheme.primary,
+                  borderRadius: BorderRadius.circular(designTheme.radiusStandard),
+                  border: Border.all(color: designTheme.primary.withOpacity(0.3)),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.primary.withValues(alpha: 0.3),
+                      color: designTheme.primary.withOpacity(0.3),
                       blurRadius: 15,
                       offset: const Offset(0, 8),
                     ),
@@ -171,90 +164,93 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
+                        color: Colors.white.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(100),
                       ),
                       child: Text(
-                        AppLocalizations.of(context)!.tip_of_the_day,
-                        style: AppTypography.bodySmall.copyWith(
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.bold,
+                        AppLocalizations.of(context)!.tip_of_the_day.toUpperCase(),
+                        style: designTheme.bodyRegular.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
                           fontSize: 10,
-                          letterSpacing: 1,
+                          letterSpacing: 1.2,
                         ),
                       ),
                     ),
-                    const SizedBox(height: AppSpacing.md),
+                    const SizedBox(height: 16.0),
                     Text(
                       AppLocalizations.of(context)!.early_detection_title,
-                      style: AppTypography.h3.copyWith(
+                      style: designTheme.titleLarge.copyWith(
                         color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 22.0,
                       ),
                     ),
-                    const SizedBox(height: AppSpacing.sm),
+                    const SizedBox(height: 8.0),
                     Text(
                       AppLocalizations.of(context)!.early_detection_desc,
-                      style: AppTypography.body.copyWith(
-                        color: Colors.white.withValues(alpha: 0.9),
-                        height: 1.4,
+                      style: designTheme.bodyRegular.copyWith(
+                        color: Colors.white.withOpacity(0.9),
+                        height: 1.5,
+                        fontSize: 15.0,
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: AppSpacing.xxxl),
+              const SizedBox(height: 32.0),
 
               // ── Popular Topics ──
               Text(
                 AppLocalizations.of(context)!.popular_topics,
-                style: AppTypography.h3.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.onSurface,
+                style: designTheme.titleLarge.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: designTheme.textMain,
+                  fontSize: 20.0,
                 ),
               ),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: 12.0),
               GridView.count(
                 crossAxisCount: 2,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                mainAxisSpacing: AppSpacing.md,
-                crossAxisSpacing: AppSpacing.md,
+                mainAxisSpacing: 16.0,
+                crossAxisSpacing: 16.0,
                 childAspectRatio: 0.95,
                 children: [
-                  _buildTopicCard(
-                    iconBackgroundColor: const Color(0xFFE53935),
-                    icon: Icons.coronavirus,
+                   _buildTopicCard(
+                    iconBackgroundColor: designTheme.semanticError,
+                    icon: Icons.coronavirus_rounded,
                     title: AppLocalizations.of(context)!.crop_diseases,
                     subtitle: AppLocalizations.of(context)!.crop_diseases_desc_short,
                     onTap: () => context.push('/article/diseases'),
                   ),
                   _buildTopicCard(
-                    iconBackgroundColor: const Color(0xFFFF9800),
-                    icon: Icons.bug_report,
+                    iconBackgroundColor: designTheme.secondary,
+                    icon: Icons.bug_report_rounded,
                     title: AppLocalizations.of(context)!.pest_control,
                     subtitle: AppLocalizations.of(context)!.pest_control_desc_short,
                     onTap: () => context.push('/article/pests'),
                   ),
                   _buildTopicCard(
-                    iconBackgroundColor: const Color(0xFF4CAF50),
-                    icon: Icons.grass,
+                    iconBackgroundColor: designTheme.primary,
+                    icon: Icons.grass_rounded,
                     title: AppLocalizations.of(context)!.soil_health,
                     subtitle: AppLocalizations.of(context)!.soil_health_desc_short,
                     onTap: () => context.push('/article/soil'),
                   ),
                   _buildTopicCard(
-                    iconBackgroundColor: const Color(0xFF2196F3),
-                    icon: Icons.water_drop,
+                    iconBackgroundColor: designTheme.secondary,
+                    icon: Icons.water_drop_rounded,
                     title: AppLocalizations.of(context)!.irrigation,
                     subtitle: AppLocalizations.of(context)!.irrigation_desc_short,
                     onTap: () => context.push('/article/water'),
                   ),
                 ],
               ),
-              const SizedBox(height: AppSpacing.xxxl), // Bottom padding
+              const SizedBox(height: 32.0), // Bottom padding
             ],
           ),
         ),
@@ -271,66 +267,78 @@ class _HomeScreenState extends State<HomeScreen> {
     required String subtitle,
     VoidCallback? onTap,
   }) {
-    final theme = Theme.of(context);
+    final designTheme = AppDesignSystem.of(context);
     return BouncingCard(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.only(bottom: AppSpacing.md),
+        margin: const EdgeInsets.only(bottom: 16.0),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
-          borderRadius: BorderRadius.circular(16),
+          color: designTheme.surface,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: designTheme.textMain.withOpacity(0.04)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+              color: Colors.black.withOpacity(0.06),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
             ),
           ],
         ),
         child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
+            padding: const EdgeInsets.all(16.0),
             child: Row(
               children: [
                 Container(
-                  width: 52,
-                  height: 52,
+                  width: 56,
+                  height: 56,
                   decoration: BoxDecoration(
-                    color: iconBackgroundColor,
-                    borderRadius: BorderRadius.circular(12),
+                    color: iconBackgroundColor.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(16),
                   ),
                   child: Center(
                     child: Icon(
                       icon,
-                      color: Colors.white,
+                      color: iconBackgroundColor,
                       size: 28,
                     ),
                   ),
                 ),
-                const SizedBox(width: AppSpacing.md),
+                const SizedBox(width: 16.0),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         title,
-                        style: AppTypography.bodyLarge.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: theme.colorScheme.onSurface,
+                        style: designTheme.bodyRegular.copyWith(
+                          fontWeight: FontWeight.w800,
+                          color: designTheme.textMain,
+                          fontSize: 17.0,
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      const SizedBox(height: 4),
                       Text(
                         subtitle,
-                        style: AppTypography.bodySmall.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
+                        style: designTheme.bodyRegular.copyWith(
+                          color: designTheme.textDim,
+                          fontSize: 13.0,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],
                   ),
                 ),
-                const Icon(
-                  Icons.chevron_right,
-                  color: AppColors.gray400,
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: designTheme.textMain.withOpacity(0.03),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.chevron_right_rounded,
+                    color: designTheme.textDim,
+                    size: 20,
+                  ),
                 ),
               ],
             ),
@@ -346,58 +354,62 @@ class _HomeScreenState extends State<HomeScreen> {
     required String subtitle,
     VoidCallback? onTap,
   }) {
-    final theme = Theme.of(context);
+    final designTheme = AppDesignSystem.of(context);
     return BouncingCard(
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
-          borderRadius: BorderRadius.circular(16),
+          color: designTheme.surface,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: designTheme.textMain.withOpacity(0.04)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+              color: Colors.black.withOpacity(0.06),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
             ),
           ],
         ),
         child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  width: 56,
-                  height: 56,
+                  width: 60,
+                  height: 60,
                   decoration: BoxDecoration(
-                    color: iconBackgroundColor,
+                    color: iconBackgroundColor.withOpacity(0.12),
                     shape: BoxShape.circle,
                   ),
                   child: Center(
                     child: Icon(
                       icon,
-                      color: Colors.white,
+                      color: iconBackgroundColor,
                       size: 28,
                     ),
                   ),
                 ),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: 16.0),
                 Text(
                   title,
-                  style: AppTypography.body.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: theme.colorScheme.onSurface,
+                  style: designTheme.bodyRegular.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: designTheme.textMain,
+                    fontSize: 15.0,
+                    height: 1.1,
                   ),
                   textAlign: TextAlign.center,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 6),
                 Text(
                   subtitle,
-                  style: AppTypography.bodySmall.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                    fontSize: 11,
+                  style: designTheme.bodyRegular.copyWith(
+                    color: designTheme.textDim,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
                   ),
                   textAlign: TextAlign.center,
                 ),

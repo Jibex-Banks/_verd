@@ -1,7 +1,7 @@
 import 'package:verd/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 import 'package:verd/features/home/home_screen.dart';
 import 'package:verd/features/profile/profile_screen.dart';
 import 'package:verd/features/scan/scan_screen.dart';
@@ -39,9 +39,9 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final designTheme = AppDesignSystem.of(context);
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
+      backgroundColor: designTheme.surface,
       body: ConnectivityBanner(
         child: IndexedStack(index: _currentIndex, children: _screens),
       ),
@@ -49,58 +49,53 @@ class _MainScreenState extends State<MainScreen> {
         bottom: true,
         child: Container(
           decoration: BoxDecoration(
-            color: theme.colorScheme.surface,
+            color: designTheme.surface,
             borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(32),
-              topRight: Radius.circular(32),
+              topLeft: Radius.circular(24),
+              topRight: Radius.circular(24),
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
+                color: Colors.black.withOpacity(0.05),
                 blurRadius: 20,
                 offset: const Offset(0, -5),
               ),
             ],
           ),
           padding: const EdgeInsets.symmetric(
-            vertical: AppSpacing.lg,
-            horizontal: AppSpacing.xl,
+            vertical: 12.0,
+            horizontal: 16.0,
           ),
           child: GNav(
             selectedIndex: _currentIndex,
             onTabChange: _onTabTapped,
-            rippleColor: AppColors.primary.withValues(
-              alpha: 0.2,
-            ), // tab button ripple color when pressed
-            hoverColor: AppColors.primary.withValues(
-              alpha: 0.1,
-            ), // tab button hover color
-            haptic: true, // haptic feedback
-            tabBorderRadius: 24,
+            rippleColor: designTheme.primary.withOpacity(0.15),
+            hoverColor: designTheme.primary.withOpacity(0.05),
+            haptic: true,
+            tabBorderRadius: 16,
             tabActiveBorder: Border.all(
-              color: AppColors.primary,
+              color: designTheme.primary.withOpacity(0.1),
               width: 1,
-            ), // tab button border
+            ),
             tabBorder: Border.all(
               color: Colors.transparent,
               width: 1,
-            ), // tab button border
+            ),
             tabShadow: [
               BoxShadow(
-                color: AppColors.primary.withValues(alpha: 0.1),
+                color: designTheme.primary.withOpacity(0.05),
                 blurRadius: 8,
               ),
-            ], // tab button shadow
-            curve: Curves.easeOutExpo, // tab animation curves
+            ],
+            curve: Curves.easeOutExpo,
             duration: const Duration(
               milliseconds: 300,
-            ), // tab animation duration
-            gap: 8, // the tab button gap between icon and text
-            color: AppColors.gray500, // unselected icon color
-            activeColor: Colors.white, // selected icon and text color
-            iconSize: 26, // tab button icon size
-            tabBackgroundColor:
-                AppColors.primary, // selected tab background color
+            ),
+            gap: 8,
+            color: designTheme.textDim,
+            activeColor: Colors.white,
+            iconSize: 24,
+            tabBackgroundColor: designTheme.primary,
             padding: const EdgeInsets.symmetric(
               horizontal: 20,
               vertical: 12,

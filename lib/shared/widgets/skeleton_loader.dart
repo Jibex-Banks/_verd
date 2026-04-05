@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 
 // ─── Base shimmer wrapper ───────────────────────────────────────────────────
 
@@ -10,11 +10,11 @@ class _Shimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final designTheme = AppDesignSystem.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Shimmer.fromColors(
-      baseColor: isDark ? theme.colorScheme.surfaceContainerHighest : AppColors.gray200,
-      highlightColor: isDark ? theme.colorScheme.surfaceContainerHigh : AppColors.gray50,
+      baseColor: isDark ? designTheme.surface.withOpacity(0.1) : Colors.grey[300]!,
+      highlightColor: isDark ? designTheme.surface.withOpacity(0.2) : Colors.grey[100]!,
       period: const Duration(milliseconds: 1400),
       child: child,
     );
@@ -32,7 +32,7 @@ class ShimmerBox extends StatelessWidget {
     super.key,
     required this.width,
     required this.height,
-    this.borderRadius = AppRadius.md,
+    this.borderRadius = 12.0,
   });
 
   @override
@@ -66,8 +66,8 @@ class ShimmerLine extends StatelessWidget {
       width: width ?? double.infinity,
       height: height,
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(AppRadius.sm),
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(4.0),
       ),
     );
   }
@@ -101,23 +101,24 @@ class ScanListItemSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final designTheme = AppDesignSystem.of(context);
     return _Shimmer(
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.lg,
-          vertical: AppSpacing.md,
+          horizontal: 16.0,
+          vertical: 12.0,
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ShimmerBox(width: 56, height: 56, borderRadius: AppRadius.md),
-            const SizedBox(width: AppSpacing.md),
+            const ShimmerBox(width: 56, height: 56, borderRadius: 12.0),
+            const SizedBox(width: 16.0),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const ShimmerLine(width: double.infinity, height: 14),
-                  const SizedBox(height: AppSpacing.xs),
+                  const SizedBox(height: 4.0),
                   ShimmerLine(
                     width: MediaQuery.sizeOf(context).width * 0.4,
                     height: 12,
@@ -125,8 +126,8 @@ class ScanListItemSkeleton extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: AppSpacing.md),
-            const ShimmerBox(width: 60, height: 24, borderRadius: AppRadius.full),
+            const SizedBox(width: 16.0),
+            const ShimmerBox(width: 60, height: 24, borderRadius: 100),
           ],
         ),
       ),
@@ -149,9 +150,9 @@ class ScanListSkeleton extends StatelessWidget {
           if (i < itemCount - 1)
             Divider(
               height: 1,
-              indent: AppSpacing.lg,
-              endIndent: AppSpacing.lg,
-              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+              indent: 16.0,
+              endIndent: 16.0,
+              color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
             ),
         ],
       )),
@@ -165,17 +166,18 @@ class DashboardSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final designTheme = AppDesignSystem.of(context);
     final sw = MediaQuery.sizeOf(context).width;
     return _Shimmer(
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.screenPadding),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Header row
             Row(children: [
               const ShimmerCircle(size: 44),
-              const SizedBox(width: AppSpacing.md),
+              const SizedBox(width: 16.0),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,32 +188,32 @@ class DashboardSkeleton extends StatelessWidget {
                   ],
                 ),
               ),
-              const ShimmerBox(width: 40, height: 40, borderRadius: AppRadius.full),
+              const ShimmerBox(width: 40, height: 40, borderRadius: 100),
             ]),
-            const SizedBox(height: AppSpacing.xxl),
+            const SizedBox(height: 32.0),
             // Stat cards row
             Row(children: [
-              Expanded(child: ShimmerBox(width: double.infinity, height: 88)),
-              const SizedBox(width: AppSpacing.md),
-              Expanded(child: ShimmerBox(width: double.infinity, height: 88)),
+              const Expanded(child: ShimmerBox(width: double.infinity, height: 88)),
+              const SizedBox(width: 16.0),
+              const Expanded(child: ShimmerBox(width: double.infinity, height: 88)),
             ]),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: 16.0),
             Row(children: [
-              Expanded(child: ShimmerBox(width: double.infinity, height: 88)),
-              const SizedBox(width: AppSpacing.md),
-              Expanded(child: ShimmerBox(width: double.infinity, height: 88)),
+              const Expanded(child: ShimmerBox(width: double.infinity, height: 88)),
+              const SizedBox(width: 16.0),
+              const Expanded(child: ShimmerBox(width: double.infinity, height: 88)),
             ]),
-            const SizedBox(height: AppSpacing.xxl),
+            const SizedBox(height: 32.0),
             // Section title
             ShimmerLine(width: sw * 0.35, height: 16),
-            const SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: 16.0),
             // Recent scan cards
-            ...List.generate(3, (_) => Padding(
-              padding: const EdgeInsets.only(bottom: AppSpacing.md),
+            ...List.generate(3, (_) => const Padding(
+              padding: EdgeInsets.only(bottom: 16.0),
               child: ShimmerBox(
                 width: double.infinity,
                 height: 72,
-                borderRadius: AppRadius.card,
+                borderRadius: 16.0,
               ),
             )),
           ],
@@ -227,27 +229,28 @@ class ProfileSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final designTheme = AppDesignSystem.of(context);
     final sw = MediaQuery.sizeOf(context).width;
     return _Shimmer(
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.screenPadding),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             // Avatar + name
             const ShimmerCircle(size: 80),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: 16.0),
             ShimmerLine(width: sw * 0.4, height: 18),
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: 8.0),
             ShimmerLine(width: sw * 0.55, height: 13),
-            const SizedBox(height: AppSpacing.xxl),
+            const SizedBox(height: 32.0),
             // Settings rows
             ...List.generate(6, (_) => Padding(
-              padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+              padding: const EdgeInsets.only(bottom: 16.0),
               child: Row(children: [
                 const ShimmerBox(width: 40, height: 40),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(child: ShimmerLine(height: 14)),
-                const SizedBox(width: AppSpacing.md),
+                const SizedBox(width: 16.0),
+                const Expanded(child: ShimmerLine(height: 14)),
+                const SizedBox(width: 16.0),
                 const ShimmerBox(width: 20, height: 20),
               ]),
             )),
@@ -264,10 +267,11 @@ class ScanDetailSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final designTheme = AppDesignSystem.of(context);
     final sw = MediaQuery.sizeOf(context).width;
     return _Shimmer(
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.screenPadding),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -275,34 +279,34 @@ class ScanDetailSkeleton extends StatelessWidget {
             ShimmerBox(
               width: double.infinity,
               height: sw * 0.6,
-              borderRadius: AppRadius.xl,
+              borderRadius: 24.0,
             ),
-            const SizedBox(height: AppSpacing.xl),
+            const SizedBox(height: 24.0),
             // Title + badge
             Row(children: [
-              Expanded(child: ShimmerLine(height: 20)),
-              const SizedBox(width: AppSpacing.md),
-              const ShimmerBox(width: 72, height: 28, borderRadius: AppRadius.full),
+              const Expanded(child: ShimmerLine(height: 20)),
+              const SizedBox(width: 16.0),
+              const ShimmerBox(width: 72, height: 28, borderRadius: 100),
             ]),
-            const SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: 16.0),
             // Body lines
             const ShimmerLine(height: 13),
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: 4.0),
             const ShimmerLine(height: 13),
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: 4.0),
             ShimmerLine(width: sw * 0.7, height: 13),
-            const SizedBox(height: AppSpacing.xxl),
+            const SizedBox(height: 32.0),
             // Recommendations
             ShimmerLine(width: sw * 0.4, height: 16),
-            const SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: 16.0),
             ...List.generate(3, (_) => Padding(
-              padding: const EdgeInsets.only(bottom: AppSpacing.md),
+              padding: const EdgeInsets.only(bottom: 12.0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const ShimmerCircle(size: 20),
-                  const SizedBox(width: AppSpacing.md),
-                  Expanded(child: ShimmerLine(height: 13)),
+                  const SizedBox(width: 16.0),
+                  const Expanded(child: ShimmerLine(height: 13)),
                 ],
               ),
             )),

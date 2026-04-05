@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 import 'package:verd/providers/auth_provider.dart';
 import 'package:verd/shared/widgets/app_text_field.dart';
 import 'package:verd/shared/widgets/app_toast.dart';
@@ -114,50 +114,67 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final designTheme = AppDesignSystem.of(context);
     final user = ref.watch(currentUserProvider);
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
+      backgroundColor: designTheme.background,
       appBar: AppBar(
-        leadingWidth: 80,
+        backgroundColor: designTheme.background,
+        elevation: 0,
+        leadingWidth: 90,
         leading: TextButton(
           onPressed: _handleCancel,
           child: Text(
             AppLocalizations.of(context)!.cancel,
-            style: AppTypography.buttonSmall.copyWith(color: theme.colorScheme.primary),
+            style: designTheme.bodyRegular.copyWith(
+              color: designTheme.primary,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
-        title: Text(
-          AppLocalizations.of(context)!.edit_profile,
-          style: AppTypography.h4.copyWith(color: theme.colorScheme.onSurface),
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            AppLocalizations.of(context)!.edit_profile,
+            style: designTheme.titleLarge.copyWith(
+              color: designTheme.textMain,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
         ),
         centerTitle: true,
         actions: [
           _isSaving
               ? Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: SizedBox(
                     width: 20,
                     height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2, color: theme.colorScheme.primary),
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2, 
+                      color: designTheme.primary
+                    ),
                   ),
                 )
               : TextButton(
                   onPressed: _handleSave,
                   child: Text(
                     AppLocalizations.of(context)!.save,
-                    style: AppTypography.buttonSmall.copyWith(color: theme.colorScheme.primary),
+                    style: designTheme.bodyRegular.copyWith(
+                      color: designTheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
-          const SizedBox(width: AppSpacing.sm),
+          const SizedBox(width: 8.0),
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppSpacing.xl),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
-            const SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: 16.0),
 
             // ── Profile Picture ──
             Center(
@@ -172,9 +189,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       child: Container(
                         padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
-                          color: AppColors.primary,
+                          color: designTheme.primary,
                           shape: BoxShape.circle,
-                          border: Border.all(color: theme.colorScheme.surface, width: 2),
+                          border: Border.all(color: designTheme.surface, width: 2),
                         ),
                         child: const Icon(Icons.camera_alt, color: Colors.white, size: 16),
                       ),
@@ -184,14 +201,17 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               ),
             ),
             if (_pickedImageFile != null) ...[
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: 8.0),
               Text(
                 AppLocalizations.of(context)!.new_photo_selected,
-                style: AppTypography.caption.copyWith(color: theme.colorScheme.primary),
+                style: designTheme.bodyRegular.copyWith(
+                  color: designTheme.primary,
+                  fontSize: 12,
+                ),
                 textAlign: TextAlign.center,
               ),
             ],
-            const SizedBox(height: AppSpacing.xxxl),
+            const SizedBox(height: 40.0),
 
             // ── Edit Fields ──
             AppTextField(
@@ -199,20 +219,20 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               hint: AppLocalizations.of(context)!.full_name_hint,
               controller: _nameController,
             ),
-            const SizedBox(height: AppSpacing.xl),
+            const SizedBox(height: 24.0),
             AppTextField.email(label: AppLocalizations.of(context)!.email,
               hint: AppLocalizations.of(context)!.email_hint,
               controller: _emailController,
               enabled: false, // Email cannot be changed here
             ),
-            const SizedBox(height: AppSpacing.xl),
+            const SizedBox(height: 24.0),
             AppTextField(
               label: AppLocalizations.of(context)!.phone_number,
               hint: AppLocalizations.of(context)!.phone_hint,
               controller: _phoneController,
               keyboardType: TextInputType.phone,
             ),
-            const SizedBox(height: AppSpacing.xl),
+            const SizedBox(height: 24.0),
             AppTextField(
               label: AppLocalizations.of(context)!.farm_location,
               hint: AppLocalizations.of(context)!.farm_location_hint,
@@ -227,6 +247,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
   Widget _buildAvatarCircle(String? photoUrl, String? name) {
     const size = 100.0;
+    final designTheme = AppDesignSystem.of(context);
 
     if (_pickedImageFile != null) {
       return CircleAvatar(
@@ -239,7 +260,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       return CircleAvatar(
         radius: size / 2,
         backgroundImage: NetworkImage(photoUrl),
-        backgroundColor: AppColors.primary200,
+        backgroundColor: designTheme.primary.withOpacity(0.2),
       );
     }
 
@@ -249,11 +270,11 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: AppColors.primary,
+        color: designTheme.primary,
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.3),
+            color: designTheme.primary.withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),

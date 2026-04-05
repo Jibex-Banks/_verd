@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 import 'package:verd/shared/widgets/app_button.dart';
 
 /// A single bullet row used in permission screens.
@@ -11,9 +11,10 @@ class _PermissionBullet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
     final scaleFactor = MediaQuery.textScalerOf(context).scale(1.0).clamp(0.8, 1.3);
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      padding: const EdgeInsets.only(bottom: 8.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -23,13 +24,13 @@ class _PermissionBullet extends StatelessWidget {
             decoration: BoxDecoration(color: checkColor, shape: BoxShape.circle),
             child: const Icon(Icons.check, color: Colors.white, size: 13),
           ),
-          const SizedBox(width: AppSpacing.md),
+          const SizedBox(width: 16.0),
           Expanded(
             child: Text(
               text,
-              style: AppTypography.body.copyWith(
-                color: AppColors.textPrimary,
-                fontSize: AppTypography.base * scaleFactor,
+              style: designTheme.bodyRegular.copyWith(
+                color: designTheme.textMain,
+                fontSize: 16.0 * scaleFactor,
               ),
             ),
           ),
@@ -77,7 +78,7 @@ class PermissionTemplate extends StatelessWidget {
   }) =>
       PermissionTemplate(
         key: key,
-        iconBackgroundColor: AppColors.primary,
+        iconBackgroundColor: const Color(0xFF2ECC71), // accentGreen mapping
         iconWidget:
         const Icon(Icons.camera_alt_outlined, color: Colors.white, size: 48),
         title: 'Camera Access Required',
@@ -88,7 +89,7 @@ class PermissionTemplate extends StatelessWidget {
           'Identify diseases in real-time',
           'Save scan history with photos',
         ],
-        bulletColor: AppColors.primary,
+        bulletColor: const Color(0xFF2ECC71),
         actionButtonText: 'Allow Camera Access',
         onAction: onAllow,
         onSkip: onSkip,
@@ -103,7 +104,7 @@ class PermissionTemplate extends StatelessWidget {
   }) =>
       PermissionTemplate(
         key: key,
-        iconBackgroundColor: AppColors.info,
+        iconBackgroundColor: const Color(0xFF3498DB), // info/primary mapping
         iconWidget:
         const Icon(Icons.location_on_outlined, color: Colors.white, size: 48),
         title: 'Location Access',
@@ -114,7 +115,7 @@ class PermissionTemplate extends StatelessWidget {
           'Receive weather-based recommendations',
           'Find nearby agricultural resources',
         ],
-        bulletColor: AppColors.info,
+        bulletColor: const Color(0xFF3498DB),
         actionButtonText: 'Allow Location Access',
         onAction: onAllow,
         onSkip: onSkip,
@@ -129,7 +130,7 @@ class PermissionTemplate extends StatelessWidget {
   }) =>
       PermissionTemplate(
         key: key,
-        iconBackgroundColor: AppColors.warning,
+        iconBackgroundColor: const Color(0xFFF1C40F), // warning mapping
         iconWidget: const Icon(Icons.notifications_outlined,
             color: Colors.white, size: 48),
         title: 'Stay Informed',
@@ -140,7 +141,7 @@ class PermissionTemplate extends StatelessWidget {
           'Disease outbreak warnings',
           'Weekly crop health reports',
         ],
-        bulletColor: AppColors.warning,
+        bulletColor: const Color(0xFFF1C40F),
         actionButtonText: 'Enable Notifications',
         onAction: onAllow,
         onSkip: onSkip,
@@ -150,19 +151,19 @@ class PermissionTemplate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
     final size = MediaQuery.sizeOf(context);
     final scaleFactor = MediaQuery.textScalerOf(context).scale(1.0).clamp(0.8, 1.3);
-    // Icon circle scales between 120–160px depending on screen height
     final iconSize = (size.height * 0.20).clamp(120.0, 160.0);
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundPrimary,
+      backgroundColor: designTheme.surface,
       body: SafeArea(
         child: Column(
           children: [
             // Skip — fixed at top
             SizedBox(
-              height: 44,
+              height: designTheme.touchTargetMin,
               child: onSkip != null
                   ? Align(
                 alignment: Alignment.centerRight,
@@ -170,9 +171,9 @@ class PermissionTemplate extends StatelessWidget {
                   onPressed: onSkip,
                   child: Text(
                     'Skip',
-                    style: AppTypography.body.copyWith(
-                      color: AppColors.textSecondary,
-                      fontSize: AppTypography.base * scaleFactor,
+                    style: designTheme.bodyRegular.copyWith(
+                      color: designTheme.textDim,
+                      fontSize: 16.0 * scaleFactor,
                     ),
                   ),
                 ),
@@ -183,9 +184,9 @@ class PermissionTemplate extends StatelessWidget {
             // Scrollable content — handles short screens / landscape
             Expanded(
               child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppSpacing.screenPadding,
-                  vertical: AppSpacing.lg,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24.0,
+                  vertical: 16.0,
                 ),
                 child: Column(
                   children: [
@@ -198,7 +199,7 @@ class PermissionTemplate extends StatelessWidget {
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: iconBackgroundColor.withValues(alpha: 0.35),
+                            color: iconBackgroundColor.withOpacity(0.35),
                             blurRadius: 32,
                             offset: const Offset(0, 12),
                           ),
@@ -212,21 +213,22 @@ class PermissionTemplate extends StatelessWidget {
                     // Title
                     Text(
                       title,
-                      style: AppTypography.h2.copyWith(
-                        color: AppColors.textPrimary,
-                        fontSize: AppTypography.xxl * scaleFactor,
+                      style: designTheme.titleLarge.copyWith(
+                        color: designTheme.textMain,
+                        fontSize: 28.0 * scaleFactor,
+                        fontWeight: FontWeight.w700,
                       ),
                       textAlign: TextAlign.center,
                     ),
 
-                    const SizedBox(height: AppSpacing.md),
+                    const SizedBox(height: 16.0),
 
                     // Description
                     Text(
                       description,
-                      style: AppTypography.body.copyWith(
-                        color: AppColors.textSecondary,
-                        fontSize: AppTypography.base * scaleFactor,
+                      style: designTheme.bodyRegular.copyWith(
+                        color: designTheme.textDim,
+                        fontSize: 16.0 * scaleFactor,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -245,22 +247,21 @@ class PermissionTemplate extends StatelessWidget {
                     AppButton(
                       text: actionButtonText,
                       onPressed: onAction,
-                      customColor: iconBackgroundColor,
                     ),
 
                     if (footerNote != null) ...[
-                      const SizedBox(height: AppSpacing.md),
+                      const SizedBox(height: 16.0),
                       Text(
                         footerNote!,
-                        style: AppTypography.caption.copyWith(
-                          color: AppColors.textSecondary,
-                          fontSize: AppTypography.xs * scaleFactor,
+                        style: designTheme.bodyRegular.copyWith(
+                          color: designTheme.textDim,
+                          fontSize: 12.0 * scaleFactor,
                         ),
                         textAlign: TextAlign.center,
                       ),
                     ],
 
-                    const SizedBox(height: AppSpacing.xl),
+                    const SizedBox(height: 24.0),
                   ],
                 ),
               ),

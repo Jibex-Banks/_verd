@@ -6,10 +6,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
+import 'package:verd/l10n/app_localizations.dart';
 import 'package:verd/providers/ai_provider.dart';
 import 'package:verd/providers/auth_provider.dart';
 import 'package:verd/shared/widgets/app_toast.dart';
+import 'package:verd/data/services/ai_routing_service.dart';
+import 'package:verd/data/services/firebase_auth_service.dart';
 
 class GalleryScreen extends ConsumerStatefulWidget {
   const GalleryScreen({super.key});
@@ -166,24 +169,24 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final designTheme = AppDesignSystem.of(context);
 
     return Scaffold(
-      backgroundColor: theme.colorScheme.surface,
+      backgroundColor: designTheme.background,
       appBar: AppBar(
         leadingWidth: 80,
         leading: Padding(
-          padding: const EdgeInsets.only(left: AppSpacing.lg),
+          padding: const EdgeInsets.only(left: 20.0),
           child: Center(
             child: Container(
-              width: 40,
-              height: 40,
+              width: 44,
+              height: 44,
               decoration: BoxDecoration(
-                color: theme.colorScheme.surface,
+                color: designTheme.surface,
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: theme.colorScheme.shadow.withValues(alpha: 0.05),
+                    color: Colors.black.withOpacity(0.05),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -191,39 +194,38 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen>
               ),
               child: IconButton(
                 padding: EdgeInsets.zero,
-                icon: Icon(Icons.chevron_left, color: theme.colorScheme.onSurface),
+                icon: Icon(Icons.chevron_left, color: designTheme.textMain),
                 onPressed: () => context.canPop() ? context.pop() : null,
               ),
             ),
           ),
         ),
         title: Text(
-          'Gallery',
-          style: AppTypography.h3.copyWith(
-            color: theme.colorScheme.onSurface,
-            fontWeight: FontWeight.bold,
+          'Gallery Scan',
+          style: designTheme.titleLarge.copyWith(
+            color: designTheme.textMain,
+            fontWeight: FontWeight.w800,
           ),
         ),
         centerTitle: true,
-        backgroundColor: theme.colorScheme.surface,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: designTheme.background,
         elevation: 0,
       ),
-      body: _buildBody(theme),
+      body: _buildBody(designTheme),
     );
   }
 
-  Widget _buildBody(ThemeData theme) {
+  Widget _buildBody(AppDesignSystem designTheme) {
     switch (_permissionStatus) {
       case _GalleryPermissionStatus.checking:
-        return const Center(child: CircularProgressIndicator(color: AppColors.primary));
+        return Center(child: CircularProgressIndicator(color: designTheme.primary));
 
       case _GalleryPermissionStatus.granted:
-        return _buildPickerPrompt(theme);
+        return _buildPickerPrompt(designTheme);
 
       case _GalleryPermissionStatus.denied:
         return _buildPermissionState(
-          theme: theme,
+          designTheme: designTheme,
           icon: Icons.photo_library_outlined,
           title: 'Gallery Access Needed',
           subtitle: 'Verd needs access to your photo library so you can select crop images for scanning.',
@@ -233,11 +235,10 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen>
 
       case _GalleryPermissionStatus.permanentlyDenied:
         return _buildPermissionState(
-          theme: theme,
+          designTheme: designTheme,
           icon: Icons.no_photography_outlined,
           title: 'Permission Denied',
-          subtitle:
-              'Photo library access has been permanently denied. Please open Settings and grant "Photos" or "Media" permission to Verd.',
+          subtitle: 'Photo library access has been permanently denied. Please open Settings and grant it manually.',
           buttonLabel: 'Open Settings',
           onTap: openAppSettings,
         );
@@ -245,61 +246,66 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen>
   }
 
   /// The main prompt shown when permission is granted.
-  Widget _buildPickerPrompt(ThemeData theme) {
+  Widget _buildPickerPrompt(AppDesignSystem dt) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
+        padding: const EdgeInsets.symmetric(horizontal: 40.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             // Illustration circle
             Container(
-              width: 120,
-              height: 120,
+              width: 140,
+              height: 140,
               decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.08),
+                color: dt.primary.withOpacity(0.08),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.add_photo_alternate_outlined, size: 56, color: AppColors.primary),
+              child: Icon(Icons.add_photo_alternate_rounded, size: 64, color: dt.primary),
             ),
-            const SizedBox(height: AppSpacing.xl),
+            const SizedBox(height: 32.0),
             Text(
               'Pick a Crop Photo',
-              style: AppTypography.h3.copyWith(
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.onSurface,
+              style: dt.titleLarge.copyWith(
+                fontWeight: FontWeight.w800,
+                color: dt.textMain,
+                fontSize: 26,
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: 12.0),
             Text(
               'Choose a clear, well-lit photo of a leaf or crop from your photo library. Verd will analyse it for diseases and health status.',
-              style: AppTypography.body.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-                height: 1.5,
+              style: dt.bodyRegular.copyWith(
+                color: dt.textDim,
+                height: 1.6,
+                fontSize: 15,
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: AppSpacing.xxxl),
+            const SizedBox(height: 48.0),
 
             // Pick button
             _isProcessing
                 ? Column(
                     children: [
-                      const CircularProgressIndicator(color: AppColors.primary),
-                      const SizedBox(height: AppSpacing.lg),
+                      CircularProgressIndicator(color: dt.primary),
+                      const SizedBox(height: 16.0),
                       Text(
                         'Analysing crop…',
-                        style: AppTypography.body.copyWith(color: AppColors.primary),
+                        style: dt.bodyRegular.copyWith(color: dt.primary, fontWeight: FontWeight.w700),
                       ),
                     ],
                   )
                 : SizedBox(
                     width: double.infinity,
-                    child: FilledButton.icon(
-                      style: FilledButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: dt.primary,
+                        foregroundColor: Colors.white,
+                        elevation: 8,
+                        shadowColor: dt.primary.withOpacity(0.4),
+                        padding: const EdgeInsets.symmetric(vertical: 18),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
@@ -308,33 +314,46 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen>
                       icon: const Icon(Icons.photo_library_rounded, color: Colors.white),
                       label: Text(
                         'Choose from Gallery',
-                        style: AppTypography.bodyLarge.copyWith(
+                        style: dt.bodyRegular.copyWith(
                           color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 16,
                         ),
                       ),
                     ),
                   ),
 
-            const SizedBox(height: AppSpacing.xl),
+            const SizedBox(height: 32.0),
 
-            // Tips row
-            _buildTipRow(
-              theme,
-              icon: Icons.light_mode_outlined,
-              label: 'Good lighting improves accuracy',
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            _buildTipRow(
-              theme,
-              icon: Icons.center_focus_strong_outlined,
-              label: 'Focus on a single leaf or area',
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            _buildTipRow(
-              theme,
-              icon: Icons.image_search_outlined,
-              label: 'Clear, close-up photos work best',
+            // Tips section
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: dt.surface,
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: dt.textMain.withOpacity(0.05)),
+              ),
+              child: Column(
+                children: [
+                    _buildTipRow(
+                      dt,
+                      icon: Icons.light_mode_rounded,
+                      label: 'Good lighting improves accuracy',
+                    ),
+                    const SizedBox(height: 12.0),
+                    _buildTipRow(
+                      dt,
+                      icon: Icons.center_focus_strong_rounded,
+                      label: 'Focus on a single leaf or area',
+                    ),
+                    const SizedBox(height: 12.0),
+                    _buildTipRow(
+                      dt,
+                      icon: Icons.image_search_rounded,
+                      label: 'Clear, close-up photos work best',
+                    ),
+                ],
+              ),
             ),
           ],
         ),
@@ -342,17 +361,19 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen>
     );
   }
 
-  Widget _buildTipRow(ThemeData theme, {required IconData icon, required String label}) {
+  Widget _buildTipRow(AppDesignSystem dt, {required IconData icon, required String label}) {
     return Row(
       mainAxisSize: MainAxisSize.max,
       children: [
-        Icon(icon, size: 18, color: AppColors.primary.withValues(alpha: 0.7)),
-        const SizedBox(width: AppSpacing.sm),
+        Icon(icon, size: 20, color: dt.primary),
+        const SizedBox(width: 12.0),
         Expanded(
           child: Text(
             label,
-            style: AppTypography.bodySmall.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
+            style: dt.bodyRegular.copyWith(
+              color: dt.textDim,
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
             ),
           ),
         ),
@@ -362,7 +383,7 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen>
 
   /// Generic permission-denied / settings prompt.
   Widget _buildPermissionState({
-    required ThemeData theme,
+    required AppDesignSystem designTheme,
     required IconData icon,
     required String title,
     required String subtitle,
@@ -371,44 +392,47 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen>
   }) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
+        padding: const EdgeInsets.symmetric(horizontal: 40.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 110,
-              height: 110,
+              width: 120,
+              height: 120,
               decoration: BoxDecoration(
-                color: theme.colorScheme.errorContainer.withValues(alpha: 0.2),
+                color: designTheme.semanticError.withOpacity(0.08),
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, size: 52, color: theme.colorScheme.error),
+              child: Icon(icon, size: 56, color: designTheme.semanticError),
             ),
-            const SizedBox(height: AppSpacing.xl),
+            const SizedBox(height: 32.0),
             Text(
               title,
-              style: AppTypography.h3.copyWith(
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.onSurface,
+              style: designTheme.titleLarge.copyWith(
+                fontWeight: FontWeight.w800,
+                color: designTheme.textMain,
+                fontSize: 24,
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: 12.0),
             Text(
               subtitle,
-              style: AppTypography.body.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-                height: 1.5,
+              style: designTheme.bodyRegular.copyWith(
+                color: designTheme.textDim,
+                height: 1.6,
+                fontSize: 15,
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: AppSpacing.xxxl),
+            const SizedBox(height: 48.0),
             SizedBox(
               width: double.infinity,
-              child: FilledButton(
-                style: FilledButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: designTheme.primary,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 18),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
@@ -416,9 +440,10 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen>
                 onPressed: onTap,
                 child: Text(
                   buttonLabel,
-                  style: AppTypography.bodyLarge.copyWith(
+                  style: designTheme.bodyRegular.copyWith(
                     color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 16,
                   ),
                 ),
               ),
@@ -430,33 +455,65 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen>
   }
 
   void _showLimitReachedDialog() {
+    final designTheme = AppDesignSystem.of(context);
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (ctx) => AlertDialog(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        title: Text('Free Trial Ended', style: AppTypography.h3),
+        backgroundColor: designTheme.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+        titlePadding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
+        contentPadding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+        actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        title: Row(
+          children: [
+            Icon(Icons.lock_clock_rounded, color: designTheme.semanticWarning),
+            const SizedBox(width: 12),
+            Text(
+              'Limit Reached',
+              style: designTheme.titleLarge.copyWith(fontWeight: FontWeight.w800),
+            ),
+          ],
+        ),
         content: Text(
           'You have reached your limit of 3 free scans. Sign up for unlimited scanning and save your farm history!',
-          style: AppTypography.body.copyWith(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          style: designTheme.bodyRegular.copyWith(
+            color: designTheme.textDim,
+            height: 1.5,
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
             child: Text(
-              'Cancel',
-              style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+              'Later',
+              style: designTheme.bodyRegular.copyWith(
+                color: designTheme.textDim,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
-          FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: AppColors.primary),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: designTheme.primary,
+              foregroundColor: Colors.white,
+              elevation: 0,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
             onPressed: () {
               Navigator.pop(ctx);
               context.go('/signup');
             },
-            child: const Text('Sign Up', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            child: Text(
+              'Sign Up',
+              style: designTheme.bodyRegular.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
           ),
         ],
       ),

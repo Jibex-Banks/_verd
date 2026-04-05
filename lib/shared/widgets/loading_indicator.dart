@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 
 enum LoadingIndicatorVariant { spinner, dots, linear }
 enum LoadingIndicatorSize { small, medium, large }
@@ -33,8 +33,8 @@ class LoadingIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final effectiveColor = color ?? theme.colorScheme.primary;
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
+    final effectiveColor = color ?? designTheme.primary;
     final scaleFactor = MediaQuery.textScalerOf(context).scale(1.0).clamp(0.8, 1.3);
 
     Widget indicator = switch (variant) {
@@ -48,10 +48,10 @@ class LoadingIndicator extends StatelessWidget {
       ),
       LoadingIndicatorVariant.dots => _DotsIndicator(color: effectiveColor),
       LoadingIndicatorVariant.linear => ClipRRect(
-        borderRadius: BorderRadius.circular(AppRadius.full),
+        borderRadius: BorderRadius.circular(100), // Full rounded
         child: LinearProgressIndicator(
           valueColor: AlwaysStoppedAnimation<Color>(effectiveColor),
-          backgroundColor: effectiveColor.withValues(alpha: 0.15),
+          backgroundColor: effectiveColor.withOpacity(0.15),
           minHeight: 3,
         ),
       ),
@@ -62,12 +62,12 @@ class LoadingIndicator extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           indicator,
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: 12.0),
           Text(
             label!,
-            style: AppTypography.bodySmall.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-              fontSize: AppTypography.sm * scaleFactor,
+            style: designTheme.bodyRegular.copyWith(
+              color: designTheme.textDim,
+              fontSize: 14.0 * scaleFactor,
             ),
           ),
         ],
@@ -93,7 +93,7 @@ class LoadingOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
     return Stack(
       children: [
         child,
@@ -101,29 +101,23 @@ class LoadingOverlay extends StatelessWidget {
         // Absorb all touches while loading
           AbsorbPointer(
             child: Container(
-              color: Colors.black.withValues(alpha: 0.4),
+              color: Colors.black.withOpacity(0.6), // Dim background
               child: Center(
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 280),
                   child: Container(
-                    padding: const EdgeInsets.all(AppSpacing.xxl),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.surface,
-                      borderRadius: BorderRadius.circular(AppRadius.xl),
-                      boxShadow: [
-                        if (theme.brightness == Brightness.light) AppShadows.lg
-                      ],
-                    ),
+                    padding: const EdgeInsets.all(32.0),
+                    decoration: designTheme.glassDecoration(opacity: 0.1, blur: 20),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const LoadingIndicator(size: LoadingIndicatorSize.large),
                         if (message != null) ...[
-                          const SizedBox(height: AppSpacing.lg),
+                          const SizedBox(height: 16.0),
                           Text(
                             message!,
-                            style: AppTypography.body.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant),
+                            style: designTheme.bodyRegular.copyWith(
+                                color: designTheme.textMain),
                             textAlign: TextAlign.center,
                           ),
                         ],

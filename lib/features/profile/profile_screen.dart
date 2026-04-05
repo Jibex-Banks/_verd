@@ -2,7 +2,7 @@ import 'package:verd/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 import 'package:verd/providers/auth_provider.dart';
 
 import 'package:verd/shared/dialogs/confirmation_dialog.dart';
@@ -24,9 +24,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     // Truly not signed in (not even anonymously) — show skeleton briefly until
     // auth state resolves, or redirect happens via the router guard.
     if (user == null) {
-      return Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: const ProfileSkeleton(),
+      return const Scaffold(
+        body: ProfileSkeleton(),
       );
     }
 
@@ -37,10 +36,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       return _buildGuestScreen(context);
     }
 
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final designTheme = AppDesignSystem.of(context);
     // Deep green from the inspiration Image #3
-    final headerBgColor = isDark ? const Color(0xFF081C0B) : const Color(0xFF13401A);
+    final headerBgColor = Theme.of(context).brightness == Brightness.dark ? const Color(0xFF081C0B) : const Color(0xFF13401A);
 
     return Scaffold(
       backgroundColor: headerBgColor, // Bleeds into status bar
@@ -78,21 +76,27 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               SafeArea(
                 bottom: false,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
                   child: Column(
                     children: [
-                      const SizedBox(height: AppSpacing.md),
+                      const SizedBox(height: 16.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(AppLocalizations.of(context)!.profile, style: AppTypography.h2.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
+                          Text(
+                            AppLocalizations.of(context)!.profile, 
+                            style: designTheme.titleLarge.copyWith(
+                              color: Colors.white, 
+                              fontWeight: FontWeight.w800
+                            )
+                          ),
                           IconButton(
                             icon: const Icon(Icons.more_vert, color: Colors.white),
                             onPressed: () => _showMoreOptions(context),
                           ),
                         ],
                       ),
-                      const SizedBox(height: AppSpacing.md),
+                      const SizedBox(height: 16.0),
                       // Avatar
                       Stack(
                         alignment: Alignment.bottomRight,
@@ -113,23 +117,24 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: AppSpacing.md),
+                      const SizedBox(height: 16.0),
                       Text(
                         user.displayName.isNotEmpty ? user.displayName : AppLocalizations.of(context)!.farmer,
-                        style: AppTypography.h3.copyWith(
+                        style: designTheme.titleLarge.copyWith(
                           color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w800,
                           letterSpacing: 0.5,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         user.email,
-                        style: AppTypography.bodySmall.copyWith(
+                        style: designTheme.bodyRegular.copyWith(
+                          fontSize: 13,
                           color: Colors.white70,
                         ),
                       ),
-                      const SizedBox(height: AppSpacing.xl),
+                      const SizedBox(height: 32.0),
                     ],
                   ),
                 ),
@@ -140,7 +145,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.surface,
+                    color: designTheme.surface,
                     borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(32),
                       topRight: Radius.circular(32),
@@ -152,47 +157,42 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       topRight: Radius.circular(32),
                     ),
                     child: SingleChildScrollView(
-                      padding: const EdgeInsets.only(
-                        left: AppSpacing.xl,
-                        right: AppSpacing.xl,
-                        top: AppSpacing.xxl,
-                        bottom: 120, // Pad enough for nav bar area + safety
-                      ),
+                      padding: const EdgeInsets.all(24.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             AppLocalizations.of(context)!.account_overview,
-                            style: AppTypography.h3.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: theme.colorScheme.onSurface,
+                            style: designTheme.titleLarge.copyWith(
+                              fontWeight: FontWeight.w800,
+                              color: designTheme.textMain,
                             ),
                           ),
-                          const SizedBox(height: AppSpacing.lg),
+                          const SizedBox(height: 16.0),
 
                           _buildMenuItem(
-                            theme: theme,
+                            designTheme: designTheme,
                             icon: Icons.person_outline,
                             iconColor: const Color(0xFF2196F3), // Light Blue
                             title: AppLocalizations.of(context)!.my_profile,
                             onTap: () => context.push('/edit-profile'),
                           ),
                           _buildMenuItem(
-                            theme: theme,
+                            designTheme: designTheme,
                             icon: Icons.history,
                             iconColor: const Color(0xFF4CAF50), // Green 
                             title: AppLocalizations.of(context)!.scan_history,
                             onTap: () => context.push('/scan-history'),
                           ),
                           _buildMenuItem(
-                            theme: theme,
+                            designTheme: designTheme,
                             icon: Icons.analytics_outlined,
                             iconColor: const Color(0xFF9C27B0), // Purple
                             title: AppLocalizations.of(context)!.farming_insights,
                             onTap: () => context.push('/user-insights'),
                           ),
                           _buildMenuItem(
-                            theme: theme,
+                            designTheme: designTheme,
                             icon: Icons.lock_outline,
                             iconColor: const Color(0xFFFF9800), // Orange
                             title: AppLocalizations.of(context)!.change_password,
@@ -200,7 +200,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           ),
                           
                           _buildMenuItem(
-                            theme: theme,
+                            designTheme: designTheme,
                             icon: Icons.logout,
                             iconColor: const Color(0xFFF44336), // Red
                             title: AppLocalizations.of(context)!.logout,
@@ -232,6 +232,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Widget _buildAvatar(String? photoUrl, String displayName, Color borderColor) {
     const size = 100.0;
     final initial = displayName.isNotEmpty ? displayName[0].toUpperCase() : '?';
+    final designTheme = AppDesignSystem.of(context);
 
     return Container(
       width: size,
@@ -239,7 +240,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(color: const Color(0xFF81C784), width: 3),
-        color: AppColors.primary,
+        color: designTheme.primary,
       ),
       child: ClipOval(
         child: photoUrl != null && photoUrl.isNotEmpty
@@ -267,7 +268,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   Widget _buildMenuItem({
-    required ThemeData theme,
+    required AppDesignSystem designTheme,
     required IconData icon,
     required Color iconColor,
     required String title,
@@ -291,20 +292,20 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 ),
                 child: Icon(icon, color: iconColor, size: 24),
               ),
-              const SizedBox(width: AppSpacing.lg),
+              const SizedBox(width: 16.0),
               Expanded(
                 child: Text(
                   title,
-                  style: AppTypography.bodyLarge.copyWith(
+                  style: designTheme.bodyRegular.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: theme.colorScheme.onSurface,
+                    color: designTheme.textMain,
                   ),
                 ),
               ),
               if (!hideChevron)
                 Icon(
                   Icons.chevron_right,
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                  color: designTheme.textDim.withOpacity(0.5),
                   size: 24,
                 ),
             ],
@@ -344,18 +345,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   /// Guest / anonymous user profile screen — prompts them to sign up.
   Widget _buildGuestScreen(BuildContext context) {
-    final theme = Theme.of(context);
+    final designTheme = AppDesignSystem.of(context);
     return Scaffold(
-      backgroundColor: theme.colorScheme.surface,
+      backgroundColor: designTheme.background,
       appBar: AppBar(
-        backgroundColor: theme.colorScheme.surface,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: designTheme.background,
         elevation: 0,
         title: Text(
           AppLocalizations.of(context)!.profile,
-          style: AppTypography.h3.copyWith(
-            color: theme.colorScheme.onSurface,
-            fontWeight: FontWeight.bold,
+          style: designTheme.titleLarge.copyWith(
+            color: designTheme.textMain,
+            fontWeight: FontWeight.w800,
           ),
         ),
         centerTitle: true,
@@ -363,47 +363,45 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       body: SafeArea(
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Icon
                 Container(
                   width: 100,
                   height: 100,
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withValues(alpha: 0.1),
+                    color: designTheme.primary.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.person_outline, size: 50, color: AppColors.primary),
+                  child: Icon(Icons.person_outline, size: 50, color: designTheme.primary),
                 ),
-                const SizedBox(height: AppSpacing.xl),
+                const SizedBox(height: 32.0),
                 Text(
                   'You\'re using Verd as a Guest',
-                  style: AppTypography.h3.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.onSurface,
+                  style: designTheme.titleLarge.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: designTheme.textMain,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: 12.0),
                 Text(
                   'Create a free account to unlock unlimited scans, save your farm history, and access all features.',
-                  style: AppTypography.body.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
+                  style: designTheme.bodyRegular.copyWith(
+                    color: designTheme.textDim,
                     height: 1.5,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: AppSpacing.xxxl),
+                const SizedBox(height: 48.0),
 
-                // Sign Up button
                 SizedBox(
                   width: double.infinity,
                   child: FilledButton(
                     style: FilledButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+                      backgroundColor: designTheme.primary,
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -411,23 +409,22 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     onPressed: () => context.go('/signup'),
                     child: Text(
                       'Create Free Account',
-                      style: AppTypography.bodyLarge.copyWith(
+                      style: designTheme.bodyRegular.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: 16.0),
 
-                // Login link
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       'Already have an account? ',
-                      style: AppTypography.body.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
+                      style: designTheme.bodyRegular.copyWith(
+                        color: designTheme.textDim,
                       ),
                     ),
                     TextButton(
@@ -439,8 +436,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       onPressed: () => context.go('/login'),
                       child: Text(
                         'Log In',
-                        style: AppTypography.body.copyWith(
-                          color: AppColors.primary,
+                        style: designTheme.bodyRegular.copyWith(
+                          color: designTheme.primary,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

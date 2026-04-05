@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 
 class BouncingCard extends StatefulWidget {
   final Widget child;

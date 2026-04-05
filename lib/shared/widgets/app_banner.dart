@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 
 enum BannerVariant { success, error, warning, info }
 
@@ -61,11 +61,11 @@ class _AppBannerState extends State<AppBanner>
     super.dispose();
   }
 
-  Color get _bg => switch (widget.variant) {
-        BannerVariant.success => AppColors.success,
-        BannerVariant.error   => AppColors.error,
-        BannerVariant.warning => AppColors.warning,
-        BannerVariant.info    => AppColors.info,
+  Color _bg(BuildContext context, AppDesignSystem theme) => switch (widget.variant) {
+        BannerVariant.success => theme.accentGreen,
+        BannerVariant.error   => Theme.of(context).colorScheme.error,
+        BannerVariant.warning => Colors.orange,
+        BannerVariant.info    => theme.primary,
       };
 
   IconData get _icon => switch (widget.variant) {
@@ -77,6 +77,8 @@ class _AppBannerState extends State<AppBanner>
 
   @override
   Widget build(BuildContext context) {
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
+    
     return ClipRect(
       child: AnimatedBuilder(
         animation: _heightFactor,
@@ -86,26 +88,26 @@ class _AppBannerState extends State<AppBanner>
         ),
         child: Container(
           width: double.infinity,
-          color: _bg,
-          padding: EdgeInsets.fromLTRB(
-            AppSpacing.lg,
-            AppSpacing.md,
-            AppSpacing.sm,
-            AppSpacing.md,
+          color: _bg(context, designTheme),
+          padding: const EdgeInsets.fromLTRB(
+            16.0,
+            12.0,
+            8.0,
+            12.0,
           ),
           child: SafeArea(
             bottom: false,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Icon(_icon, color: Colors.white, size: 20),
-                const SizedBox(width: AppSpacing.md),
+                Icon(_icon, color: designTheme.textMain, size: 20),
+                const SizedBox(width: 12.0),
                 Expanded(
                   child: Text(
                     widget.message,
-                    style: AppTypography.body.copyWith(
-                      color: Colors.white,
-                      fontWeight: AppTypography.medium,
+                    style: designTheme.bodyRegular.copyWith(
+                      color: designTheme.textMain,
+                      fontWeight: FontWeight.w500,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -113,16 +115,18 @@ class _AppBannerState extends State<AppBanner>
                 ),
                 // Optional CTA
                 if (widget.actionLabel != null && widget.onAction != null) ...[
-                  const SizedBox(width: AppSpacing.sm),
+                  const SizedBox(width: 8.0),
                   TextButton(
                     onPressed: widget.onAction,
                     style: TextButton.styleFrom(
-                      foregroundColor: Colors.white,
+                      foregroundColor: designTheme.textMain,
                       padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.md, vertical: AppSpacing.xs),
-                      minimumSize: const Size(44, 44),
-                      textStyle: AppTypography.buttonSmall
-                          .copyWith(decoration: TextDecoration.underline),
+                          horizontal: 12.0, vertical: 4.0),
+                      minimumSize: Size(designTheme.touchTargetMin, designTheme.touchTargetMin),
+                      textStyle: designTheme.bodyRegular.copyWith(
+                        decoration: TextDecoration.underline,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                     child: Text(widget.actionLabel!),
                   ),
@@ -132,11 +136,11 @@ class _AppBannerState extends State<AppBanner>
                   GestureDetector(
                     onTap: widget.onDismiss,
                     behavior: HitTestBehavior.opaque,
-                    child: const SizedBox(
-                      width: 44,
-                      height: 44,
+                    child: SizedBox(
+                      width: designTheme.touchTargetMin,
+                      height: designTheme.touchTargetMin,
                       child: Center(
-                        child: Icon(Icons.close, color: Colors.white, size: 18),
+                        child: Icon(Icons.close, color: designTheme.textMain, size: 18),
                       ),
                     ),
                   ),

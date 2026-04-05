@@ -2,7 +2,7 @@ import 'package:verd/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 import 'package:verd/shared/widgets/app_button.dart';
 import 'package:verd/shared/widgets/progress_dots.dart';
 
@@ -86,16 +86,17 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final designTheme = AppDesignSystem.of(context);
     return Scaffold(
-      backgroundColor: AppColors.backgroundPrimary,
+      backgroundColor: designTheme.background,
       body: SafeArea(
         child: Column(
           children: [
             // ── Top Bar (Skip + Progress Dots) ──
             Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.xl,
-                vertical: AppSpacing.md,
+                horizontal: 24.0,
+                vertical: 12.0,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -104,22 +105,19 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
                   ProgressDots(
                      count: _pages.length,
                      currentIndex: _currentIndex,
-                     activeColor: AppColors.gray800,
-                     inactiveColor: AppColors.gray300,
-                     dotSize: 8, // Smaller dots compared to onboarding
                   ),
-                  const SizedBox(width: AppSpacing.sm),
+                  const SizedBox(width: 8.0),
                   TextButton(
                     onPressed: _skip,
                     style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       minimumSize: Size.zero,
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                     child: Text(
                       AppLocalizations.of(context)!.skip,
-                      style: AppTypography.body.copyWith(
-                        color: AppColors.gray600,
+                      style: designTheme.bodyRegular.copyWith(
+                        color: designTheme.textDim,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -151,13 +149,14 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
   }
 
   Widget _buildPageContent(_PermissionPageData data) {
+    final designTheme = AppDesignSystem.of(context);
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppSpacing.xxl),
+      padding: const EdgeInsets.all(24.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: AppSpacing.xxl),
+          const SizedBox(height: 24.0),
           // ── Hero Icon ──
           Center(
             child: Stack(
@@ -194,7 +193,7 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
                       decoration: BoxDecoration(
                         color: const Color(0xFFE53935), // Red badge
                         shape: BoxShape.circle,
-                        border: Border.all(color: AppColors.backgroundPrimary, width: 3),
+                        border: Border.all(color: designTheme.background, width: 3),
                       ),
                       child: Text(
                         data.badgeScore.toString(),
@@ -214,17 +213,17 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
           // ── Title & Description ──
           Text(
             data.title,
-            style: AppTypography.h2.copyWith(
-              fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
+            style: designTheme.titleLarge.copyWith(
+              fontWeight: FontWeight.w800,
+              color: designTheme.textMain,
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: 12.0),
           Text(
             data.description,
-            style: AppTypography.bodyLarge.copyWith(
-              color: AppColors.gray600,
+            style: designTheme.bodyRegular.copyWith(
+              color: designTheme.textDim,
               height: 1.4,
             ),
             textAlign: TextAlign.center,
@@ -235,16 +234,16 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
           Column(
             children: data.benefits.map((benefit) {
               return Padding(
-                padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                padding: const EdgeInsets.only(bottom: 12.0),
                 child: Row(
                   children: [
                     Icon(Icons.check_circle, color: data.color, size: 24),
-                    const SizedBox(width: AppSpacing.sm),
+                    const SizedBox(width: 8.0),
                     Expanded(
                       child: Text(
                         benefit,
-                        style: AppTypography.body.copyWith(
-                          color: AppColors.textPrimary,
+                        style: designTheme.bodyRegular.copyWith(
+                          color: designTheme.textMain,
                         ),
                       ),
                     ),
@@ -261,13 +260,13 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
             onPressed: _handlePermissionRequest,
             customColor: data.color,
           ),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: 24.0),
 
           // ── Small Print ──
           Text(
             data.permissionDetails,
-            style: AppTypography.bodySmall.copyWith(
-              color: AppColors.gray500,
+            style: designTheme.bodyRegular.copyWith(
+              color: designTheme.textDim.withOpacity(0.6),
               fontSize: 11,
               height: 1.4,
             ),

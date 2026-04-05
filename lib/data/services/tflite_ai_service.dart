@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:image/image.dart' as img;
 import 'package:verd/data/services/crop_disease_knowledge.dart';
+import 'package:verd/data/services/yolo_service.dart';
 
 // Top-level function for Isolate execution to prevent UI stuttering
 Uint8List _processImageInIsolate(Uint8List bytes) {
@@ -44,6 +45,7 @@ class PredictionCandidate {
 class TFLiteAIService {
   late Interpreter _interpreter;
   late Map<int, String> _labels;
+  final YoloService _yoloService = YoloService();
   bool _isLoaded = false;
 
   /// Confidence threshold below which we flag the result as uncertain
@@ -54,8 +56,8 @@ class TFLiteAIService {
   Future<void> initialize() async {
     if (_isLoaded) return;
     try {
-      _interpreter = await Interpreter.fromAsset('assets/models/verd_v2.tflite');
-      final rawLabels = await rootBundle.loadString('assets/models/verd_v2_labels.json');
+      _interpreter = await Interpreter.fromAsset('assets/models/verd.tflite');
+      final rawLabels = await rootBundle.loadString('assets/models/labels_v3.json');
       final Map<String, dynamic> decoded = json.decode(rawLabels);
       _labels = decoded.map((k, v) => MapEntry(int.parse(k), v as String));
       _isLoaded = true;
@@ -80,12 +82,17 @@ class TFLiteAIService {
         throw Exception('Invalid image file size.');
       }
 
-      // 2. Offload preprocessing to a background Isolate
-      final bytes = await imageFile.readAsBytes();
+      // 2. YOLO leaf detection
+      File? processingFile = await _yoloService.cropLeaf(imageFile);
+      processingFile ??= imageFile; // fallback to full image
+
+      // 3. Offload preprocessing to a background Isolate
+      final bytes = await processingFile.readAsBytes();
       final preprocessedBytes = await compute(_processImageInIsolate, bytes);
 
       final input = preprocessedBytes.reshape([1, 224, 224, 3]);
-      final output = List.filled(54, 0).reshape([1, 54]);
+      final outputSize = _labels.length;
+      final output = List.filled(outputSize, 0).reshape([1, outputSize]);
 
       _interpreter.run(input, output);
 

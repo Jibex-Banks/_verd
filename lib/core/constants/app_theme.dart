@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 
 /// Centralized design tokens for VERD Agricultural App
 class AppColors {
@@ -462,6 +463,7 @@ class AppTheme {
       contentTextStyle: AppTypography.body.copyWith(color: AppColors.textWhite),
       actionTextColor: AppColors.primary200,
     ),
+    extensions: [AppDesignSystem.dark()],
   );
 
   static ThemeData darkTheme = ThemeData(
@@ -637,6 +639,7 @@ class AppTheme {
       contentTextStyle: AppTypography.body.copyWith(color: DarkColors.textPrimary),
       actionTextColor: AppColors.primary300,
     ),
+    extensions: [AppDesignSystem.dark()],
   );
 }
 

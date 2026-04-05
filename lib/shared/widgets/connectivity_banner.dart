@@ -1,7 +1,7 @@
 import 'package:verd/l10n/app_localizations.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // CONNECTIVITY BANNER
@@ -121,31 +121,35 @@ class _ConnectivityBannerState extends State<ConnectivityBanner>
               child: child,
             ),
           ),
-          child: _justReconnected
-              ? _BannerContent(
-                  message: AppLocalizations.of(context)!.back_online,
-                  icon: Icons.wifi,
-                  backgroundColor: AppColors.success,
-                )
-              : _BannerContent(
-                  message: AppLocalizations.of(context)!.no_internet,
-                  icon: Icons.wifi_off_outlined,
-                  backgroundColor: AppColors.gray900,
-                  trailing: TextButton(
-                    onPressed: () {
-                      // Trigger manual retry logic here
-                    },
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.white70,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.md),
-                      minimumSize: const Size(44, 44),
-                    ),
-                    child: Text(AppLocalizations.of(context)!.retry,
-                        style: AppTypography.buttonSmall
-                            .copyWith(color: Colors.white70)),
-                  ),
-                ),
+          child: Builder(
+            builder: (context) {
+              final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
+              return _justReconnected
+                  ? _BannerContent(
+                      message: AppLocalizations.of(context)!.back_online,
+                      icon: Icons.wifi,
+                      backgroundColor: designTheme.accentGreen,
+                    )
+                  : _BannerContent(
+                      message: AppLocalizations.of(context)!.no_internet,
+                      icon: Icons.wifi_off_outlined,
+                      backgroundColor: designTheme.surface,
+                      trailing: TextButton(
+                        onPressed: () {
+                          // Trigger manual retry logic here
+                        },
+                        style: TextButton.styleFrom(
+                          foregroundColor: designTheme.textMain,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12.0),
+                          minimumSize: Size(designTheme.touchTargetMin, designTheme.touchTargetMin),
+                        ),
+                        child: Text(AppLocalizations.of(context)!.retry,
+                            style: designTheme.bodyRegular.copyWith(fontWeight: FontWeight.w500, color: designTheme.textDim)),
+                      ),
+                    );
+            }
+          ),
         ),
         Expanded(child: widget.child),
       ],
@@ -168,27 +172,29 @@ class _BannerContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
     return Container(
       width: double.infinity,
       color: backgroundColor,
       padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.lg, vertical: 10),
+          horizontal: 16.0, vertical: 10.0),
       child: SafeArea(
         bottom: false,
         child: Row(
           children: [
-            Icon(icon, color: Colors.white, size: 16),
-            const SizedBox(width: AppSpacing.sm),
+            Icon(icon, color: designTheme.textMain, size: 16),
+            const SizedBox(width: 8.0),
             Expanded(
               child: Text(
                 message,
-                style: AppTypography.bodySmall.copyWith(
-                  color: Colors.white,
-                  fontWeight: AppTypography.medium,
+                style: designTheme.bodyRegular.copyWith(
+                  color: designTheme.textMain,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14.0, // mapping bodySmall size
                 ),
               ),
             ),
-            ?trailing,
+            if (trailing != null) trailing!,
           ],
         ),
       ),

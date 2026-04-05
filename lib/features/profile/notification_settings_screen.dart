@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 import 'package:verd/shared/widgets/app_card.dart';
 import 'package:verd/providers/notification_provider.dart';
 import 'package:verd/providers/settings_provider.dart';
@@ -13,13 +13,17 @@ class NotificationSettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
+    final designTheme = AppDesignSystem.of(context);
     final topics = ref.watch(notificationSettingsProvider);
     final notifier = ref.read(notificationSettingsProvider.notifier);
     final settingsNotifier = ref.read(settingsProvider.notifier);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
+      backgroundColor: designTheme.background,
       appBar: AppBar(
+        backgroundColor: designTheme.background,
+        elevation: 0,
         leadingWidth: 80,
         leading: TextButton(
           onPressed: () {
@@ -27,12 +31,18 @@ class NotificationSettingsScreen extends ConsumerWidget {
           },
           child: Text(
             AppLocalizations.of(context)!.back,
-            style: AppTypography.buttonSmall.copyWith(color: AppColors.primary),
+            style: designTheme.bodyRegular.copyWith(
+              color: designTheme.primary,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
         title: Text(
           AppLocalizations.of(context)!.notifications,
-          style: AppTypography.h4.copyWith(color: theme.colorScheme.onSurface),
+          style: designTheme.titleLarge.copyWith(
+            color: designTheme.textMain,
+            fontWeight: FontWeight.w800,
+          ),
         ),
         centerTitle: true,
         actions: [
@@ -40,18 +50,22 @@ class NotificationSettingsScreen extends ConsumerWidget {
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
               AppLocalizations.of(context)!.done,
-              style: AppTypography.buttonSmall.copyWith(color: AppColors.primary),
+              style: designTheme.bodyRegular.copyWith(
+                color: designTheme.primary,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
-          const SizedBox(width: AppSpacing.sm),
+          const SizedBox(width: 8.0),
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppSpacing.xl),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
             _buildToggleItem(
               context: context,
+              designTheme: designTheme,
               title: AppLocalizations.of(context)!.push_notifications,
               subtitle: AppLocalizations.of(context)!.push_notifications_desc,
               value: settingsNotifier.notificationsEnabled,
@@ -63,22 +77,23 @@ class NotificationSettingsScreen extends ConsumerWidget {
                 await settingsNotifier.setNotificationsEnabled(val);
               },
             ),
-            const Divider(height: AppSpacing.xl),
+            const Divider(height: 32.0),
             Padding(
-              padding: const EdgeInsets.only(bottom: AppSpacing.md),
+              padding: const EdgeInsets.only(bottom: 12.0),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   AppLocalizations.of(context)!.topics,
-                  style: AppTypography.h4.copyWith(
+                  style: designTheme.titleLarge.copyWith(
                     fontSize: 18,
-                    color: theme.colorScheme.primary,
+                    color: designTheme.primary,
                   ),
                 ),
               ),
             ),
             _buildToggleItem(
               context: context,
+              designTheme: designTheme,
               title: AppLocalizations.of(context)!.scan_results,
               subtitle: AppLocalizations.of(context)!.scan_results_desc,
               value: topics[FcmTopics.scanResults] ?? false,
@@ -87,6 +102,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
             ),
             _buildToggleItem(
               context: context,
+              designTheme: designTheme,
               title: AppLocalizations.of(context)!.learning_updates,
               subtitle: AppLocalizations.of(context)!.learning_updates_desc,
               value: topics[FcmTopics.learningUpdates] ?? false,
@@ -95,15 +111,17 @@ class NotificationSettingsScreen extends ConsumerWidget {
             ),
             _buildToggleItem(
               context: context,
+              designTheme: designTheme,
               title: AppLocalizations.of(context)!.system_alerts,
               subtitle: AppLocalizations.of(context)!.system_alerts_desc,
               value: topics[FcmTopics.systemAlerts] ?? false,
               onChanged: (val) => notifier.toggleTopic(FcmTopics.systemAlerts, val),
               enabled: settingsNotifier.notificationsEnabled,
             ),
-            const Divider(height: AppSpacing.xl),
+            const Divider(height: 32.0),
             _buildToggleItem(
               context: context,
+              designTheme: designTheme,
               title: AppLocalizations.of(context)!.email_notifications,
               subtitle: AppLocalizations.of(context)!.email_notifications_desc,
               value: true, // Mocked for now
@@ -111,16 +129,16 @@ class NotificationSettingsScreen extends ConsumerWidget {
               enabled: true,
             ),
             if (kDebugMode) ...[
-              const Divider(height: AppSpacing.xxl),
+              const Divider(height: 48.0),
               Padding(
-                padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                padding: const EdgeInsets.only(bottom: 12.0),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     AppLocalizations.of(context)!.debug_tools,
-                    style: AppTypography.h4.copyWith(
+                    style: designTheme.titleLarge.copyWith(
                       fontSize: 18,
-                      color: theme.colorScheme.primary,
+                      color: designTheme.primary,
                     ),
                   ),
                 ),
@@ -141,18 +159,21 @@ class NotificationSettingsScreen extends ConsumerWidget {
                 child: ListTile(
                   leading: Icon(
                     Icons.copy_outlined,
-                    color: theme.brightness == Brightness.dark ? AppColors.errorLight : AppColors.error,
+                    color: isDark ? const Color(0xFFEF5350) : const Color(0xFFD32F2F),
                   ),
                   title: Text(
                     AppLocalizations.of(context)!.copy_token,
-                    style: AppTypography.bodyLarge.copyWith(
-                      fontWeight: AppTypography.medium,
-                      color: theme.colorScheme.onSurface,
+                    style: designTheme.bodyRegular.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: designTheme.textMain,
                     ),
                   ),
                   subtitle: Text(
                     AppLocalizations.of(context)!.debug_token_desc,
-                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                    style: designTheme.bodyRegular.copyWith(
+                      fontSize: 13,
+                      color: designTheme.textDim,
+                    ),
                   ),
                 ),
               ),
@@ -165,18 +186,18 @@ class NotificationSettingsScreen extends ConsumerWidget {
 
   Widget _buildToggleItem({
     required BuildContext context,
+    required AppDesignSystem designTheme,
     required String title,
     required String subtitle,
     required bool value,
     required ValueChanged<bool> onChanged,
     bool enabled = true,
   }) {
-    final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      padding: const EdgeInsets.only(bottom: 12.0),
       child: AppCard(
         variant: AppCardVariant.elevated,
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.xl),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -186,16 +207,17 @@ class NotificationSettingsScreen extends ConsumerWidget {
                 children: [
                   Text(
                     title,
-                    style: AppTypography.bodyLarge.copyWith(
+                    style: designTheme.bodyRegular.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: theme.colorScheme.onSurface,
+                      color: designTheme.textMain,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style: AppTypography.bodySmall.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
+                    style: designTheme.bodyRegular.copyWith(
+                      fontSize: 13,
+                      color: designTheme.textDim,
                     ),
                   ),
                 ],
@@ -205,11 +227,11 @@ class NotificationSettingsScreen extends ConsumerWidget {
               value: value,
               onChanged: enabled ? onChanged : null,
               activeThumbColor: Colors.white,
-              activeTrackColor: AppColors.primary,
+              activeTrackColor: designTheme.primary,
               inactiveThumbColor: Colors.white,
-              inactiveTrackColor: theme.brightness == Brightness.dark 
-                  ? theme.colorScheme.surfaceContainerHighest 
-                  : AppColors.gray300,
+              inactiveTrackColor: Theme.of(context).brightness == Brightness.dark
+                  ? designTheme.textDim.withOpacity(0.2)
+                  : const Color(0xFFE0E0E0),
             ),
           ],
         ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:verd/core/providers/locale_provider.dart';
 import 'package:verd/l10n/app_localizations.dart';
@@ -32,12 +32,14 @@ class _LanguageScreenState extends ConsumerState<LanguageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final designTheme = AppDesignSystem.of(context);
     final currentLocale = ref.watch(localeProvider);
     
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
+      backgroundColor: designTheme.background,
       appBar: AppBar(
+        backgroundColor: designTheme.background,
+        elevation: 0,
         leadingWidth: 80,
         leading: TextButton(
           onPressed: () {
@@ -45,12 +47,18 @@ class _LanguageScreenState extends ConsumerState<LanguageScreen> {
           },
           child: Text(
             AppLocalizations.of(context)!.back,
-            style: AppTypography.buttonSmall.copyWith(color: AppColors.primary),
+            style: designTheme.bodyRegular.copyWith(
+              color: designTheme.primary,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
         title: Text(
           AppLocalizations.of(context)!.language,
-          style: AppTypography.h4.copyWith(color: theme.colorScheme.onSurface),
+          style: designTheme.titleLarge.copyWith(
+            color: designTheme.textMain,
+            fontWeight: FontWeight.w800,
+          ),
         ),
         centerTitle: true,
         actions: [
@@ -62,20 +70,23 @@ class _LanguageScreenState extends ConsumerState<LanguageScreen> {
             },
             child: Text(
               AppLocalizations.of(context)!.done,
-              style: AppTypography.buttonSmall.copyWith(color: AppColors.primary),
+              style: designTheme.bodyRegular.copyWith(
+                color: designTheme.primary,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
-          const SizedBox(width: AppSpacing.sm),
+          const SizedBox(width: 8.0),
         ],
       ),
       body: Container(
-        color: theme.colorScheme.surface,
+        color: designTheme.surface,
         child: ListView.separated(
           itemCount: _languages.length,
-          separatorBuilder: (context, index) => const Divider(
+          separatorBuilder: (context, index) => Divider(
             height: 1,
-            color: AppColors.gray200,
-            indent: AppSpacing.xl,
+            color: designTheme.textDim.withOpacity(0.1),
+            indent: 24.0,
           ),
           itemBuilder: (context, index) {
             final language = _languages[index];
@@ -90,8 +101,8 @@ class _LanguageScreenState extends ConsumerState<LanguageScreen> {
               },
               child: Padding(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.xl,
-                  vertical: AppSpacing.md,
+                  horizontal: 24.0,
+                  vertical: 16.0,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -101,24 +112,25 @@ class _LanguageScreenState extends ConsumerState<LanguageScreen> {
                       children: [
                         Text(
                           language['name']!,
-                          style: AppTypography.bodyLarge.copyWith(
-                            fontWeight: AppTypography.medium,
-                            color: theme.colorScheme.onSurface,
+                          style: designTheme.bodyRegular.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: designTheme.textMain,
                           ),
                         ),
                         const SizedBox(height: 2),
                         Text(
                           language['nativeName']!,
-                          style: AppTypography.bodySmall.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
+                          style: designTheme.bodyRegular.copyWith(
+                            fontSize: 13,
+                            color: designTheme.textDim,
                           ),
                         ),
                       ],
                     ),
                     if (isSelected)
-                      const Icon(
+                      Icon(
                         Icons.check,
-                        color: AppColors.primary,
+                        color: designTheme.primary,
                         size: 24,
                       ),
                   ],

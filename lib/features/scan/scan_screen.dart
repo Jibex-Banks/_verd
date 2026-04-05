@@ -8,7 +8,7 @@ import 'package:uuid/uuid.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 import 'package:verd/shared/widgets/app_toast.dart';
 import 'package:verd/providers/ai_provider.dart';
 import 'package:verd/providers/auth_provider.dart';
@@ -253,8 +253,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
 
   @override
   Widget build(BuildContext context) {
+    final designTheme = AppDesignSystem.of(context);
     return Scaffold(
-      backgroundColor: Colors.black, // Dark background for camera
+      backgroundColor: Colors.black, // Dark background for camera stays as it's the standard for camera UIs
       body: Stack(
         children: [
           // ── Camera Background ──
@@ -268,8 +269,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
               ),
             )
           else
-            const Center(
-              child: CircularProgressIndicator(color: AppColors.primary),
+            Center(
+              child: CircularProgressIndicator(color: designTheme.primary),
             ),
 
           // ── UI Overlay ──
@@ -280,13 +281,14 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                   // ── Top Bar ──
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.xl,
-                      vertical: AppSpacing.md,
+                      horizontal: 20.0,
+                      vertical: 16.0,
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         _buildCircularIconButton(
+                          designTheme: designTheme,
                           icon: Icons.history,
                           onPressed: () {
                             context.push('/scan-history');
@@ -297,21 +299,29 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                   ),
 
                   // ── Instruction Pill ──
-                  const SizedBox(height: AppSpacing.xl),
+                  const SizedBox(height: 20.0),
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.xxl,
-                      vertical: AppSpacing.md,
+                      horizontal: 24.0,
+                      vertical: 12.0,
                     ),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF4CAF50), // Green
-                      borderRadius: BorderRadius.circular(30),
+                      color: designTheme.primary,
+                      borderRadius: BorderRadius.circular(100),
+                      boxShadow: [
+                        BoxShadow(
+                          color: designTheme.primary.withOpacity(0.3),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
                     child: Text(
                       AppLocalizations.of(context)!.position_crop_instruction,
-                      style: AppTypography.body.copyWith(
+                      style: designTheme.bodyRegular.copyWith(
                         color: Colors.white,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.2,
                       ),
                     ),
                   ),
@@ -327,10 +337,10 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                           height: MediaQuery.sizeOf(context).width * 0.8,
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: const Color(0xFF4CAF50),
+                              color: designTheme.primary.withOpacity(0.5),
                               width: 1.5,
                             ),
-                            borderRadius: BorderRadius.circular(24),
+                            borderRadius: BorderRadius.circular(28),
                           ),
                           child: Stack(
                             children: [
@@ -341,11 +351,11 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                                 children: [
                                   Container(
                                     height: 1,
-                                    color: Colors.white.withValues(alpha: 0.2),
+                                    color: Colors.white.withOpacity(0.15),
                                   ),
                                   Container(
                                     height: 1,
-                                    color: Colors.white.withValues(alpha: 0.2),
+                                    color: Colors.white.withOpacity(0.15),
                                   ),
                                 ],
                               ),
@@ -356,11 +366,11 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                                 children: [
                                   Container(
                                     width: 1,
-                                    color: Colors.white.withValues(alpha: 0.2),
+                                    color: Colors.white.withOpacity(0.15),
                                   ),
                                   Container(
                                     width: 1,
-                                    color: Colors.white.withValues(alpha: 0.2),
+                                    color: Colors.white.withOpacity(0.15),
                                   ),
                                 ],
                               ),
@@ -370,8 +380,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
 
                         // ── Corner Brackets ──
                         ..._buildCornerBrackets(
+                          designTheme,
                           MediaQuery.sizeOf(context).width * 0.8,
-                          24.0,
+                          2.0,
                         ),
                       ],
                     ),
@@ -380,42 +391,55 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
 
                   // ── Bottom Action Buttons ──
                   Padding(
-                    padding: const EdgeInsets.only(bottom: AppSpacing.xxxl * 2),
+                    padding: const EdgeInsets.only(bottom: 48.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         _buildCircularIconButton(
+                          designTheme: designTheme,
                           icon: Icons.upload_outlined,
                           onPressed: _pickImageAndAnalyze,
                           size: 64,
                         ),
-                        const SizedBox(width: AppSpacing.xl),
-                        Container(
-                          width: 80,
-                          height: 80,
-                          decoration: const BoxDecoration(
-                            color: Color(0xFF4CAF50),
-                            shape: BoxShape.circle,
-                          ),
-                          child: _isProcessing
-                              ? const Padding(
-                                  padding: EdgeInsets.all(22.0),
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                    strokeWidth: 3,
-                                  ),
-                                )
-                              : IconButton(
-                                  icon: const Icon(
-                                    Icons.camera_alt_outlined,
-                                    color: Colors.white,
-                                    size: 36,
-                                  ),
-                                  onPressed: _takeScanPicture,
+                        const SizedBox(width: 32.0),
+                        GestureDetector(
+                          onTap: _isProcessing ? null : _takeScanPicture,
+                          child: Container(
+                            width: 84,
+                            height: 84,
+                            decoration: BoxDecoration(
+                              color: designTheme.primary,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: designTheme.primary.withOpacity(0.4),
+                                  blurRadius: 20,
+                                  spreadRadius: 2,
                                 ),
+                              ],
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.2),
+                                width: 4,
+                              ),
+                            ),
+                            child: _isProcessing
+                                ? const Padding(
+                                    padding: EdgeInsets.all(24.0),
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 3,
+                                    ),
+                                  )
+                                : const Icon(
+                                    Icons.camera_alt_rounded,
+                                    color: Colors.white,
+                                    size: 40,
+                                  ),
+                          ),
                         ),
-                        const SizedBox(width: AppSpacing.xl),
+                        const SizedBox(width: 32.0),
                         _buildCircularIconButton(
+                          designTheme: designTheme,
                           icon: Icons.insert_photo_outlined,
                           onPressed: () {
                             context.push('/gallery');
@@ -433,22 +457,25 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
           if (_isProcessing)
             Positioned.fill(
               child: Container(
-                color: Colors.black.withValues(alpha: 0.6),
+                color: Colors.black.withOpacity(0.7),
                 child: Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const CircularProgressIndicator(color: Colors.white),
-                      const SizedBox(height: AppSpacing.lg),
+                      CircularProgressIndicator(color: designTheme.primary),
+                      const SizedBox(height: 24.0),
                       Text(
                         AppLocalizations.of(context)!.analyzing_crop,
-                        style: AppTypography.h3.copyWith(color: Colors.white),
+                        style: designTheme.titleLarge.copyWith(
+                          color: Colors.white,
+                          fontSize: 24,
+                        ),
                       ),
-                      const SizedBox(height: AppSpacing.sm),
+                      const SizedBox(height: 8.0),
                       Text(
                         AppLocalizations.of(context)!.analyzing_delay_desc,
-                        style: AppTypography.body.copyWith(
-                          color: Colors.white70,
+                        style: designTheme.bodyRegular.copyWith(
+                          color: Colors.white.withOpacity(0.7),
                         ),
                       ),
                     ],
@@ -462,16 +489,18 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
   }
 
   Widget _buildCircularIconButton({
+    required AppDesignSystem designTheme,
     required IconData icon,
     required VoidCallback onPressed,
-    double size = 48,
+    double size = 52,
   }) {
     return Container(
       width: size,
       height: size,
-      decoration: const BoxDecoration(
-        color: Color(0xFF333333), // Darker grey for buttons
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.12),
         shape: BoxShape.circle,
+        border: Border.all(color: Colors.white.withOpacity(0.1), width: 1),
       ),
       child: IconButton(
         icon: Icon(icon, color: Colors.white, size: size * 0.45),
@@ -480,10 +509,10 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
     );
   }
 
-  List<Positioned> _buildCornerBrackets(double boxSize, double strokeWidth) {
-    const double lineLength = 40.0;
+  List<Positioned> _buildCornerBrackets(AppDesignSystem designTheme, double boxSize, double strokeWidth) {
+    const double lineLength = 32.0;
     const double thickness = 4.0;
-    const Color color = Colors.white;
+    final Color color = designTheme.primary;
 
     return [
       // Top Left
@@ -600,21 +629,28 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
   }
 
   void _showLimitReachedDialog() {
+    final designTheme = AppDesignSystem.of(context);
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (ctx) => AlertDialog(
-        backgroundColor: Theme.of(context).colorScheme.surface,
+        backgroundColor: designTheme.surface,
+        shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(designTheme.radiusStandard),
+            ),
         title: Text(
           AppLocalizations.of(context)?.free_trial_ended ?? 'Free Trial Ended',
-          style: AppTypography.h3,
+          style: designTheme.titleLarge.copyWith(
+                fontWeight: FontWeight.w800,
+              ),
         ),
         content: Text(
           AppLocalizations.of(context)?.free_trial_desc ??
               'You have reached your limit of 3 free scans. Sign up to unlock unlimited scanning and save your farm history!',
-          style: AppTypography.body.copyWith(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
+          style: designTheme.bodyRegular.copyWith(
+                color: designTheme.textDim,
+                height: 1.5,
+              ),
         ),
         actions: [
           TextButton(
@@ -622,12 +658,20 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
             child: Text(
               AppLocalizations.of(context)!.cancel,
               style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                color: designTheme.textDim,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
-          FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: AppColors.primary),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                  backgroundColor: designTheme.primary,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                ),
             onPressed: () {
               Navigator.pop(ctx);
               context.go('/signup');
@@ -635,7 +679,6 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
             child: Text(
               AppLocalizations.of(context)!.sign_up,
               style: const TextStyle(
-                color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             ),

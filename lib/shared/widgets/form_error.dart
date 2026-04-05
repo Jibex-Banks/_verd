@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // FORM VALIDATORS
@@ -78,24 +78,25 @@ class FieldError extends StatelessWidget {
     final scaleFactor =
         MediaQuery.textScalerOf(context).scale(1.0).clamp(0.8, 1.3);
 
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
     return AnimatedSize(
       duration: const Duration(milliseconds: 200),
       curve: Curves.easeInOut,
       child: error != null
           ? Padding(
-              padding: const EdgeInsets.only(top: AppSpacing.xs),
+              padding: const EdgeInsets.only(top: 4.0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.error_outline,
-                      size: 14, color: AppColors.error),
+                  Icon(Icons.error_outline,
+                      size: 14, color: Theme.of(context).colorScheme.error),
                   const SizedBox(width: 4),
                   Expanded(
                     child: Text(
                       error!,
-                      style: AppTypography.caption.copyWith(
-                        color: AppColors.error,
-                        fontSize: AppTypography.xs * scaleFactor,
+                      style: designTheme.bodyRegular.copyWith(
+                        color: Theme.of(context).colorScheme.error,
+                        fontSize: 12.0 * scaleFactor,
                       ),
                     ),
                   ),
@@ -127,34 +128,34 @@ class FormErrorBanner extends StatelessWidget {
       curve: Curves.easeInOut,
       child: error != null
           ? Padding(
-              padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+              padding: const EdgeInsets.only(bottom: 16.0),
               child: Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.lg,
-                  vertical: AppSpacing.md,
+                  horizontal: 16.0,
+                  vertical: 12.0,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.error.withValues(alpha: 0.08),
-                  borderRadius: BorderRadius.circular(AppRadius.md),
+                  color: Theme.of(context).colorScheme.error.withOpacity(0.08),
+                  borderRadius: BorderRadius.circular(designTheme.radiusStandard),
                   border: Border.all(
-                      color: AppColors.error.withValues(alpha: 0.3)),
+                      color: Theme.of(context).colorScheme.error.withOpacity(0.3)),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.only(top: 1),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 1),
                       child: Icon(Icons.error_outline,
-                          size: 18, color: AppColors.error),
+                          size: 18, color: Theme.of(context).colorScheme.error),
                     ),
-                    const SizedBox(width: AppSpacing.sm),
+                    const SizedBox(width: 8.0),
                     Expanded(
                       child: Text(
                         error!,
-                        style: AppTypography.bodySmall.copyWith(
-                          color: AppColors.errorDark,
-                          fontSize: AppTypography.sm * scaleFactor,
+                        style: designTheme.bodyRegular.copyWith(
+                          color: Theme.of(context).colorScheme.error,
+                          fontSize: 14.0 * scaleFactor,
                         ),
                       ),
                     ),
@@ -311,20 +312,22 @@ class _ValidatedTextFieldState extends State<ValidatedTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
     final scaleFactor =
         MediaQuery.textScalerOf(context).scale(1.0).clamp(0.8, 1.3);
     final hasError = _error != null;
+    final errorColor = Theme.of(context).colorScheme.error;
 
     final Widget? suffix = widget._isPassword
         ? IconButton(
             icon: Icon(
               _obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-              color: AppColors.gray500,
+              color: designTheme.textDim,
               size: 20,
             ),
             onPressed: () => setState(() => _obscure = !_obscure),
-            padding: const EdgeInsets.all(AppSpacing.sm),
-            constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+            padding: const EdgeInsets.all(8.0),
+            constraints: BoxConstraints(minWidth: designTheme.touchTargetMin, minHeight: designTheme.touchTargetMin),
           )
         : null;
 
@@ -335,13 +338,13 @@ class _ValidatedTextFieldState extends State<ValidatedTextField> {
         if (widget.label != null) ...[
           Text(
             widget.label!,
-            style: AppTypography.body.copyWith(
-              color: AppColors.textPrimary,
-              fontWeight: AppTypography.medium,
-              fontSize: AppTypography.base * scaleFactor,
+            style: designTheme.bodyRegular.copyWith(
+              color: designTheme.textMain,
+              fontWeight: FontWeight.w500,
+              fontSize: 16.0 * scaleFactor,
             ),
           ),
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: 4.0),
         ],
         TextFormField(
           controller: _ctrl,
@@ -351,9 +354,9 @@ class _ValidatedTextFieldState extends State<ValidatedTextField> {
           obscureText: widget._isPassword ? _obscure : widget.obscureText,
           enabled: widget.enabled,
           textAlignVertical: TextAlignVertical.center,
-          style: AppTypography.body.copyWith(
-            color: widget.enabled ? AppColors.textPrimary : AppColors.textDisabled,
-            fontSize: AppTypography.base * scaleFactor,
+          style: designTheme.bodyRegular.copyWith(
+            color: widget.enabled ? designTheme.textMain : designTheme.textDim.withOpacity(0.5),
+            fontSize: 16.0 * scaleFactor,
           ),
           onChanged: (v) {
             _validate(v);
@@ -375,35 +378,35 @@ class _ValidatedTextFieldState extends State<ValidatedTextField> {
             suffixIcon: suffix,
             filled: true,
             fillColor: widget.enabled
-                ? AppColors.backgroundSecondary
-                : AppColors.gray100,
+                ? designTheme.surface.withOpacity(0.5)
+                : designTheme.surface.withOpacity(0.2),
             isDense: true,
             contentPadding: EdgeInsets.symmetric(
-              horizontal: AppSpacing.lg,
+              horizontal: 16.0,
               vertical: MediaQuery.sizeOf(context).height * 0.016,
             ),
             // Override border to show error state without Flutter's default
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppRadius.input),
+              borderRadius: BorderRadius.circular(designTheme.radiusStandard),
               borderSide: BorderSide(
-                color: hasError ? AppColors.error : AppColors.gray300,
-                width: hasError ? 1.5 : 1.5,
+                color: hasError ? errorColor : designTheme.textMain.withOpacity(0.1),
+                width: 1.5,
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppRadius.input),
+              borderRadius: BorderRadius.circular(designTheme.radiusStandard),
               borderSide: BorderSide(
-                color: hasError ? AppColors.error : AppColors.primary,
+                color: hasError ? errorColor : designTheme.primary,
                 width: 2,
               ),
             ),
             disabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppRadius.input),
+              borderRadius: BorderRadius.circular(designTheme.radiusStandard),
               borderSide:
-                  const BorderSide(color: AppColors.gray200, width: 1.5),
+                  BorderSide(color: designTheme.textMain.withOpacity(0.05), width: 1.5),
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppRadius.input),
+              borderRadius: BorderRadius.circular(designTheme.radiusStandard),
             ),
           ),
         ),

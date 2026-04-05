@@ -2,7 +2,7 @@ import 'package:verd/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 import 'package:verd/shared/widgets/app_toast.dart';
 import 'package:verd/shared/widgets/app_card.dart';
 
@@ -21,10 +21,12 @@ class HelpSupportScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final designTheme = AppDesignSystem.of(context);
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
+      backgroundColor: designTheme.background,
       appBar: AppBar(
+        backgroundColor: designTheme.background,
+        elevation: 0,
         leadingWidth: 80,
         leading: TextButton(
           onPressed: () {
@@ -32,30 +34,37 @@ class HelpSupportScreen extends StatelessWidget {
           },
           child: Text(
             AppLocalizations.of(context)!.back,
-            style: AppTypography.buttonSmall.copyWith(color: AppColors.primary),
+            style: designTheme.bodyRegular.copyWith(
+              color: designTheme.primary,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
         title: Text(
           AppLocalizations.of(context)!.help_support,
-          style: AppTypography.h4.copyWith(color: theme.colorScheme.onSurface),
+          style: designTheme.titleLarge.copyWith(
+            color: designTheme.textMain,
+            fontWeight: FontWeight.w800,
+          ),
         ),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppSpacing.xl),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               AppLocalizations.of(context)!.contact_us,
-              style: AppTypography.h3.copyWith(
-                fontWeight: FontWeight.w600,
-                color: theme.colorScheme.onSurface,
+              style: designTheme.titleLarge.copyWith(
+                fontWeight: FontWeight.w800,
+                color: designTheme.textMain,
               ),
             ),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: 12.0),
             _buildContactItem(
               context: context,
+              designTheme: designTheme,
               icon: Icons.email_outlined,
               title: AppLocalizations.of(context)!.email_support,
               subtitle: 'support@verd.app',
@@ -65,6 +74,7 @@ class HelpSupportScreen extends StatelessWidget {
             ),
             _buildContactItem(
               context: context,
+              designTheme: designTheme,
               icon: Icons.phone_outlined,
               title: AppLocalizations.of(context)!.call_us,
               subtitle: '+1 (800) 123-4567',
@@ -74,6 +84,7 @@ class HelpSupportScreen extends StatelessWidget {
             ),
             _buildContactItem(
               context: context,
+              designTheme: designTheme,
               icon: Icons.chat_bubble_outline,
               title: AppLocalizations.of(context)!.live_chat,
               subtitle: AppLocalizations.of(context)!.live_chat_desc,
@@ -81,32 +92,35 @@ class HelpSupportScreen extends StatelessWidget {
                 _launchUrl(context, Uri.parse('https://wa.me/2348087400168'));
               },
             ),
-            const SizedBox(height: AppSpacing.xxxl),
+            const SizedBox(height: 40.0),
             
             Text(
               AppLocalizations.of(context)!.faqs,
-              style: AppTypography.h3.copyWith(
-                fontWeight: FontWeight.w600,
-                color: theme.colorScheme.onSurface,
+              style: designTheme.titleLarge.copyWith(
+                fontWeight: FontWeight.w800,
+                color: designTheme.textMain,
               ),
             ),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: 12.0),
             _buildFAQItem(
               context: context,
+              designTheme: designTheme,
               question: AppLocalizations.of(context)!.faq_scan_q,
               answer: AppLocalizations.of(context)!.faq_scan_a,
             ),
             _buildFAQItem(
               context: context,
+              designTheme: designTheme,
               question: AppLocalizations.of(context)!.faq_accuracy_q,
               answer: AppLocalizations.of(context)!.faq_accuracy_a,
             ),
             _buildFAQItem(
               context: context,
+              designTheme: designTheme,
               question: AppLocalizations.of(context)!.faq_offline_q,
               answer: AppLocalizations.of(context)!.faq_offline_a,
             ),
-            const SizedBox(height: AppSpacing.xxxl),
+            const SizedBox(height: 40.0),
           ],
         ),
       ),
@@ -115,17 +129,17 @@ class HelpSupportScreen extends StatelessWidget {
 
   Widget _buildContactItem({
     required BuildContext context,
+    required AppDesignSystem designTheme,
     required IconData icon,
     required String title,
     required String subtitle,
     required VoidCallback onTap,
   }) {
-    final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      padding: const EdgeInsets.only(bottom: 12.0),
       child: AppCard(
         variant: AppCardVariant.elevated,
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: const EdgeInsets.all(16.0),
         onTap: onTap,
         child: Row(
           children: [
@@ -133,32 +147,33 @@ class HelpSupportScreen extends StatelessWidget {
               width: 52,
               height: 52,
               decoration: BoxDecoration(
-                color: const Color(0xFF388E3C), // Dark green icon bg
+                color: designTheme.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 icon,
-                color: Colors.white,
+                color: designTheme.primary,
                 size: 24,
               ),
             ),
-            const SizedBox(width: AppSpacing.md),
+            const SizedBox(width: 16.0),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-                    style: AppTypography.bodyLarge.copyWith(
+                    style: designTheme.bodyRegular.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: theme.colorScheme.onSurface,
+                      color: designTheme.textMain,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     subtitle,
-                    style: AppTypography.bodySmall.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
+                    style: designTheme.bodyRegular.copyWith(
+                      fontSize: 13,
+                      color: designTheme.textDim,
                     ),
                   ),
                 ],
@@ -166,7 +181,7 @@ class HelpSupportScreen extends StatelessWidget {
             ),
             Icon(
               Icons.chevron_right,
-              color: theme.colorScheme.onSurfaceVariant,
+              color: designTheme.textDim,
             ),
           ],
         ),
@@ -176,32 +191,32 @@ class HelpSupportScreen extends StatelessWidget {
 
   Widget _buildFAQItem({
     required BuildContext context,
+    required AppDesignSystem designTheme,
     required String question,
     required String answer,
   }) {
-
-    final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      padding: const EdgeInsets.only(bottom: 12.0),
       child: AppCard(
         variant: AppCardVariant.elevated,
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               question,
-              style: AppTypography.bodyLarge.copyWith(
+              style: designTheme.bodyRegular.copyWith(
                 fontWeight: FontWeight.w600,
-                color: theme.colorScheme.onSurface,
+                color: designTheme.textMain,
               ),
             ),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: 12.0),
             Text(
               answer,
-              style: AppTypography.body.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+              style: designTheme.bodyRegular.copyWith(
+                color: designTheme.textDim,
                 height: 1.5,
+                fontSize: 14,
               ),
             ),
           ],

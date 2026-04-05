@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 
 class AppTextField extends StatefulWidget {
   final String? label;
@@ -165,12 +165,12 @@ class _AppTextFieldState extends State<AppTextField> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
     // Responsive font size — capped to avoid layout overflow
     final scaleFactor = MediaQuery.textScalerOf(context).scale(1.0).clamp(0.8, 1.3);
-    final bodyStyle = AppTypography.body.copyWith(
-      color: widget.enabled ? theme.colorScheme.onSurface : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-      fontSize: (AppTypography.base) * scaleFactor,
+    final bodyStyle = designTheme.bodyRegular.copyWith(
+      color: widget.enabled ? designTheme.textMain : designTheme.textDim.withOpacity(0.5),
+      fontSize: 16.0 * scaleFactor,
     );
 
     final Widget? resolvedSuffix = widget._isPassword
@@ -179,13 +179,13 @@ class _AppTextFieldState extends State<AppTextField> {
         _obscure
             ? Icons.visibility_outlined
             : Icons.visibility_off_outlined,
-        color: theme.colorScheme.onSurfaceVariant,
+        color: designTheme.textDim,
         size: 20,
       ),
       onPressed: () => setState(() => _obscure = !_obscure),
-      // Ensure icon button itself meets touch target
-      padding: const EdgeInsets.all(AppSpacing.sm),
-      constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+      // Ensure icon button itself meets touch target dynamically
+      padding: const EdgeInsets.all(8.0),
+      constraints: BoxConstraints(minWidth: designTheme.touchTargetMin, minHeight: designTheme.touchTargetMin),
     )
         : widget.suffixIcon;
 
@@ -196,13 +196,13 @@ class _AppTextFieldState extends State<AppTextField> {
         if (widget.label != null) ...[
           Text(
             widget.label!,
-            style: AppTypography.body.copyWith(
-              color: theme.colorScheme.onSurface,
-              fontWeight: AppTypography.medium,
-              fontSize: AppTypography.base * scaleFactor,
+            style: designTheme.bodyRegular.copyWith(
+              color: designTheme.textMain,
+              fontWeight: FontWeight.w500,
+              fontSize: 16.0 * scaleFactor,
             ),
           ),
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: 4.0),
         ],
         TextFormField(
           controller: widget.controller,
@@ -235,12 +235,25 @@ class _AppTextFieldState extends State<AppTextField> {
             counterText: '', // hide character counter clutter
             filled: true,
             fillColor: widget.enabled
-                ? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3)
-                : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.1),
+                ? designTheme.surface.withOpacity(0.5)
+                : designTheme.surface.withOpacity(0.2),
+            // Map borders to match the glassmorphic aesthetic
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(designTheme.radiusStandard),
+              borderSide: BorderSide(color: designTheme.textMain.withOpacity(0.1)),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(designTheme.radiusStandard),
+              borderSide: BorderSide(color: designTheme.textMain.withOpacity(0.1)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(designTheme.radiusStandard),
+              borderSide: BorderSide(color: designTheme.primary),
+            ),
             // isDense makes the field shorter on small screens
             isDense: true,
             contentPadding: EdgeInsets.symmetric(
-              horizontal: AppSpacing.lg,
+              horizontal: 16.0,
               vertical: MediaQuery.sizeOf(context).height * 0.016,
             ),
           ),

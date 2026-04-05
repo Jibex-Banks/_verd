@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 import 'package:verd/shared/widgets/app_button.dart';
 
 enum ErrorViewVariant { fullPage, inline, banner }
@@ -91,6 +91,7 @@ class _FullPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
     final size = MediaQuery.sizeOf(context);
     final scaleFactor = MediaQuery.textScalerOf(context).scale(1.0).clamp(0.8, 1.3);
     final iconSize = (size.width * 0.22).clamp(64.0, 88.0);
@@ -99,7 +100,7 @@ class _FullPage extends StatelessWidget {
       child: SingleChildScrollView(
         padding: EdgeInsets.symmetric(
           horizontal: size.width * 0.1,
-          vertical: AppSpacing.xxl,
+          vertical: 32.0,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -108,37 +109,37 @@ class _FullPage extends StatelessWidget {
               width: iconSize,
               height: iconSize,
               decoration: BoxDecoration(
-                color: AppColors.error.withValues(alpha: 0.1),
+                color: Theme.of(context).colorScheme.error.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 icon ?? Icons.error_outline,
                 size: iconSize * 0.45,
-                color: AppColors.error,
+                color: Theme.of(context).colorScheme.error,
               ),
             ),
-            const SizedBox(height: AppSpacing.xl),
+            const SizedBox(height: 24.0),
             Text(
               title,
-              style: AppTypography.h3.copyWith(
-                color: AppColors.textPrimary,
-                fontSize: AppTypography.xl * scaleFactor,
+              style: designTheme.titleLarge.copyWith(
+                color: designTheme.textMain,
+                fontSize: 24.0 * scaleFactor,
               ),
               textAlign: TextAlign.center,
             ),
             if (message != null) ...[
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: 8.0),
               Text(
                 message!,
-                style: AppTypography.body.copyWith(
-                  color: AppColors.textSecondary,
-                  fontSize: AppTypography.base * scaleFactor,
+                style: designTheme.bodyRegular.copyWith(
+                  color: designTheme.textDim,
+                  fontSize: 16.0 * scaleFactor,
                 ),
                 textAlign: TextAlign.center,
               ),
             ],
             if (onRetry != null) ...[
-              const SizedBox(height: AppSpacing.xxl),
+              const SizedBox(height: 32.0),
               AppButton(
                 text: retryLabel ?? 'Try Again',
                 onPressed: onRetry,
@@ -163,19 +164,20 @@ class _Inline extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
     final scaleFactor = MediaQuery.textScalerOf(context).scale(1.0).clamp(0.8, 1.3);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+      padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: Row(
         children: [
-          const Icon(Icons.error_outline, size: 16, color: AppColors.error),
-          const SizedBox(width: AppSpacing.sm),
+          Icon(Icons.error_outline, size: 16, color: Theme.of(context).colorScheme.error),
+          const SizedBox(width: 8.0),
           Expanded(
             child: Text(
               title,
-              style: AppTypography.bodySmall.copyWith(
-                color: AppColors.error,
-                fontSize: AppTypography.sm * scaleFactor,
+              style: designTheme.bodyRegular.copyWith(
+                color: Theme.of(context).colorScheme.error,
+                fontSize: 14.0 * scaleFactor,
               ),
             ),
           ),
@@ -183,16 +185,16 @@ class _Inline extends StatelessWidget {
             TextButton(
               onPressed: onRetry,
               style: TextButton.styleFrom(
-                padding:
-                const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-                minimumSize: const Size(44, 44),
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                minimumSize: Size(designTheme.touchTargetMin, designTheme.touchTargetMin),
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
               child: Text(
                 retryLabel ?? 'Retry',
-                style: AppTypography.bodySmall.copyWith(
-                  color: AppColors.primary,
-                  fontSize: AppTypography.sm * scaleFactor,
+                style: designTheme.bodyRegular.copyWith(
+                  color: designTheme.primary,
+                  fontSize: 14.0 * scaleFactor,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
@@ -219,22 +221,24 @@ class _Banner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
     final scaleFactor = MediaQuery.textScalerOf(context).scale(1.0).clamp(0.8, 1.3);
+    final errorColor = Theme.of(context).colorScheme.error;
+
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.lg, vertical: AppSpacing.md),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
       decoration: BoxDecoration(
-        color: AppColors.error.withValues(alpha: 0.08),
-        border: const Border(
-          left: BorderSide(color: AppColors.error, width: 3),
+        color: errorColor.withOpacity(0.08),
+        border: Border(
+          left: BorderSide(color: errorColor, width: 3),
         ),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Icon(Icons.error_outline, size: 18, color: AppColors.error),
-          const SizedBox(width: AppSpacing.sm),
+          Icon(Icons.error_outline, size: 18, color: errorColor),
+          const SizedBox(width: 8.0),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -242,18 +246,18 @@ class _Banner extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: AppTypography.body.copyWith(
-                    color: AppColors.errorDark,
-                    fontWeight: AppTypography.semibold,
-                    fontSize: AppTypography.base * scaleFactor,
+                  style: designTheme.bodyRegular.copyWith(
+                    color: designTheme.textMain,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16.0 * scaleFactor,
                   ),
                 ),
                 if (message != null)
                   Text(
                     message!,
-                    style: AppTypography.bodySmall.copyWith(
-                      color: AppColors.error,
-                      fontSize: AppTypography.sm * scaleFactor,
+                    style: designTheme.bodyRegular.copyWith(
+                      color: designTheme.textDim,
+                      fontSize: 14.0 * scaleFactor,
                     ),
                   ),
               ],
@@ -263,12 +267,13 @@ class _Banner extends StatelessWidget {
             TextButton(
               onPressed: onRetry,
               style: TextButton.styleFrom(
-                  minimumSize: const Size(44, 44)),
+                  minimumSize: Size(designTheme.touchTargetMin, designTheme.touchTargetMin)),
               child: Text(
                 retryLabel ?? 'Retry',
-                style: AppTypography.bodySmall.copyWith(
-                  color: AppColors.error,
-                  fontSize: AppTypography.sm * scaleFactor,
+                style: designTheme.bodyRegular.copyWith(
+                  color: designTheme.primary,
+                  fontSize: 14.0 * scaleFactor,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),

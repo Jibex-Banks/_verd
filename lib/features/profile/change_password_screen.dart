@@ -1,7 +1,7 @@
 import 'package:verd/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 import 'package:verd/shared/widgets/app_card.dart';
 import 'package:verd/shared/widgets/app_text_field.dart';
 import 'package:verd/shared/widgets/app_toast.dart';
@@ -33,82 +33,99 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final designTheme = AppDesignSystem.of(context);
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
+      backgroundColor: designTheme.background,
       appBar: AppBar(
-        leadingWidth: 80,
+        backgroundColor: designTheme.background,
+        elevation: 0,
+        leadingWidth: 90,
         leading: TextButton(
           onPressed: () {
             context.pop();
           },
           child: Text(
             AppLocalizations.of(context)!.cancel,
-            style: AppTypography.buttonSmall.copyWith(color: theme.colorScheme.primary),
+            style: designTheme.bodyRegular.copyWith(
+              color: designTheme.primary,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
-        title: Text(
-          AppLocalizations.of(context)!.change_password,
-          style: AppTypography.h4.copyWith(color: theme.colorScheme.onSurface),
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            AppLocalizations.of(context)!.change_password,
+            style: designTheme.titleLarge.copyWith(
+              color: designTheme.textMain,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
         ),
         centerTitle: true,
         actions: [
           _isSaving 
             ? Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: SizedBox(
                   width: 20,
                   height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2, color: theme.colorScheme.primary),
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2, 
+                    color: designTheme.primary
+                  ),
                 ),
               )
             : TextButton(
                 onPressed: _handleSave,
             child: Text(
               AppLocalizations.of(context)!.save,
-              style: AppTypography.buttonSmall.copyWith(color: theme.colorScheme.primary),
+              style: designTheme.bodyRegular.copyWith(
+                color: designTheme.primary,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
-          const SizedBox(width: AppSpacing.sm),
+          const SizedBox(width: 8.0),
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppSpacing.xl),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             AppTextField.password(label: AppLocalizations.of(context)!.current_password,
               hint: AppLocalizations.of(context)!.enter_current_password,
             ),
-            const SizedBox(height: AppSpacing.xl),
+            const SizedBox(height: 24.0),
             AppTextField.password(label: AppLocalizations.of(context)!.new_password,
               hint: AppLocalizations.of(context)!.enter_new_password,
             ),
-            const SizedBox(height: AppSpacing.xl),
+            const SizedBox(height: 24.0),
             AppTextField.password(label: AppLocalizations.of(context)!.confirm_new_password,
               hint: AppLocalizations.of(context)!.confirm_new_password,
               textInputAction: TextInputAction.done,
             ),
-            const SizedBox(height: AppSpacing.xxl),
+            const SizedBox(height: 32.0),
             AppCard(
               variant: AppCardVariant.elevated,
-              padding: const EdgeInsets.all(AppSpacing.xl),
+              padding: const EdgeInsets.all(24.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     AppLocalizations.of(context)!.password_requirements,
-                    style: AppTypography.body.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onSurface,
+                    style: designTheme.bodyRegular.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: designTheme.textMain,
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.md),
-                  _buildRequirementItem(context, AppLocalizations.of(context)!.pwd_rule_length),
-                  _buildRequirementItem(context, AppLocalizations.of(context)!.pwd_rule_case),
-                  _buildRequirementItem(context, AppLocalizations.of(context)!.pwd_rule_number),
-                  _buildRequirementItem(context, AppLocalizations.of(context)!.pwd_rule_special),
+                  const SizedBox(height: 12.0),
+                  _buildRequirementItem(context, AppLocalizations.of(context)!.pwd_rule_length, designTheme),
+                  _buildRequirementItem(context, AppLocalizations.of(context)!.pwd_rule_case, designTheme),
+                  _buildRequirementItem(context, AppLocalizations.of(context)!.pwd_rule_number, designTheme),
+                  _buildRequirementItem(context, AppLocalizations.of(context)!.pwd_rule_special, designTheme),
                 ],
               ),
             ),
@@ -118,14 +135,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     );
   }
 
-  Widget _buildRequirementItem(BuildContext context, String text) {
-    final theme = Theme.of(context);
+  Widget _buildRequirementItem(BuildContext context, String text, AppDesignSystem designTheme) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      padding: const EdgeInsets.only(bottom: 8.0),
       child: Text(
         text,
-        style: AppTypography.bodySmall.copyWith(
-          color: theme.colorScheme.onSurfaceVariant,
+        style: designTheme.bodyRegular.copyWith(
+          color: designTheme.textDim,
+          fontSize: 13,
         ),
       ),
     );
