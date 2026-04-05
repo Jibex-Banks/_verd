@@ -14,6 +14,7 @@ class AppDesignSystem extends ThemeExtension<AppDesignSystem> {
   final Color textDim;
   final Color semanticError;
   final Color semanticWarning;
+  final Color accentRed; // Added for the new UI
 
   // --- Dimensions & Borders ---
   final double radiusStandard;
@@ -21,8 +22,10 @@ class AppDesignSystem extends ThemeExtension<AppDesignSystem> {
 
   // --- Typography ---
   final TextStyle displayLarge;
+  final TextStyle displayMedium; // Added for the new UI
   final TextStyle titleLarge;
   final TextStyle bodyRegular;
+  final TextStyle bodySmall; // Added for the new UI
 
   const AppDesignSystem({
     required this.primary,
@@ -34,21 +37,22 @@ class AppDesignSystem extends ThemeExtension<AppDesignSystem> {
     required this.textDim,
     required this.semanticError,
     required this.semanticWarning,
+    required this.accentRed,
     required this.radiusStandard,
     required this.touchTargetMin,
     required this.displayLarge,
+    required this.displayMedium,
     required this.titleLarge,
     required this.bodyRegular,
+    required this.bodySmall,
   });
 
   /// Safer lookup for the [AppDesignSystem] extension.
-  /// Falls back to [AppDesignSystem.dark()] if the extension is not registered
-  /// on the current [ThemeData], preventing null pointer exceptions during transitions.
   static AppDesignSystem of(BuildContext context) {
     return Theme.of(context).extension<AppDesignSystem>() ?? AppDesignSystem.dark();
   }
 
-  /// Factory establishing the default dark theme parameters adapted from [new_design_plan]
+  /// Factory establishing the default dark theme parameters.
   factory AppDesignSystem.dark() {
     const textMainColor = Colors.white;
     return AppDesignSystem(
@@ -61,13 +65,19 @@ class AppDesignSystem extends ThemeExtension<AppDesignSystem> {
       textDim: const Color(0x66FFFFFF),
       semanticError: const Color(0xFFEF5350),
       semanticWarning: const Color(0xFFFF9800),
+      accentRed: const Color(0xFFEF5350), // Map to semantic error
       radiusStandard: 24.0,
-      touchTargetMin: 44.0, // WCAG AA Compliance
+      touchTargetMin: 44.0,
       displayLarge: const TextStyle(
         fontSize: 72,
         fontWeight: FontWeight.bold,
         letterSpacing: -2,
         fontStyle: FontStyle.italic,
+        color: textMainColor,
+      ),
+      displayMedium: const TextStyle(
+        fontSize: 32,
+        fontWeight: FontWeight.bold,
         color: textMainColor,
       ),
       titleLarge: const TextStyle(
@@ -80,10 +90,13 @@ class AppDesignSystem extends ThemeExtension<AppDesignSystem> {
         fontSize: 16,
         color: textMainColor,
       ),
+      bodySmall: const TextStyle(
+        fontSize: 12,
+        color: textMainColor,
+      ),
     );
   }
 
-  /// Structural paradigm for Glassmorphic cards
   BoxDecoration glassDecoration({double opacity = 0.05, double blur = 10.0}) {
     return BoxDecoration(
       color: textMain.withOpacity(opacity),
@@ -103,11 +116,14 @@ class AppDesignSystem extends ThemeExtension<AppDesignSystem> {
     Color? textDim,
     Color? semanticError,
     Color? semanticWarning,
+    Color? accentRed,
     double? radiusStandard,
     double? touchTargetMin,
     TextStyle? displayLarge,
+    TextStyle? displayMedium,
     TextStyle? titleLarge,
     TextStyle? bodyRegular,
+    TextStyle? bodySmall,
   }) {
     return AppDesignSystem(
       primary: primary ?? this.primary,
@@ -119,11 +135,14 @@ class AppDesignSystem extends ThemeExtension<AppDesignSystem> {
       textDim: textDim ?? this.textDim,
       semanticError: semanticError ?? this.semanticError,
       semanticWarning: semanticWarning ?? this.semanticWarning,
+      accentRed: accentRed ?? this.accentRed,
       radiusStandard: radiusStandard ?? this.radiusStandard,
       touchTargetMin: touchTargetMin ?? this.touchTargetMin,
       displayLarge: displayLarge ?? this.displayLarge,
+      displayMedium: displayMedium ?? this.displayMedium,
       titleLarge: titleLarge ?? this.titleLarge,
       bodyRegular: bodyRegular ?? this.bodyRegular,
+      bodySmall: bodySmall ?? this.bodySmall,
     );
   }
 
@@ -140,12 +159,14 @@ class AppDesignSystem extends ThemeExtension<AppDesignSystem> {
       textDim: Color.lerp(textDim, other.textDim, t)!,
       semanticError: Color.lerp(semanticError, other.semanticError, t)!,
       semanticWarning: Color.lerp(semanticWarning, other.semanticWarning, t)!,
+      accentRed: Color.lerp(accentRed, other.accentRed, t)!,
       radiusStandard: ui.lerpDouble(radiusStandard, other.radiusStandard, t) ?? radiusStandard,
       touchTargetMin: ui.lerpDouble(touchTargetMin, other.touchTargetMin, t) ?? touchTargetMin,
       displayLarge: TextStyle.lerp(displayLarge, other.displayLarge, t)!,
+      displayMedium: TextStyle.lerp(displayMedium, other.displayMedium, t)!,
       titleLarge: TextStyle.lerp(titleLarge, other.titleLarge, t)!,
       bodyRegular: TextStyle.lerp(bodyRegular, other.bodyRegular, t)!,
+      bodySmall: TextStyle.lerp(bodySmall, other.bodySmall, t)!,
     );
   }
 }
-

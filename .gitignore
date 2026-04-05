@@ -61,3 +61,5 @@ extension.txt
 agriscan-flutter-guide.html
 Code_Review.txt
 *.tflite
+new_design_plan/
+tmp/

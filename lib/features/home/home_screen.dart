@@ -1,12 +1,14 @@
 import 'package:verd/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:verd/core/theme/app_design_system.dart';
+import 'package:verd/providers/learning_provider.dart';
 
 import 'package:verd/shared/widgets/skeleton_loader.dart';
 import 'package:verd/shared/widgets/bouncing_card.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   final VoidCallback? onScanTap;
   final VoidCallback? onProfileTap;
   
@@ -17,10 +19,10 @@ class HomeScreen extends StatefulWidget {
   });
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool _isLoading = true;
 
   @override
@@ -146,110 +148,65 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 32.0),
               // ── Tip of the Day ──
-              Container(
-                padding: const EdgeInsets.all(20.0),
-                decoration: BoxDecoration(
-                  color: designTheme.primary,
-                  borderRadius: BorderRadius.circular(designTheme.radiusStandard),
-                  border: Border.all(color: designTheme.primary.withOpacity(0.3)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: designTheme.primary.withOpacity(0.3),
-                      blurRadius: 15,
-                      offset: const Offset(0, 8),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      child: Text(
-                        AppLocalizations.of(context)!.tip_of_the_day.toUpperCase(),
-                        style: designTheme.bodyRegular.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 10,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16.0),
-                    Text(
-                      AppLocalizations.of(context)!.early_detection_title,
-                      style: designTheme.titleLarge.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 22.0,
-                      ),
-                    ),
-                    const SizedBox(height: 8.0),
-                    Text(
-                      AppLocalizations.of(context)!.early_detection_desc,
-                      style: designTheme.bodyRegular.copyWith(
-                        color: Colors.white.withOpacity(0.9),
-                        height: 1.5,
-                        fontSize: 15.0,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              _buildTipOfTheDay(context, designTheme),
               const SizedBox(height: 32.0),
 
               // ── Popular Topics ──
-              Text(
-                AppLocalizations.of(context)!.popular_topics,
-                style: designTheme.titleLarge.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: designTheme.textMain,
-                  fontSize: 20.0,
-                ),
-              ),
-              const SizedBox(height: 12.0),
-              GridView.count(
-                crossAxisCount: 2,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                mainAxisSpacing: 16.0,
-                crossAxisSpacing: 16.0,
-                childAspectRatio: 0.95,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                   _buildTopicCard(
-                    iconBackgroundColor: designTheme.semanticError,
-                    icon: Icons.coronavirus_rounded,
-                    title: AppLocalizations.of(context)!.crop_diseases,
-                    subtitle: AppLocalizations.of(context)!.crop_diseases_desc_short,
-                    onTap: () => context.push('/article/diseases'),
+                  Text(
+                    AppLocalizations.of(context)!.popular_topics,
+                    style: designTheme.titleLarge.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: designTheme.textMain,
+                      fontSize: 20.0,
+                    ),
                   ),
-                  _buildTopicCard(
-                    iconBackgroundColor: designTheme.secondary,
-                    icon: Icons.bug_report_rounded,
-                    title: AppLocalizations.of(context)!.pest_control,
-                    subtitle: AppLocalizations.of(context)!.pest_control_desc_short,
-                    onTap: () => context.push('/article/pests'),
-                  ),
-                  _buildTopicCard(
-                    iconBackgroundColor: designTheme.primary,
-                    icon: Icons.grass_rounded,
-                    title: AppLocalizations.of(context)!.soil_health,
-                    subtitle: AppLocalizations.of(context)!.soil_health_desc_short,
-                    onTap: () => context.push('/article/soil'),
-                  ),
-                  _buildTopicCard(
-                    iconBackgroundColor: designTheme.secondary,
-                    icon: Icons.water_drop_rounded,
-                    title: AppLocalizations.of(context)!.irrigation,
-                    subtitle: AppLocalizations.of(context)!.irrigation_desc_short,
-                    onTap: () => context.push('/article/water'),
+                  TextButton(
+                    onPressed: () => context.push('/learning-center'),
+                    child: Text(
+                      'View All',
+                      style: designTheme.bodySmall.copyWith(
+                        color: designTheme.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ],
               ),
+              const SizedBox(height: 12.0),
+              ref.watch(coursesProvider).when(
+                    data: (courses) {
+                      final displayCourses = courses.take(4).toList();
+                      if (displayCourses.isEmpty) {
+                        return _buildEmptyTopics(context, designTheme);
+                      }
+                      return GridView.builder(
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 16.0,
+                          crossAxisSpacing: 16.0,
+                          childAspectRatio: 0.95,
+                        ),
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: displayCourses.length,
+                        itemBuilder: (context, index) {
+                          final course = displayCourses[index];
+                          return _buildTopicCard(
+                            iconBackgroundColor: _courseColor(index),
+                            icon: _courseIcon(course.id),
+                            title: _courseFriendlyName(course.id),
+                            subtitle: _courseCategory(course.id),
+                            onTap: () => context.push('/article/${course.id}'),
+                          );
+                        },
+                      );
+                    },
+                    loading: () => _buildLoadingTopics(),
+                    error: (err, _) => _buildErrorTopics(designTheme, err),
+                  ),
               const SizedBox(height: 32.0), // Bottom padding
             ],
           ),
@@ -258,7 +215,158 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildEmptyTopics(BuildContext context, AppDesignSystem designTheme) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: designTheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: designTheme.textMain.withOpacity(0.05)),
+      ),
+      child: Center(
+        child: Text(
+          'Start your learning journey today!',
+          style: designTheme.bodySmall.copyWith(color: designTheme.textDim),
+        ),
+      ),
+    );
+  }
 
+  Widget _buildLoadingTopics() {
+    return GridView.count(
+      crossAxisCount: 2,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      mainAxisSpacing: 16,
+      crossAxisSpacing: 16,
+      childAspectRatio: 0.95,
+      children: List.generate(
+        4,
+        (index) => Container(
+          decoration: BoxDecoration(
+            color: Colors.grey.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorTopics(AppDesignSystem designTheme, Object error) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: designTheme.semanticError.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Text(
+        'Failed to load topics',
+        style: designTheme.bodySmall.copyWith(color: designTheme.semanticError),
+      ),
+    );
+  }
+
+  Color _courseColor(int index) {
+    const colors = [
+      Color(0xFFE53935), // Red
+      Color(0xFF4CAF50), // Green
+      Color(0xFF2196F3), // Blue
+      Color(0xFFFF9800), // Orange
+    ];
+    return colors[index % colors.length];
+  }
+
+  IconData _courseIcon(String courseId) {
+    final id = courseId.toLowerCase();
+    if (id.contains('pathology') || id.contains('disease')) return Icons.coronavirus;
+    if (id.contains('pest') || id.contains('ecology') || id.contains('ipm')) return Icons.bug_report;
+    if (id.contains('soil') || id.contains('fertility')) return Icons.grass;
+    if (id.contains('water') || id.contains('irrigat')) return Icons.water_drop;
+    if (id.contains('ai') || id.contains('precision')) return Icons.auto_awesome;
+    if (id.contains('agronomy') || id.contains('farming')) return Icons.agriculture;
+    if (id.contains('harvest') || id.contains('biology')) return Icons.eco;
+    return Icons.menu_book;
+  }
+
+  String _courseFriendlyName(String courseId) {
+    return courseId
+        .replaceAll('-', ' ')
+        .replaceAll('_', ' ')
+        .replaceAll('expanded', '')
+        .trim()
+        .split(' ')
+        .map((word) => word.isEmpty ? '' : '${word[0].toUpperCase()}${word.substring(1)}')
+        .join(' ');
+  }
+
+  String _courseCategory(String courseId) {
+    final id = courseId.toLowerCase();
+    if (id.contains('pathology') || id.contains('disease')) return 'Plant Protection';
+    if (id.contains('pest') || id.contains('ecology') || id.contains('ipm')) return 'Pest Control';
+    if (id.contains('soil') || id.contains('fertility')) return 'Sustenance';
+    if (id.contains('water') || id.contains('irrigat')) return 'Resource Mgmt';
+    if (id.contains('ai') || id.contains('precision')) return 'Advanced Tech';
+    return 'Core Agronomy';
+  }
+
+  Widget _buildTipOfTheDay(BuildContext context, AppDesignSystem designTheme) {
+    final tip = ref.watch(tipOfTheDayProvider);
+    final tipText = tip?.text ?? AppLocalizations.of(context)!.early_detection_desc;
+
+    return Container(
+      padding: const EdgeInsets.all(20.0),
+      decoration: BoxDecoration(
+        color: designTheme.primary,
+        borderRadius: BorderRadius.circular(designTheme.radiusStandard),
+        boxShadow: [
+          BoxShadow(
+            color: designTheme.primary.withOpacity(0.3),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(100),
+            ),
+            child: Text(
+              AppLocalizations.of(context)!.tip_of_the_day.toUpperCase(),
+              style: designTheme.bodyRegular.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w800,
+                fontSize: 10,
+                letterSpacing: 1.2,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16.0),
+          Text(
+            AppLocalizations.of(context)!.early_detection_title,
+            style: designTheme.titleLarge.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.w800,
+              fontSize: 22.0,
+            ),
+          ),
+          const SizedBox(height: 8.0),
+          Text(
+            tipText,
+            style: designTheme.bodyRegular.copyWith(
+              color: Colors.white.withOpacity(0.9),
+              height: 1.5,
+              fontSize: 15.0,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _buildQuickActionCard({
     required Color iconBackgroundColor,

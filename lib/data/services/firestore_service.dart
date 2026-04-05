@@ -2,6 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:verd/data/models/user.dart';
 import 'package:verd/data/models/scan_result.dart';
+import 'package:verd/data/models/course.dart';
+import 'package:verd/data/models/tip.dart';
+import 'package:verd/data/models/user_progress.dart';
 
 /// Wraps [FirebaseFirestore] with typed methods for Verd's collections.
 ///
@@ -200,5 +203,116 @@ class FirestoreService {
     }
     // Delete user document
     await _usersCol.doc(uid).delete();
+  }
+
+  // ─── Courses ───
+
+  CollectionReference<Map<String, dynamic>> get _coursesCol =>
+      _firestore.collection('courses');
+
+  /// Fetch all courses from Firestore.
+  Future<List<Course>> fetchCourses() async {
+    try {
+      final snapshot = await _coursesCol.get();
+      return snapshot.docs
+          .map((doc) => Course.fromFirestore(
+              doc as DocumentSnapshot<Map<String, dynamic>>))
+          .toList();
+    } catch (e, stack) {
+      debugPrint('[FirestoreService] fetchCourses error: $e');
+      debugPrint('[FirestoreService] Stack trace: $stack');
+      return [];
+    }
+  }
+
+  // ─── Tips ───
+
+  CollectionReference<Map<String, dynamic>> get _tipsCol =>
+      _firestore.collection('tips');
+
+  /// Fetch all tips from Firestore.
+  Future<List<Tip>> fetchTips() async {
+    try {
+      final snapshot = await _tipsCol.get();
+      return snapshot.docs
+          .map((doc) => Tip.fromFirestore(
+              doc as DocumentSnapshot<Map<String, dynamic>>))
+          .toList();
+    } catch (e, stack) {
+      debugPrint('[FirestoreService] fetchTips error: $e');
+      debugPrint('[FirestoreService] Stack trace: $stack');
+      return [];
+    }
+  }
+
+  // ─── User Progress ───
+
+  CollectionReference<Map<String, dynamic>> get _progressCol =>
+      _firestore.collection('userProgress');
+
+  /// Fetch progress for a specific user + course.
+  Future<UserProgress?> fetchUserProgress(
+      String userId, String courseId) async {
+    try {
+      final docId = '${userId}_$courseId';
+      final doc = await _progressCol.doc(docId).get();
+      if (!doc.exists) return null;
+      return UserProgress.fromFirestore(
+          doc as DocumentSnapshot<Map<String, dynamic>>);
+    } catch (e) {
+      debugPrint('[FirestoreService] fetchUserProgress error: $e');
+      return null;
+    }
+  }
+
+  /// Save or update user progress for a course.
+  Future<void> saveUserProgress(UserProgress progress) async {
+    try {
+      await _progressCol
+          .doc(progress.docId)
+          .set(progress.toFirestore(), SetOptions(merge: true));
+    } catch (e) {
+      debugPrint('[FirestoreService] saveUserProgress error: $e');
+    }
+  }
+
+  /// Mark a single lesson as complete for a user.
+  Future<UserProgress> toggleLessonComplete({
+    required String userId,
+    required String courseId,
+    required String lessonId,
+    required int totalLessons,
+    UserProgress? existing,
+  }) async {
+    final current = existing ??
+        UserProgress(
+          userId: userId,
+          courseId: courseId,
+          completedLessons: [],
+          status: 'not_started',
+          updatedAt: DateTime.now(),
+        );
+
+    final completedLessons = List<String>.from(current.completedLessons);
+    if (completedLessons.contains(lessonId)) {
+      completedLessons.remove(lessonId);
+    } else {
+      completedLessons.add(lessonId);
+    }
+
+    final status = completedLessons.isEmpty
+        ? 'not_started'
+        : completedLessons.length >= totalLessons
+            ? 'completed'
+            : 'started';
+
+    final updated = current.copyWith(
+      completedLessons: completedLessons,
+      status: status,
+      updatedAt: DateTime.now(),
+    );
+
+    await saveUserProgress(updated);
+    return updated;
   }
 }

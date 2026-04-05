@@ -709,7 +709,13 @@ class ScanResultScreen extends StatelessWidget {
                                 ),
                                 const Spacer(),
                                 TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    final normalizedId = title.toLowerCase()
+                                        .replaceAll(' ', '-')
+                                        .replaceAll('_', '-');
+                                    // Navigate to the article for this resource
+                                    context.push('/article/$normalizedId');
+                                  },
                                   style: TextButton.styleFrom(
                                     padding: EdgeInsets.zero,
                                     minimumSize: Size.zero,

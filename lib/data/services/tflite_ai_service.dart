@@ -56,8 +56,8 @@ class TFLiteAIService {
   Future<void> initialize() async {
     if (_isLoaded) return;
     try {
-      _interpreter = await Interpreter.fromAsset('assets/models/verd.tflite');
-      final rawLabels = await rootBundle.loadString('assets/models/labels_v3.json');
+      _interpreter = await Interpreter.fromAsset('assets/models/model.tflite');
+      final rawLabels = await rootBundle.loadString('assets/models/model_labels.json');
       final Map<String, dynamic> decoded = json.decode(rawLabels);
       _labels = decoded.map((k, v) => MapEntry(int.parse(k), v as String));
       _isLoaded = true;

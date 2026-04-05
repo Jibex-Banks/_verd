@@ -754,6 +754,7 @@ class CropDiseaseKnowledge {
   static String _humanize(String label) {
     return label
         .replaceAll('maize2nd_', 'maize_')
+        .replaceAll('___', ' ')
         .replaceAll('_', ' ')
         .split(' ')
         .map((w) => w.isNotEmpty ? '${w[0].toUpperCase()}${w.substring(1)}' : '')
@@ -761,13 +762,26 @@ class CropDiseaseKnowledge {
   }
 
   static String _extractCrop(String label) {
-    if (label.startsWith('beans')) return 'Beans';
-    if (label.startsWith('cashew')) return 'Cashew';
-    if (label.startsWith('cassava')) return 'Cassava';
-    if (label.startsWith('maize')) return 'Maize';
-    if (label.startsWith('potato')) return 'Potato';
-    if (label.startsWith('rice')) return 'Rice';
-    if (label.startsWith('tomato')) return 'Tomato';
+    final lower = label.toLowerCase();
+    if (lower.startsWith('apple')) return 'Apple';
+    if (lower.startsWith('beans')) return 'Beans';
+    if (lower.startsWith('blueberry')) return 'Blueberry';
+    if (lower.startsWith('cashew')) return 'Cashew';
+    if (lower.startsWith('cassava')) return 'Cassava';
+    if (lower.startsWith('cherry')) return 'Cherry';
+    if (lower.startsWith('corn')) return 'Corn';
+    if (lower.startsWith('grape')) return 'Grape';
+    if (lower.startsWith('maize')) return 'Maize';
+    if (lower.startsWith('orange')) return 'Orange';
+    if (lower.startsWith('peach')) return 'Peach';
+    if (lower.startsWith('pepper')) return 'Pepper';
+    if (lower.startsWith('potato')) return 'Potato';
+    if (lower.startsWith('raspberry')) return 'Raspberry';
+    if (lower.startsWith('rice')) return 'Rice';
+    if (lower.startsWith('soybean')) return 'Soybean';
+    if (lower.startsWith('squash')) return 'Squash';
+    if (lower.startsWith('strawberry')) return 'Strawberry';
+    if (lower.startsWith('tomato')) return 'Tomato';
     return 'Unknown Crop';
   }
 }

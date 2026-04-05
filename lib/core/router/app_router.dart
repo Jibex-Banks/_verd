@@ -83,8 +83,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         return '/login';
       }
 
-      // 2. If user is IN, and trying to access an auth screen (login/signup) -> Redirect to Home
-      if (isAuth &&
+      // 2. If user is IN (and not anonymous), and trying to access an auth screen (login/signup) -> Redirect to Home
+      final isAnonymous = FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
+
+      if (isAuth && !isAnonymous &&
           (state.matchedLocation == '/login' ||
               state.matchedLocation == '/signup' ||
               state.matchedLocation == '/onboarding')) {
@@ -92,7 +94,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       }
 
       // 3. If user is GUEST (anonymous), prevent access to strict authenticated routes
-      final isAnonymous = FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
       if (isAuth && isAnonymous) {
         const guestRestrictedRoutes = [
           '/edit-profile',
