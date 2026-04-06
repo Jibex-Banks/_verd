@@ -16,19 +16,9 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
-  late final List<Widget> _screens;
-
   @override
   void initState() {
     super.initState();
-    _screens = [
-      HomeScreen(
-        onScanTap: () => _onTabTapped(1),
-        onProfileTap: () => _onTabTapped(2),
-      ),
-      const ScanScreen(),
-      const ProfileScreen(),
-    ];
   }
 
   void _onTabTapped(int index) {
@@ -43,7 +33,17 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       backgroundColor: designTheme.surface,
       body: ConnectivityBanner(
-        child: IndexedStack(index: _currentIndex, children: _screens),
+        child: IndexedStack(
+          index: _currentIndex,
+          children: [
+            HomeScreen(
+              onScanTap: () => _onTabTapped(1),
+              onProfileTap: () => _onTabTapped(2),
+            ),
+            ScanScreen(isActive: _currentIndex == 1),
+            const ProfileScreen(),
+          ],
+        ),
       ),
       bottomNavigationBar: SafeArea(
         bottom: true,

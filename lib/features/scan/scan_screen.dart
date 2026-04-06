@@ -14,7 +14,12 @@ import 'package:verd/providers/ai_provider.dart';
 import 'package:verd/providers/auth_provider.dart';
 
 class ScanScreen extends ConsumerStatefulWidget {
-  const ScanScreen({super.key});
+  final bool isActive;
+
+  const ScanScreen({
+    super.key,
+    this.isActive = true,
+  });
 
   @override
   ConsumerState<ScanScreen> createState() => _ScanScreenState();
@@ -31,30 +36,49 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _initCamera();
+    if (widget.isActive) {
+      _initCamera();
+    }
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (!mounted) return;
+    if (!mounted || !widget.isActive) return;
 
     if (state == AppLifecycleState.resumed) {
-      // Resume preview when app comes to foreground
-      if (_cameraController != null && _isInit) {
-        _cameraController!.resumePreview();
-      }
+      _initCamera();
     } else if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.inactive) {
-      // Pause preview when app goes to background
-      if (_cameraController != null && _isInit) {
-        _cameraController!.pausePreview();
-      }
+      _disposeCamera();
     }
   }
 
   @override
   void didUpdateWidget(ScanScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (widget.isActive != oldWidget.isActive) {
+      if (widget.isActive) {
+        _initCamera();
+      } else {
+        _disposeCamera();
+      }
+    }
+  }
+
+  Future<void> _disposeCamera() async {
+    final controller = _cameraController;
+    _cameraController = null;
+    
+    if (mounted) {
+      setState(() {
+        _isInit = false;
+        _isCameraInitializing = false;
+      });
+    }
+    
+    if (controller != null) {
+      await controller.dispose();
+    }
   }
 
   Future<void> _initCamera() async {
@@ -80,16 +104,23 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
 
       await _cameraController!.initialize();
 
-      if (mounted) {
-        setState(() {
-          _isInit = true;
-        });
-        debugPrint("Camera initialized successfully");
+      if (!mounted || !widget.isActive) {
+        await _cameraController?.dispose();
+        _cameraController = null;
+        _isCameraInitializing = false;
+        return;
       }
+
+      setState(() {
+        _isInit = true;
+      });
+      debugPrint("Camera initialized successfully");
     } catch (e) {
       debugPrint("Camera Error: $e");
     } finally {
-      _isCameraInitializing = false;
+      if (mounted) {
+        _isCameraInitializing = false;
+      }
     }
   }
 
@@ -247,7 +278,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _cameraController?.dispose();
+    _disposeCamera();
     super.dispose();
   }
 
