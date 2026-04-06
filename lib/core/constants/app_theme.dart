@@ -61,7 +61,6 @@ class AppColors {
 class AppTypography {
   // Font families
   static const String primaryFont = 'Inter';
-  static const String secondaryFont = 'SF Pro';
 
   // Font weights
   static const FontWeight regular = FontWeight.w400;
