@@ -63,3 +63,4 @@ Code_Review.txt
 *.tflite
 new_design_plan/
 tmp/
+inspect_model.py

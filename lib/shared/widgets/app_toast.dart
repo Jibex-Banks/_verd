@@ -91,7 +91,7 @@ class _ToastWidgetState extends State<_ToastWidget>
   Color _bg(BuildContext context, AppDesignSystem theme) => switch (widget.variant) {
         ToastVariant.success => theme.accentGreen,
         ToastVariant.error   => Theme.of(context).colorScheme.error,
-        ToastVariant.warning => Colors.orange,
+        ToastVariant.warning => theme.semanticWarning,
         ToastVariant.info    => theme.surface,
       };
 
@@ -131,7 +131,13 @@ class _ToastWidgetState extends State<_ToastWidget>
                     decoration: BoxDecoration(
                       color: _bg(context, designTheme),
                       borderRadius: BorderRadius.circular(designTheme.radiusStandard),
-                      boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 10, offset: Offset(0, 4))],
+                      boxShadow: [
+                        BoxShadow(
+                          color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.22),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
                     child: Row(
                       children: [

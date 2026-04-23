@@ -1,4 +1,5 @@
 import 'package:verd/l10n/app_localizations.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -32,6 +33,7 @@ class _ScanHistoryScreenState extends ConsumerState<ScanHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     final designTheme = AppDesignSystem.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
     final user = ref.watch(currentUserProvider);
 
     if (user == null) {
@@ -124,7 +126,7 @@ class _ScanHistoryScreenState extends ConsumerState<ScanHistoryScreen> {
                         filter['label']!,
                         style: designTheme.bodyRegular.copyWith(
                           color: isSelected
-                              ? Colors.white
+                              ? colorScheme.onPrimary
                               : designTheme.textMain.withOpacity(0.6),
                           fontWeight:
                               isSelected ? FontWeight.w800 : FontWeight.w600,
@@ -260,6 +262,7 @@ class _ScanHistoryScreenState extends ConsumerState<ScanHistoryScreen> {
     required IconData icon,
     required VoidCallback onTap,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -270,12 +273,12 @@ class _ScanHistoryScreenState extends ConsumerState<ScanHistoryScreen> {
           shape: BoxShape.circle,
           border: Border.all(color: designTheme.textMain.withOpacity(0.05)),
           boxShadow: [
-             BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-             )
-          ]
+            BoxShadow(
+              color: colorScheme.shadow.withValues(alpha: 0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Icon(icon, color: designTheme.textMain, size: 22),
       ),
@@ -284,6 +287,7 @@ class _ScanHistoryScreenState extends ConsumerState<ScanHistoryScreen> {
 
   Widget _buildHistoryCard(BuildContext context, ScanResult item, AppDesignSystem dt) {
     final statusColor = _getStatusColor(item.diagnosis, dt);
+    final colorScheme = Theme.of(context).colorScheme;
     
     return AppCard(
       padding: const EdgeInsets.all(16.0),
@@ -300,8 +304,14 @@ class _ScanHistoryScreenState extends ConsumerState<ScanHistoryScreen> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: item.imageUrl != null
-                  ? Image.network(item.imageUrl!, fit: BoxFit.cover)
-                  : Icon(Icons.image_outlined, color: statusColor),
+                  ? _buildHistoryImage(item, statusColor)
+                  : (item.localImagePath != null &&
+                          File(item.localImagePath!).existsSync())
+                      ? Image.file(
+                          File(item.localImagePath!),
+                          fit: BoxFit.cover,
+                        )
+                      : Icon(Icons.image_outlined, color: statusColor),
             ),
           ),
           const SizedBox(width: 16.0),
@@ -335,7 +345,7 @@ class _ScanHistoryScreenState extends ConsumerState<ScanHistoryScreen> {
                         child: Text(
                           item.diagnosis.toUpperCase(),
                           style: dt.bodyRegular.copyWith(
-                            color: Colors.white,
+                            color: colorScheme.onPrimary,
                             fontWeight: FontWeight.w900,
                             fontSize: 9,
                             letterSpacing: 0.5,
@@ -375,6 +385,19 @@ class _ScanHistoryScreenState extends ConsumerState<ScanHistoryScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildHistoryImage(ScanResult item, Color statusColor) {
+    final localPath = item.localImagePath;
+    final hasLocal = localPath != null && File(localPath).existsSync();
+    if (hasLocal) {
+      return Image.file(File(localPath), fit: BoxFit.cover);
+    }
+    return Image.network(
+      item.imageUrl!,
+      fit: BoxFit.cover,
+      errorBuilder: (_, __, ___) => Icon(Icons.image_not_supported_outlined, color: statusColor),
     );
   }
 

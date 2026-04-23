@@ -172,6 +172,20 @@ class CropDiseaseKnowledge {
       ],
       disclaimer: 'No effective chemical treatment exists. Prevention with clean cuttings is essential.',
     ),
+    'cassava_brown_streak_disease': CropDiseaseKnowledge(
+      displayName: 'Cassava Brown Streak Disease',
+      cropType: 'Cassava',
+      healthStatus: 'Critical',
+      visualSigns: 'Yellow to brown streaks on stems, chlorotic patches on leaves, and brown corky necrosis in storage roots.',
+      treatment: 'No curative treatment. Remove infected plants, use certified clean cuttings, and control whitefly vectors.',
+      actionSteps: [
+        'Rogue and destroy infected plants early',
+        'Plant only virus-free certified cassava cuttings',
+        'Control whiteflies with integrated pest management',
+        'Use tolerant or resistant cassava varieties where available',
+      ],
+      disclaimer: 'CBSD is viral and cannot be cured once established. Prevention and clean planting material are critical.',
+    ),
     'cassava_brown_spot': CropDiseaseKnowledge(
       displayName: 'Cassava Brown Spot',
       cropType: 'Cassava',
@@ -184,6 +198,20 @@ class CropDiseaseKnowledge {
         'Avoid planting in low-lying, poorly drained areas',
         'Use resistant varieties where available',
       ],
+    ),
+    'cassava_green_mottle': CropDiseaseKnowledge(
+      displayName: 'Cassava Green Mottle',
+      cropType: 'Cassava',
+      healthStatus: 'Warning',
+      visualSigns: 'Mottled light-green and dark-green patching on leaves, sometimes with mild distortion and reduced vigor.',
+      treatment: 'Use clean planting materials, remove heavily affected plants, and control insect vectors.',
+      actionSteps: [
+        'Remove severely affected plants to reduce spread',
+        'Use certified disease-free cassava cuttings',
+        'Control vector insects and nearby alternate hosts',
+        'Monitor new growth weekly for worsening mosaic symptoms',
+      ],
+      disclaimer: 'Green mottle symptoms can overlap with other viral disorders; confirm in field when possible.',
     ),
     'cassava_green_mite': CropDiseaseKnowledge(
       displayName: 'Cassava Green Mite',

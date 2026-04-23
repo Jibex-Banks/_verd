@@ -93,8 +93,15 @@ class ScanRepository {
         scanMap[scan.id] = scan;
       }
       for (final scan in remoteScans) {
-        // Remote takes precedence (it's the authoritative source)
-        scanMap[scan.id] = scan;
+        // Prefer remote analysis fields, but retain local image path when available.
+        final local = scanMap[scan.id];
+        if (local != null) {
+          scanMap[scan.id] = scan.copyWith(
+            localImagePath: scan.localImagePath ?? local.localImagePath,
+          );
+        } else {
+          scanMap[scan.id] = scan;
+        }
       }
 
       final merged = scanMap.values.toList()

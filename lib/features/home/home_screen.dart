@@ -36,6 +36,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     if (_isLoading) {
       return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -233,6 +234,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _buildLoadingTopics() {
+    final designTheme = AppDesignSystem.of(context);
     return GridView.count(
       crossAxisCount: 2,
       shrinkWrap: true,
@@ -244,7 +246,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         4,
         (index) => Container(
           decoration: BoxDecoration(
-            color: Colors.grey.withOpacity(0.1),
+            color: designTheme.surface.withValues(alpha: 0.4),
             borderRadius: BorderRadius.circular(20),
           ),
         ),
@@ -267,11 +269,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Color _courseColor(int index) {
-    const colors = [
-      Color(0xFFE53935), // Red
-      Color(0xFF4CAF50), // Green
-      Color(0xFF2196F3), // Blue
-      Color(0xFFFF9800), // Orange
+    final designTheme = AppDesignSystem.of(context);
+    final colors = [
+      designTheme.semanticError,
+      designTheme.accentGreen,
+      designTheme.secondary,
+      designTheme.semanticWarning,
     ];
     return colors[index % colors.length];
   }
@@ -310,6 +313,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _buildTipOfTheDay(BuildContext context, AppDesignSystem designTheme) {
+    final colorScheme = Theme.of(context).colorScheme;
     final tip = ref.watch(tipOfTheDayProvider);
     final tipText = tip?.text ?? AppLocalizations.of(context)!.early_detection_desc;
 
@@ -332,13 +336,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.15),
+              color: colorScheme.onPrimary.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(100),
             ),
             child: Text(
               AppLocalizations.of(context)!.tip_of_the_day.toUpperCase(),
               style: designTheme.bodyRegular.copyWith(
-                color: Colors.white,
+                color: colorScheme.onPrimary,
                 fontWeight: FontWeight.w800,
                 fontSize: 10,
                 letterSpacing: 1.2,
@@ -349,7 +353,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           Text(
             AppLocalizations.of(context)!.early_detection_title,
             style: designTheme.titleLarge.copyWith(
-              color: Colors.white,
+              color: colorScheme.onPrimary,
               fontWeight: FontWeight.w800,
               fontSize: 22.0,
             ),
@@ -358,7 +362,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           Text(
             tipText,
             style: designTheme.bodyRegular.copyWith(
-              color: Colors.white.withOpacity(0.9),
+              color: colorScheme.onPrimary.withValues(alpha: 0.9),
               height: 1.5,
               fontSize: 15.0,
             ),
@@ -376,6 +380,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     VoidCallback? onTap,
   }) {
     final designTheme = AppDesignSystem.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
     return BouncingCard(
       onTap: onTap,
       child: Container(
@@ -386,7 +391,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           border: Border.all(color: designTheme.textMain.withOpacity(0.04)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.06),
+              color: colorScheme.shadow.withValues(alpha: 0.12),
               blurRadius: 12,
               offset: const Offset(0, 6),
             ),
@@ -463,6 +468,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     VoidCallback? onTap,
   }) {
     final designTheme = AppDesignSystem.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
     return BouncingCard(
       onTap: onTap,
       child: Container(
@@ -472,7 +478,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           border: Border.all(color: designTheme.textMain.withOpacity(0.04)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.06),
+              color: colorScheme.shadow.withValues(alpha: 0.12),
               blurRadius: 12,
               offset: const Offset(0, 6),
             ),

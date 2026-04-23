@@ -64,7 +64,7 @@ class _AppBannerState extends State<AppBanner>
   Color _bg(BuildContext context, AppDesignSystem theme) => switch (widget.variant) {
         BannerVariant.success => theme.accentGreen,
         BannerVariant.error   => Theme.of(context).colorScheme.error,
-        BannerVariant.warning => Colors.orange,
+        BannerVariant.warning => theme.semanticWarning,
         BannerVariant.info    => theme.primary,
       };
 

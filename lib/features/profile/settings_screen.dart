@@ -16,7 +16,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final designTheme = AppDesignSystem.of(context);
-    final headerBgColor = Theme.of(context).brightness == Brightness.dark ? const Color(0xFF081C0B) : const Color(0xFF13401A);
+    final colorScheme = Theme.of(context).colorScheme;
+    final headerBgColor = colorScheme.primaryContainer;
 
     return Scaffold(
       backgroundColor: headerBgColor,
@@ -30,7 +31,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               width: 200,
               height: 200,
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.05),
+                color: colorScheme.onPrimaryContainer.withValues(alpha: 0.05),
                 shape: BoxShape.circle,
               ),
             ),
@@ -42,7 +43,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               width: 160,
               height: 160,
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.05),
+                color: colorScheme.onPrimaryContainer.withValues(alpha: 0.05),
                 shape: BoxShape.circle,
               ),
             ),
@@ -65,12 +66,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           Text(
                             AppLocalizations.of(context)!.preferences_support,
                             style: designTheme.titleLarge.copyWith(
-                              color: Colors.white, 
+                              color: colorScheme.onPrimaryContainer, 
                               fontWeight: FontWeight.w800
                             ),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.arrow_back, color: Colors.white),
+                            icon: Icon(Icons.arrow_back, color: colorScheme.onPrimaryContainer),
                             onPressed: () => Navigator.pop(context),
                           ),
                         ],
@@ -119,7 +120,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           _buildMenuItem(
                             designTheme: designTheme,
                             icon: Icons.notifications_none,
-                            iconColor: const Color(0xFFE91E63), // Pink
+                            iconColor: designTheme.semanticError,
                             title: AppLocalizations.of(context)!.notifications,
                             onTap: () => context.push('/notifications'),
                           ),
@@ -127,7 +128,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           _buildMenuItem(
                             designTheme: designTheme,
                             icon: Icons.language,
-                            iconColor: const Color(0xFF9C27B0), // Purple
+                            iconColor: designTheme.secondary,
                             title: AppLocalizations.of(context)!.change_language,
                             onTap: () => context.push('/language'),
                           ),
@@ -141,7 +142,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           _buildMenuItem(
                             designTheme: designTheme,
                             icon: Icons.help_outline,
-                            iconColor: const Color(0xFF00BCD4), // Cyan
+                            iconColor: designTheme.primary,
                             title: AppLocalizations.of(context)!.help_support,
                             onTap: () => context.push('/help-support'),
                           ),
@@ -211,14 +212,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     
     // Determine active icon 
     IconData activeIcon = Icons.brightness_auto;
-    Color activeColor = const Color(0xFF673AB7); // Deep Purple
+    Color activeColor = designTheme.secondary;
     
     if (currentMode == ThemeMode.dark) {
       activeIcon = Icons.dark_mode;
-      activeColor = const Color(0xFF3F51B5); // Indigo
+      activeColor = designTheme.primary;
     } else if (currentMode == ThemeMode.light) {
       activeIcon = Icons.light_mode;
-      activeColor = const Color(0xFFFF9800); // Orange
+      activeColor = designTheme.semanticWarning;
     }
 
     return Padding(

@@ -113,6 +113,7 @@ class ScanResult extends HiveObject {
     return {
       'userId': userId,
       'imageUrl': imageUrl,
+      'localImagePath': localImagePath,
       'plantName': plantName,
       'diagnosis': diagnosis,
       'confidence': confidence,

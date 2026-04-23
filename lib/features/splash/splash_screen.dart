@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:verd/core/constants/app_assets.dart';
 import 'package:verd/core/constants/app_theme.dart';
+import 'package:verd/core/theme/app_design_system.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -67,10 +68,10 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final designTheme = AppDesignSystem.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: colorScheme.surface,
+      backgroundColor: isDark ? const Color(0xFF0D0F14) : designTheme.background,
       body: Stack(
         children: [
           // ── Green Gas / Mist Effect at the bottom ──
@@ -109,9 +110,9 @@ class _SplashScreenState extends State<SplashScreen>
                     // App Name
                     Text(
                       'VERD',
-                      style: AppTypography.h2.copyWith(
+                      style: (isDark ? AppTypography.h2 : designTheme.displayMedium).copyWith(
                         fontWeight: FontWeight.bold,
-                        color: isDark ? AppColors.primary : AppColors.gray800,
+                        color: isDark ? AppColors.primary : designTheme.primary,
                         letterSpacing: 4,
                       ),
                     ),
@@ -121,8 +122,8 @@ class _SplashScreenState extends State<SplashScreen>
                     // Tagline
                     Text(
                       AppLocalizations.of(context)!.splash_tagline,
-                      style: AppTypography.body.copyWith(
-                        color: isDark ? AppColors.primary200 : AppColors.gray700,
+                      style: (isDark ? AppTypography.body : designTheme.bodyRegular).copyWith(
+                        color: isDark ? AppColors.primary200 : designTheme.textDim,
                         fontSize: 13,
                         letterSpacing: 3,
                         fontWeight: FontWeight.w500,
@@ -130,18 +131,6 @@ class _SplashScreenState extends State<SplashScreen>
                     ),
 
                     const Spacer(flex: 4),
-
-                    // Bottom text
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 48),
-                      child: Text(
-                        AppLocalizations.of(context)!.splash_powered,
-                        style: AppTypography.bodySmall.copyWith(
-                          color: isDark ? AppColors.primary200.withValues(alpha: 0.7) : AppColors.gray600,
-                          fontSize: 13,
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),

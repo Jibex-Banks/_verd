@@ -101,7 +101,7 @@ class LoadingOverlay extends StatelessWidget {
         // Absorb all touches while loading
           AbsorbPointer(
             child: Container(
-              color: Colors.black.withOpacity(0.6), // Dim background
+              color: Theme.of(context).colorScheme.scrim.withValues(alpha: 0.6), // Dim background
               child: Center(
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 280),

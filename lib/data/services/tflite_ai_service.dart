@@ -5,28 +5,47 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:image/image.dart' as img;
+import 'dart:typed_data';
 import 'package:verd/data/services/crop_disease_knowledge.dart';
 import 'package:verd/data/services/yolo_service.dart';
 
 // Top-level function for Isolate execution to prevent UI stuttering
-Uint8List _processImageInIsolate(Uint8List bytes) {
+dynamic _processImageInIsolate(Map<String, dynamic> data) {
+  final Uint8List bytes = data['bytes'];
+  final int width = data['width'];
+  final int height = data['height'];
+  final bool isFloat = data['isFloat'];
+
   final image = img.decodeImage(bytes);
   if (image == null) throw Exception('Unable to decode image data');
 
-  final resized = img.copyResize(image, width: 224, height: 224);
-  final inputBytes = Uint8List(1 * 224 * 224 * 3);
-  int i = 0;
+  final resized = img.copyResize(image, width: width, height: height);
 
-  // Convert to [1, 224, 224, 3] format (normalized 0–255 uint8)
-  for (int y = 0; y < 224; y++) {
-    for (int x = 0; x < 224; x++) {
-      final p = resized.getPixel(x, y);
-      inputBytes[i++] = p.r.toInt();
-      inputBytes[i++] = p.g.toInt();
-      inputBytes[i++] = p.b.toInt();
+  if (isFloat) {
+    var inputBytes = Float32List(1 * width * height * 3);
+    int i = 0;
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        final p = resized.getPixel(x, y);
+        inputBytes[i++] = p.r.toDouble() / 255.0;
+        inputBytes[i++] = p.g.toDouble() / 255.0;
+        inputBytes[i++] = p.b.toDouble() / 255.0;
+      }
     }
+    return inputBytes;
+  } else {
+    var inputBytes = Uint8List(1 * width * height * 3);
+    int i = 0;
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        final p = resized.getPixel(x, y);
+        inputBytes[i++] = p.r.toInt();
+        inputBytes[i++] = p.g.toInt();
+        inputBytes[i++] = p.b.toInt();
+      }
+    }
+    return inputBytes;
   }
-  return inputBytes;
 }
 
 /// Result for a single prediction candidate
@@ -53,11 +72,16 @@ class TFLiteAIService {
 
   bool get isLoaded => _isLoaded;
 
+  bool _isFloatTensorType(Object type) {
+    final typeName = type.toString().toLowerCase();
+    return typeName.contains('float32');
+  }
+
   Future<void> initialize() async {
     if (_isLoaded) return;
     try {
-      _interpreter = await Interpreter.fromAsset('assets/models/model.tflite');
-      final rawLabels = await rootBundle.loadString('assets/models/model_labels.json');
+      _interpreter = await Interpreter.fromAsset('assets/models/new_verd.tflite');
+      final rawLabels = await rootBundle.loadString('assets/models/new_verd_labels.json');
       final Map<String, dynamic> decoded = json.decode(rawLabels);
       _labels = decoded.map((k, v) => MapEntry(int.parse(k), v as String));
       _isLoaded = true;
@@ -70,6 +94,11 @@ class TFLiteAIService {
   Future<Map<String, dynamic>> analyzeImage(File imageFile) async {
     if (!_isLoaded) {
       await initialize();
+    }
+    if (!_isLoaded) {
+      throw Exception(
+        'Offline model failed to initialize. Ensure assets/models/new_verd.tflite exists.',
+      );
     }
 
     try {
@@ -86,13 +115,45 @@ class TFLiteAIService {
       File? processingFile = await _yoloService.cropLeaf(imageFile);
       processingFile ??= imageFile; // fallback to full image
 
-      // 3. Offload preprocessing to a background Isolate
-      final bytes = await processingFile.readAsBytes();
-      final preprocessedBytes = await compute(_processImageInIsolate, bytes);
+      // 3. Dynamically read model I/O signatures
+      final inputTensor = _interpreter.getInputTensor(0);
+      final inputShape = inputTensor.shape;
+      final inputType = inputTensor.type;
+      final int targetWidth = inputShape[1];
+      final int targetHeight = inputShape[2];
+      final bool isFloat = _isFloatTensorType(inputType);
 
-      final input = preprocessedBytes.reshape([1, 224, 224, 3]);
-      final outputSize = _labels.length;
-      final output = List.filled(outputSize, 0).reshape([1, outputSize]);
+      // 4. Offload preprocessing to a background Isolate
+      final bytes = await processingFile.readAsBytes();
+      final preprocessedBytes = await compute(_processImageInIsolate, {
+        'bytes': bytes,
+        'width': targetWidth,
+        'height': targetHeight,
+        'isFloat': isFloat,
+      });
+
+      dynamic input;
+      if (isFloat) {
+        input = (preprocessedBytes as Float32List).reshape(inputShape);
+      } else {
+        input = (preprocessedBytes as Uint8List).reshape(inputShape);
+      }
+
+      final outputTensor = _interpreter.getOutputTensor(0);
+      final outputShape = outputTensor.shape;
+      final bool isOutputFloat = _isFloatTensorType(outputTensor.type);
+
+      int totalOutputSize = 1;
+      for (var dim in outputShape) {
+        totalOutputSize *= dim;
+      }
+
+      dynamic output;
+      if (isOutputFloat) {
+        output = List.filled(totalOutputSize, 0.0).reshape(outputShape);
+      } else {
+        output = List.filled(totalOutputSize, 0).reshape(outputShape);
+      }
 
       _interpreter.run(input, output);
 

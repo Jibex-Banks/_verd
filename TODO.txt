@@ -7,26 +7,6 @@ location permission/based learning center articles
 
 
 
-[x] 1. Delay camera permission till on scan page (EST: 5 Minutes)
-Why it's fast: It only requires moving the requestPermission() call. Currently, you probably ask for it during app startup or onboarding. We just need to delete that code and place it inside the 
-
-initState
- (or on a button tap) specifically inside scan_screen.dart. Very straightforward.
-
-[x]2. Change icon and the size of the icon (EST: 10 - 15 Minutes)
-Why it's fast: Assuming you mean the app's launcher icon, Flutter makes this easy with the flutter_launcher_icons package. We just add the new icon image to your assets folder, update a few lines in pubspec.yaml, and run one terminal command to generate all the required Android/iOS icon sizes automatically.
-
-[x] 3. Chat and support screen / Contact us (EST: 30 Minutes)
-Why it takes a bit longer: We need to build a new UI screen (support_screen.dart). It will likely have a few buttons: "Email Us", "Call Us", or a link to a WhatsApp chat. We'll use the url_launcher package to actually open the phone's mail app, dialer, or browser. It's simple but requires setting up the layout, routing, and testing the links.
-
-[x] 4. Allow free trial (3 scans) then show signup screen (EST: 1 - 2 Hours)
-Why it takes longer: This requires a mix of state management and local storage.
-
-We have to use SharedPreferences to track scan_count.
-Every time a scan completes, increment the counter.
-Once scan_count >= 3, we have to intercept the "Scan" button tap and redirect the user to /signup instead, perhaps with a popup explaining that they've reached their free limit.
-We need to make sure the app flow handles logged-in users differently so they bypass the limit.
-
 5. Location permission / location-based learning center articles (EST: 2 - 3 Hours)
 Why it takes longer:
 

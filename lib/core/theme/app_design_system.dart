@@ -49,7 +49,56 @@ class AppDesignSystem extends ThemeExtension<AppDesignSystem> {
 
   /// Safer lookup for the [AppDesignSystem] extension.
   static AppDesignSystem of(BuildContext context) {
-    return Theme.of(context).extension<AppDesignSystem>() ?? AppDesignSystem.dark();
+    final theme = Theme.of(context);
+    return theme.extension<AppDesignSystem>() ??
+        (theme.brightness == Brightness.dark
+            ? AppDesignSystem.dark()
+            : AppDesignSystem.light());
+  }
+
+  /// Factory establishing the default light theme parameters.
+  factory AppDesignSystem.light() {
+    const textMainColor = Color(0xFF212121);
+    return AppDesignSystem(
+      primary: const Color(0xFF4CAF50),
+      secondary: const Color(0xFF388E3C),
+      background: const Color(0xFFF5F5F5),
+      surface: const Color(0xFFFFFFFF),
+      accentGreen: const Color(0xFF2E7D32),
+      textMain: textMainColor,
+      textDim: const Color(0x99000000),
+      semanticError: const Color(0xFFE53935),
+      semanticWarning: const Color(0xFFFB8C00),
+      accentRed: const Color(0xFFE53935),
+      radiusStandard: 24.0,
+      touchTargetMin: 44.0,
+      displayLarge: const TextStyle(
+        fontSize: 72,
+        fontWeight: FontWeight.bold,
+        letterSpacing: -2,
+        fontStyle: FontStyle.italic,
+        color: textMainColor,
+      ),
+      displayMedium: const TextStyle(
+        fontSize: 32,
+        fontWeight: FontWeight.bold,
+        color: textMainColor,
+      ),
+      titleLarge: const TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+        fontStyle: FontStyle.italic,
+        color: textMainColor,
+      ),
+      bodyRegular: const TextStyle(
+        fontSize: 16,
+        color: textMainColor,
+      ),
+      bodySmall: const TextStyle(
+        fontSize: 12,
+        color: textMainColor,
+      ),
+    );
   }
 
   /// Factory establishing the default dark theme parameters.

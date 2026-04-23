@@ -62,6 +62,7 @@ class _SuccessIndicatorState extends State<SuccessIndicator>
   @override
   Widget build(BuildContext context) {
     final designTheme = Theme.of(context).extension<AppDesignSystem>()!;
+    final colorScheme = Theme.of(context).colorScheme;
     final color = widget.color ?? designTheme.accentGreen;
     final s = widget.size;
 
@@ -254,13 +255,19 @@ class SuccessDialog extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: designTheme.primary,
-                    foregroundColor: Colors.white,
+                    foregroundColor: colorScheme.onPrimary,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12.0)),
                   ),
-                  child: Text(actionLabel!, style: designTheme.bodyRegular.copyWith(fontWeight: FontWeight.w600, color: Colors.white)),
+                  child: Text(
+                    actionLabel!,
+                    style: designTheme.bodyRegular.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: colorScheme.onPrimary,
+                    ),
+                  ),
                 ),
               ),
             ],

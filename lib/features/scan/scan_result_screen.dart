@@ -15,6 +15,7 @@ class ScanResultScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designTheme = AppDesignSystem.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
     final analysis = scanResult['analysis'] as Map<String, dynamic>? ?? {};
     final engine = scanResult['engine'] as String? ?? 'unknown';
     final timestamp = scanResult['timestamp'] as String? ?? '';
@@ -68,7 +69,7 @@ class ScanResultScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(designTheme.radiusStandard),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
+                      color: colorScheme.shadow.withValues(alpha: 0.22),
                       blurRadius: 15,
                       offset: const Offset(0, 8),
                     ),
@@ -344,7 +345,7 @@ class ScanResultScreen extends StatelessWidget {
                             child: Text(
                               severity.toUpperCase(),
                               style: designTheme.bodyRegular.copyWith(
-                                color: Colors.white,
+                                color: colorScheme.onPrimary,
                                 fontWeight: FontWeight.w800,
                                 fontSize: 10,
                                 letterSpacing: 0.5,
@@ -599,7 +600,7 @@ class ScanResultScreen extends StatelessWidget {
                           children: [
                             Icon(
                               Icons.check_circle,
-                              color: Colors.green,
+                              color: designTheme.accentGreen,
                               size: 16,
                             ),
                             const SizedBox(width: 8),
@@ -672,7 +673,7 @@ class ScanResultScreen extends StatelessWidget {
                                   child: Text(
                                     priority.toUpperCase(),
                                     style: designTheme.bodyRegular.copyWith(
-                                      color: Colors.white,
+                                      color: colorScheme.onPrimary,
                                       fontWeight: FontWeight.w800,
                                       fontSize: 9,
                                     ),
@@ -782,7 +783,7 @@ class ScanResultScreen extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: designTheme.primary,
-                    foregroundColor: Colors.white,
+                    foregroundColor: colorScheme.onPrimary,
                     elevation: 0,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -790,7 +791,7 @@ class ScanResultScreen extends StatelessWidget {
                   child: Text(
                     AppLocalizations.of(context)!.save_result,
                     style: designTheme.bodyRegular.copyWith(
-                      color: Colors.white,
+                      color: colorScheme.onPrimary,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -817,7 +818,7 @@ class ScanResultScreen extends StatelessWidget {
         border: Border.all(color: designTheme.textMain.withOpacity(0.05)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.15),
+            color: Colors.black.withValues(alpha: 0.18),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),

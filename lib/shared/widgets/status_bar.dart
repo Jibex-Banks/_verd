@@ -76,7 +76,7 @@ class AppStatusBar extends StatelessWidget {
     return switch (variant) {
       StatusBarVariant.success => designTheme.accentGreen.withOpacity(0.10),
       StatusBarVariant.error   => errorColor.withOpacity(0.10),
-      StatusBarVariant.warning => const Color(0xFFF1C40F).withOpacity(0.10),
+      StatusBarVariant.warning => designTheme.semanticWarning.withOpacity(0.10),
       StatusBarVariant.info    => designTheme.primary.withOpacity(0.10),
     };
   }
@@ -87,7 +87,7 @@ class AppStatusBar extends StatelessWidget {
     return switch (variant) {
       StatusBarVariant.success => designTheme.accentGreen,
       StatusBarVariant.error   => errorColor,
-      StatusBarVariant.warning => const Color(0xFFD4AC0D),
+      StatusBarVariant.warning => designTheme.semanticWarning,
       StatusBarVariant.info    => designTheme.primary,
     };
   }
@@ -98,7 +98,7 @@ class AppStatusBar extends StatelessWidget {
     return switch (variant) {
       StatusBarVariant.success => designTheme.accentGreen,
       StatusBarVariant.error   => errorColor,
-      StatusBarVariant.warning => const Color(0xFFF1C40F),
+      StatusBarVariant.warning => designTheme.semanticWarning,
       StatusBarVariant.info    => designTheme.primary,
     };
   }

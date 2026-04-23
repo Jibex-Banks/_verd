@@ -30,6 +30,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final designTheme = AppDesignSystem.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       backgroundColor: designTheme.surface,
       body: ConnectivityBanner(
@@ -56,7 +57,7 @@ class _MainScreenState extends State<MainScreen> {
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: colorScheme.shadow.withValues(alpha: 0.1),
                 blurRadius: 20,
                 offset: const Offset(0, -5),
               ),
@@ -93,7 +94,7 @@ class _MainScreenState extends State<MainScreen> {
             ),
             gap: 8,
             color: designTheme.textDim,
-            activeColor: Colors.white,
+            activeColor: colorScheme.onPrimary,
             iconSize: 24,
             tabBackgroundColor: designTheme.primary,
             padding: const EdgeInsets.symmetric(

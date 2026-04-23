@@ -58,6 +58,7 @@ class AIRoutingService {
           'engine': 'gemini_direct_api',
           'timestamp': DateTime.now().toIso8601String(),
           'imageUrl': imageUrl,
+          'localImagePath': image.path,
           'analysis': analysisData,
         };
 
@@ -69,6 +70,7 @@ class AIRoutingService {
           id: scanId,
           userId: userId,
           imageUrl: imageUrl,
+          localImagePath: image.path,
           plantName: analysisData['cropType'] ?? 'Unknown',
           diagnosis: analysisData['healthStatus'] ?? 'Unknown',
           confidence: (analysisData['confidence'] as num?)?.toDouble() ?? 0.0,
@@ -99,13 +101,18 @@ class AIRoutingService {
         return {
           ...localResult,
           'imageUrl': null, // Upload likely failed or didn't exist
+          'localImagePath': image.path,
           'cloudFallback': true,
           'cloudError': e.toString(),
         };
       }
     } else {
       // --- OFFLINE PATH (Local TFLite Model) ---
-      return await _localMLService.analyzeCropOffline(image);
+      final localResult = await _localMLService.analyzeCropOffline(image);
+      return {
+        ...localResult,
+        'localImagePath': image.path,
+      };
     }
   }
 }

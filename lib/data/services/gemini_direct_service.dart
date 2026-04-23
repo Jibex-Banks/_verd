@@ -26,10 +26,31 @@ class GeminiDirectService {
 
       // The exact prompt we were using in the Firebase Extension
       final prompt = '''
-      Analyze this crop image. Identify the cropType, healthStatus (Healthy/Warning/Critical), and confidence (0.0 to 1.0). 
-      List any diseases with name, severity, and treatment. Reply in strict JSON format matching this structure: 
-      {"cropType": "name", "healthStatus": "status", "confidence": 0.9, "diseases": [{"name": "disease", "severity": "low", "treatment": "cure"}], "visualSigns": "What to look for", "actionSteps": ["Step 1", "Step 2"]}
-      ''';
+Act as a Lead Agronomist and Expert Phytopathologist. Your task is to analyze the provided crop image for the AgriScan-AI diagnostic system. 
+
+You must adopt a methodical diagnostic reasoning process: First, carefully observe and document the visual signs (e.g., chlorotic halos, necrotic lesions, fungal hyphae). Second, use these signs to identify the specific crop type and any underlying diseases. Finally, recommend actionable mitigation protocols.
+
+MANDATE: You must return your analysis STRICTLY as a valid, parsable JSON object. Do not include any Markdown formatting, conversational filler, or code block delimiters (e.g., do not output ```json).
+
+Adhere exactly to the following JSON schema:
+{
+  "cropType": "String (The identified plant species, e.g., Maize, Cassava, Tomato)",
+  "healthStatus": "String (Must be exactly one of: Healthy, Warning, Critical)",
+  "confidence": "Float (A value between 0.0 and 1.0 representing your diagnostic certainty)",
+  "visualSigns": "String (Detailed description of the botanical symptoms observed)",
+  "diseases": [
+    {
+      "name": "String (Scientific or common name of the detected pathogen/disease)",
+      "severity": "String (Must be one of: Low, Medium, High)",
+      "treatment": "String (Specific agronomic mitigation protocol)"
+    }
+  ],
+  "actionSteps": [
+    "String (Immediate action step 1)",
+    "String (Immediate action step 2)"
+  ]
+}
+''';
 
       // Dynamically determine the MIME type
       final mimeType = lookupMimeType(imageFile.path) ?? 'image/jpeg';

@@ -170,6 +170,7 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen>
   @override
   Widget build(BuildContext context) {
     final designTheme = AppDesignSystem.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       backgroundColor: designTheme.background,
@@ -186,7 +187,7 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen>
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: colorScheme.shadow.withValues(alpha: 0.1),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -203,8 +204,9 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen>
         title: Text(
           'Gallery Scan',
           style: designTheme.titleLarge.copyWith(
-            color: designTheme.textMain,
+            color: designTheme.primary,
             fontWeight: FontWeight.w800,
+            fontStyle: FontStyle.italic,
           ),
         ),
         centerTitle: true,
@@ -247,6 +249,7 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen>
 
   /// The main prompt shown when permission is granted.
   Widget _buildPickerPrompt(AppDesignSystem dt) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 40.0),
@@ -302,7 +305,7 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen>
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: dt.primary,
-                        foregroundColor: Colors.white,
+                        foregroundColor: colorScheme.onPrimary,
                         elevation: 8,
                         shadowColor: dt.primary.withOpacity(0.4),
                         padding: const EdgeInsets.symmetric(vertical: 18),
@@ -311,11 +314,11 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen>
                         ),
                       ),
                       onPressed: _pickAndScan,
-                      icon: const Icon(Icons.photo_library_rounded, color: Colors.white),
+                      icon: Icon(Icons.photo_library_rounded, color: colorScheme.onPrimary),
                       label: Text(
                         'Choose from Gallery',
                         style: dt.bodyRegular.copyWith(
-                          color: Colors.white,
+                          color: colorScheme.onPrimary,
                           fontWeight: FontWeight.w800,
                           fontSize: 16,
                         ),
@@ -329,9 +332,9 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen>
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: dt.surface,
+                color: dt.surface.withValues(alpha: 0.92),
                 borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: dt.textMain.withOpacity(0.05)),
+                border: Border.all(color: dt.textMain.withValues(alpha: 0.08)),
               ),
               child: Column(
                 children: [
@@ -390,6 +393,7 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen>
     required String buttonLabel,
     required VoidCallback onTap,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 40.0),
@@ -431,7 +435,7 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen>
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: designTheme.primary,
-                  foregroundColor: Colors.white,
+                  foregroundColor: colorScheme.onPrimary,
                   padding: const EdgeInsets.symmetric(vertical: 18),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
@@ -441,7 +445,7 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen>
                 child: Text(
                   buttonLabel,
                   style: designTheme.bodyRegular.copyWith(
-                    color: Colors.white,
+                    color: colorScheme.onPrimary,
                     fontWeight: FontWeight.w800,
                     fontSize: 16,
                   ),
@@ -456,6 +460,7 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen>
 
   void _showLimitReachedDialog() {
     final designTheme = AppDesignSystem.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -496,7 +501,7 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen>
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: designTheme.primary,
-              foregroundColor: Colors.white,
+              foregroundColor: colorScheme.onPrimary,
               elevation: 0,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               shape: RoundedRectangleBorder(
@@ -510,7 +515,7 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen>
             child: Text(
               'Sign Up',
               style: designTheme.bodyRegular.copyWith(
-                color: Colors.white,
+                color: colorScheme.onPrimary,
                 fontWeight: FontWeight.w800,
               ),
             ),

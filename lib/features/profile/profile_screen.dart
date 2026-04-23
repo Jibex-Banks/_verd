@@ -20,6 +20,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(currentUserProvider);
+    final colorScheme = Theme.of(context).colorScheme;
 
     // Truly not signed in (not even anonymously) — show skeleton briefly until
     // auth state resolves, or redirect happens via the router guard.
@@ -37,8 +38,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     }
 
     final designTheme = AppDesignSystem.of(context);
-    // Deep green from the inspiration Image #3
-    final headerBgColor = Theme.of(context).brightness == Brightness.dark ? const Color(0xFF081C0B) : const Color(0xFF13401A);
+    final headerBgColor = colorScheme.primaryContainer;
 
     return Scaffold(
       backgroundColor: headerBgColor, // Bleeds into status bar
@@ -52,7 +52,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               width: 200,
               height: 200,
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.05),
+                color: colorScheme.onPrimaryContainer.withValues(alpha: 0.05),
                 shape: BoxShape.circle,
               ),
             ),
@@ -64,7 +64,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               width: 160,
               height: 160,
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.05),
+                color: colorScheme.onPrimaryContainer.withValues(alpha: 0.05),
                 shape: BoxShape.circle,
               ),
             ),
@@ -86,12 +86,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           Text(
                             AppLocalizations.of(context)!.profile, 
                             style: designTheme.titleLarge.copyWith(
-                              color: Colors.white, 
+                              color: colorScheme.onPrimaryContainer, 
                               fontWeight: FontWeight.w800
                             )
                           ),
                           IconButton(
-                            icon: const Icon(Icons.more_vert, color: Colors.white),
+                            icon: Icon(Icons.more_vert, color: colorScheme.onPrimaryContainer),
                             onPressed: () => _showMoreOptions(context),
                           ),
                         ],
@@ -108,11 +108,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                               padding: const EdgeInsets.all(6),
                               margin: const EdgeInsets.only(bottom: 4, right: 4),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFE68A00),
+                                color: designTheme.semanticWarning,
                                 shape: BoxShape.circle,
                                 border: Border.all(color: headerBgColor, width: 2),
                               ),
-                              child: const Icon(Icons.edit, color: Colors.white, size: 16),
+                              child: Icon(Icons.edit, color: colorScheme.onPrimary, size: 16),
                             ),
                           ),
                         ],
@@ -121,7 +121,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       Text(
                         user.displayName.isNotEmpty ? user.displayName : AppLocalizations.of(context)!.farmer,
                         style: designTheme.titleLarge.copyWith(
-                          color: Colors.white,
+                          color: colorScheme.onPrimaryContainer,
                           fontWeight: FontWeight.w800,
                           letterSpacing: 0.5,
                         ),
@@ -131,7 +131,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         user.email,
                         style: designTheme.bodyRegular.copyWith(
                           fontSize: 13,
-                          color: Colors.white70,
+                          color: colorScheme.onPrimaryContainer.withValues(alpha: 0.7),
                         ),
                       ),
                       const SizedBox(height: 32.0),
@@ -173,28 +173,28 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           _buildMenuItem(
                             designTheme: designTheme,
                             icon: Icons.person_outline,
-                            iconColor: const Color(0xFF2196F3), // Light Blue
+                            iconColor: designTheme.secondary,
                             title: AppLocalizations.of(context)!.my_profile,
                             onTap: () => context.push('/edit-profile'),
                           ),
                           _buildMenuItem(
                             designTheme: designTheme,
                             icon: Icons.history,
-                            iconColor: const Color(0xFF4CAF50), // Green 
+                            iconColor: designTheme.accentGreen,
                             title: AppLocalizations.of(context)!.scan_history,
                             onTap: () => context.push('/scan-history'),
                           ),
                           _buildMenuItem(
                             designTheme: designTheme,
                             icon: Icons.analytics_outlined,
-                            iconColor: const Color(0xFF9C27B0), // Purple
+                            iconColor: designTheme.primary,
                             title: AppLocalizations.of(context)!.farming_insights,
                             onTap: () => context.push('/user-insights'),
                           ),
                           _buildMenuItem(
                             designTheme: designTheme,
                             icon: Icons.lock_outline,
-                            iconColor: const Color(0xFFFF9800), // Orange
+                            iconColor: designTheme.semanticWarning,
                             title: AppLocalizations.of(context)!.change_password,
                             onTap: () => context.push('/change-password'),
                           ),
@@ -202,7 +202,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           _buildMenuItem(
                             designTheme: designTheme,
                             icon: Icons.logout,
-                            iconColor: const Color(0xFFF44336), // Red
+                            iconColor: designTheme.semanticError,
                             title: AppLocalizations.of(context)!.logout,
                             onTap: () async {
                               final confirmed = await ConfirmationDialog.logout(context);
@@ -239,7 +239,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: const Color(0xFF81C784), width: 3),
+        border: Border.all(color: designTheme.accentGreen, width: 3),
         color: designTheme.primary,
       ),
       child: ClipOval(
@@ -258,8 +258,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return Center(
       child: Text(
         initial,
-        style: const TextStyle(
-          color: Colors.white,
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.onPrimary,
           fontSize: 40,
           fontWeight: FontWeight.bold,
         ),
@@ -324,13 +324,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           label: AppLocalizations.of(context)!.my_profile,
           icon: Icons.person_outline,
           value: 'profile',
-          color: const Color(0xFF2196F3),
+          color: AppDesignSystem.of(context).secondary,
         ),
         SheetOption(
           label: AppLocalizations.of(context)!.preferences_support,
           icon: Icons.settings_outlined,
           value: 'settings',
-          color: const Color(0xFF9C27B0),
+          color: AppDesignSystem.of(context).primary,
         ),
       ],
     ).then((result) {
@@ -346,6 +346,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   /// Guest / anonymous user profile screen — prompts them to sign up.
   Widget _buildGuestScreen(BuildContext context) {
     final designTheme = AppDesignSystem.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       backgroundColor: designTheme.background,
       appBar: AppBar(
@@ -410,7 +411,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     child: Text(
                       'Create Free Account',
                       style: designTheme.bodyRegular.copyWith(
-                        color: Colors.white,
+                        color: colorScheme.onPrimary,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

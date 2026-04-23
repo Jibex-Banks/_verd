@@ -1,3 +1,4 @@
+
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:verd/data/services/tflite_ai_service.dart';

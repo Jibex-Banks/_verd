@@ -462,7 +462,7 @@ class AppTheme {
       contentTextStyle: AppTypography.body.copyWith(color: AppColors.textWhite),
       actionTextColor: AppColors.primary200,
     ),
-    extensions: [AppDesignSystem.dark()],
+    extensions: [AppDesignSystem.light()],
   );
 
   static ThemeData darkTheme = ThemeData(

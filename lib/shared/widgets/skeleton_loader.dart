@@ -12,9 +12,14 @@ class _Shimmer extends StatelessWidget {
   Widget build(BuildContext context) {
     final designTheme = AppDesignSystem.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
     return Shimmer.fromColors(
-      baseColor: isDark ? designTheme.surface.withOpacity(0.1) : Colors.grey[300]!,
-      highlightColor: isDark ? designTheme.surface.withOpacity(0.2) : Colors.grey[100]!,
+      baseColor: isDark
+          ? designTheme.surface.withOpacity(0.1)
+          : colorScheme.surfaceContainerHighest.withValues(alpha: 0.7),
+      highlightColor: isDark
+          ? designTheme.surface.withOpacity(0.2)
+          : colorScheme.surfaceContainerHighest.withValues(alpha: 0.35),
       period: const Duration(milliseconds: 1400),
       child: child,
     );
