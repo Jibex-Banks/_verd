@@ -204,25 +204,49 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/scan-result',
         name: 'scan_result',
         builder: (context, state) {
+          String? firstNonEmptyImage(Iterable<dynamic> values) {
+            for (final raw in values) {
+              if (raw is String) {
+                final trimmed = raw.trim();
+                if (trimmed.isNotEmpty) return trimmed;
+              }
+            }
+            return null;
+          }
+
           final extra = state.extra;
           Map<String, dynamic> resultData = {};
           String? imageUrl;
 
           if (extra is ScanResult) {
             resultData = {
-              'engine': 'gemini_cloud_extension', // Default for history
+              'engine': 'gemini_cloud_extension',
               'timestamp': extra.scannedAt.toIso8601String(),
+              'scanId': extra.id,
+              'userId': extra.userId,
+              'imageUrl': extra.imageUrl,
+              'localImagePath': extra.localImagePath,
+              'fromHistory': true,
+              'savedToCloud': true, // Already persisted
               'analysis': extra.analysisMap ?? {
                 'cropType': extra.plantName,
                 'healthStatus': extra.diagnosis,
                 'confidence': extra.confidence,
-                'diseases': [], // Basic fallback
+                'diseases': [],
               }
             };
-            imageUrl = extra.imageUrl;
+            imageUrl = firstNonEmptyImage([
+              extra.imageUrl,
+              extra.localImagePath,
+              state.uri.queryParameters['image_url'],
+            ]);
           } else if (extra is Map<String, dynamic>) {
             resultData = extra;
-            imageUrl = state.uri.queryParameters['image_url'] ?? extra['imageUrl'];
+            imageUrl = firstNonEmptyImage([
+              state.uri.queryParameters['image_url'],
+              extra['imageUrl'],
+              extra['localImagePath'],
+            ]);
           }
 
           return ScanResultScreen(

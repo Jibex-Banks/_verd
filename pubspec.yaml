@@ -47,7 +47,7 @@ dependencies:
   # Utilities
   intl: ^0.20.2                     # Date formatting
   url_launcher: ^6.3.2              # Open links (for help/terms)
-  package_info_plus: ^9.0.0         # App version for about screen
+  package_info_plus: ^10.1.0         # App version for about screen
   permission_handler: ^12.0.1       # Handle runtime permissions
   shared_preferences: ^2.5.4        # Local storage for settings
   uuid: ^4.5.1                       # Generate unique IDs for scans
@@ -92,7 +92,7 @@ dependencies:
   cupertino_icons: ^1.0.8            # REMOVED: unused (app uses Material Icons)
   google_nav_bar: 5.0.7
   flutter_launcher_icons: ^0.14.4
-  device_info_plus: ^12.3.0
+  device_info_plus: ^13.1.0
   firebase_crashlytics: ^5.0.8
 
 

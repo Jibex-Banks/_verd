@@ -153,7 +153,12 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen>
         context.pushNamed(
           'scan_result',
           extra: result,
-          queryParameters: {'image_url': result['imageUrl'] ?? ''},
+          queryParameters: {
+            'image_url': (result['imageUrl'] as String?)?.trim().isNotEmpty ==
+                    true
+                ? (result['imageUrl'] as String).trim()
+                : (result['localImagePath'] as String?) ?? '',
+          },
         );
       }
     } catch (e) {

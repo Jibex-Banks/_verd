@@ -34,6 +34,8 @@ class AIRoutingService {
     required String scanId,
     required File image,
   }) async {
+    // Stash for inclusion in every return path
+    final meta = {'scanId': scanId, 'userId': userId};
     final connectivityResult = await _connectivity.checkConnectivity();
     final isOnline =
         !connectivityResult.contains(ConnectivityResult.none) &&
@@ -60,6 +62,9 @@ class AIRoutingService {
           'imageUrl': imageUrl,
           'localImagePath': image.path,
           'analysis': analysisData,
+          // Already saved to Firestore below
+          'savedToCloud': true,
+          ...meta,
         };
 
         // 3. Save the *completed* scan to Firestore for user history
@@ -100,10 +105,12 @@ class AIRoutingService {
         final localResult = await _localMLService.analyzeCropOffline(image);
         return {
           ...localResult,
-          'imageUrl': null, // Upload likely failed or didn't exist
+          'imageUrl': null,
           'localImagePath': image.path,
           'cloudFallback': true,
           'cloudError': e.toString(),
+          'savedToCloud': false,
+          ...meta,
         };
       }
     } else {
@@ -112,6 +119,8 @@ class AIRoutingService {
       return {
         ...localResult,
         'localImagePath': image.path,
+        'savedToCloud': false,
+        ...meta,
       };
     }
   }
